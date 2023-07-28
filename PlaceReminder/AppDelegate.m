@@ -2,7 +2,7 @@
 //  AppDelegate.m
 //  PlaceReminder
 //
-//  Created by Giorgio Coccapani on 01/05/23.
+//  Created by Giorgio Coccapani on 23/07/23.
 //
 
 #import "AppDelegate.h"
