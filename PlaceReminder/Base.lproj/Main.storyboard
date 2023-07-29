@@ -84,7 +84,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="PlaceReminder" largeTitleDisplayMode="always" id="LMQ-YX-ahh">
                         <rightBarButtonItems>
-                            <barButtonItem largeContentSizeImage="add" systemItem="add" id="sdt-SZ-7sq">
+                            <barButtonItem largeContentSizeImage="plus" catalog="system" systemItem="add" id="sdt-SZ-7sq">
                                 <connections>
                                     <segue destination="E2J-f7-6Zy" kind="show" id="D27-14-XtH"/>
                                 </connections>
@@ -257,7 +257,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jG1-ht-jtS">
+                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Notes" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jG1-ht-jtS">
                                                     <rect key="frame" x="20" y="5" width="313" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -456,6 +456,7 @@
     <resources>
         <image name="add" width="128" height="128"/>
         <image name="map" catalog="system" width="128" height="112"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <image name="trash" catalog="system" width="117" height="128"/>
         <namedColor name="AccentColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
