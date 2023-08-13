@@ -20,6 +20,8 @@
 		44977CCF2A73F663006E1034 /* TablePlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CCE2A73F663006E1034 /* TablePlacesViewController.m */; };
 		44977CD22A74040A006E1034 /* TablePinnedPlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD12A74040A006E1034 /* TablePinnedPlaceViewController.m */; };
 		44977CD82A741220006E1034 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD72A741220006E1034 /* MapViewController.m */; };
+		44CFEE082A89614E00668998 /* PlaceCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 44CFEE062A89614E00668998 /* PlaceCoreDataModel.xcdatamodeld */; };
+		44CFEE0A2A89631000668998 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CFEE092A89631000668998 /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +49,8 @@
 		44977CD12A74040A006E1034 /* TablePinnedPlaceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TablePinnedPlaceViewController.m; sourceTree = "<group>"; };
 		44977CD62A741220006E1034 /* MapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		44977CD72A741220006E1034 /* MapViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		44CFEE072A89614E00668998 /* PlaceCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PlaceCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
+		44CFEE092A89631000668998 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4453F4652A6D27000066FAEA /* CoreLocation.framework in Frameworks */,
+				44CFEE0A2A89631000668998 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +69,7 @@
 		4453F43E2A6D26150066FAEA = {
 			isa = PBXGroup;
 			children = (
+				44CFEE062A89614E00668998 /* PlaceCoreDataModel.xcdatamodeld */,
 				442F5B1C2A6EDD170089E298 /* README.md */,
 				4453F4672A6D2E190066FAEA /* Models */,
 				4453F4662A6D2DFA0066FAEA /* Controllers */,
@@ -100,6 +106,7 @@
 		4453F4632A6D27000066FAEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44CFEE092A89631000668998 /* CoreData.framework */,
 				4453F4642A6D27000066FAEA /* CoreLocation.framework */,
 			);
 			name = Frameworks;
@@ -108,14 +115,14 @@
 		4453F4662A6D2DFA0066FAEA /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				44977CD02A74040A006E1034 /* TablePinnedPlaceViewController.h */,
-				44977CD12A74040A006E1034 /* TablePinnedPlaceViewController.m */,
-				4453F4502A6D26150066FAEA /* ViewController.h */,
-				4453F4512A6D26150066FAEA /* ViewController.m */,
-				44977CCD2A73F663006E1034 /* TablePlacesViewController.h */,
-				44977CCE2A73F663006E1034 /* TablePlacesViewController.m */,
 				44977CD62A741220006E1034 /* MapViewController.h */,
 				44977CD72A741220006E1034 /* MapViewController.m */,
+				44977CD02A74040A006E1034 /* TablePinnedPlaceViewController.h */,
+				44977CD12A74040A006E1034 /* TablePinnedPlaceViewController.m */,
+				44977CCD2A73F663006E1034 /* TablePlacesViewController.h */,
+				44977CCE2A73F663006E1034 /* TablePlacesViewController.m */,
+				4453F4502A6D26150066FAEA /* ViewController.h */,
+				4453F4512A6D26150066FAEA /* ViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -207,6 +214,7 @@
 				44977CD82A741220006E1034 /* MapViewController.m in Sources */,
 				4453F44C2A6D26150066FAEA /* AppDelegate.m in Sources */,
 				442F5B172A6ED4870089E298 /* Poi.m in Sources */,
+				44CFEE082A89614E00668998 /* PlaceCoreDataModel.xcdatamodeld in Sources */,
 				4453F45D2A6D26170066FAEA /* main.m in Sources */,
 				4453F44F2A6D26150066FAEA /* SceneDelegate.m in Sources */,
 				44977CCF2A73F663006E1034 /* TablePlacesViewController.m in Sources */,
@@ -350,6 +358,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 68Y9TBWBN5;
@@ -360,8 +369,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "location-services";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -379,6 +388,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 68Y9TBWBN5;
@@ -389,8 +399,8 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "location-services";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -425,6 +435,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		44CFEE062A89614E00668998 /* PlaceCoreDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				44CFEE072A89614E00668998 /* PlaceCoreDataModel.xcdatamodel */,
+			);
+			currentVersion = 44CFEE072A89614E00668998 /* PlaceCoreDataModel.xcdatamodel */;
+			path = PlaceCoreDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4453F43F2A6D26150066FAEA /* Project object */;
 }
