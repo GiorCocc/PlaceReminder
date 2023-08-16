@@ -6,10 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PlaceMO+CoreDataProperties.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TablePinnedPlaceViewController : UITableViewController
+@interface PlaceDetailsViewController : UITableViewController
+
+@property (nonatomic, strong) PlaceMO *selectedPlaceMO;
 
 @end
 

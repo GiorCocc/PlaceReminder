@@ -5,13 +5,13 @@
 //  Created by Giorgio Coccapani on 28/07/23.
 //
 
-#import "TablePinnedPlaceViewController.h"
+#import "PlaceDetailsViewController.h"
 
-@interface TablePinnedPlaceViewController ()
+@interface PlaceDetailsViewController ()
 
 @end
 
-@implementation TablePinnedPlaceViewController
+@implementation PlaceDetailsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

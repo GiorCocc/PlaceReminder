@@ -16,7 +16,6 @@
 // TODO: altre informazioni e sezioni da inserire:
 // - Immagini (per visualizzare foto relative al posto segnato)
 // TODO: implementare la lettura dello switch
-// TODO: implementare il salvataggio dei dati nel database
 // TODO: implementare l'espansione della cella delle note
 // TODO: implementare la cella con la mappa in cima alla tabella come prima sezione
 
@@ -37,8 +36,9 @@
 @property (nonatomic, strong) NSString *placeAddress;
 @property (nonatomic, strong) NSString *placeNotes;
 
-
 @end
+
+
 
 @implementation AddNewPlaceTableViewController
 
@@ -83,6 +83,7 @@
         TextFieldTableViewCell *addressCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
         NSString *placeName = nameCell.textField.text;
         NSString *placeAddress = addressCell.textField.text;
+        // TODO: recuperare ancora le note e lo switch
         
         self.placeName = placeName;
         self.placeAddress = placeAddress;
@@ -133,12 +134,6 @@
         self.placeNotes = textField.text;
     
     NSLog(@"Text field: %@\n", textField.text);
-    
-    
-    
-    
-    
-    
     
     return YES;
 }
