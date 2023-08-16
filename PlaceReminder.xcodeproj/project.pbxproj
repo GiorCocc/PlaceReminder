@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		442F5B102A6D7B0A0089E298 /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = 442F5B0F2A6D7B0A0089E298 /* Place.m */; };
 		442F5B172A6ED4870089E298 /* Poi.m in Sources */ = {isa = PBXBuildFile; fileRef = 442F5B162A6ED4870089E298 /* Poi.m */; };
 		4453F44C2A6D26150066FAEA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453F44B2A6D26150066FAEA /* AppDelegate.m */; };
 		4453F44F2A6D26150066FAEA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453F44E2A6D26150066FAEA /* SceneDelegate.m */; };
@@ -17,6 +16,9 @@
 		4453F45A2A6D26170066FAEA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4453F4582A6D26170066FAEA /* LaunchScreen.storyboard */; };
 		4453F45D2A6D26170066FAEA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453F45C2A6D26170066FAEA /* main.m */; };
 		4453F4652A6D27000066FAEA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4453F4642A6D27000066FAEA /* CoreLocation.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		445547072A8CF3F9001BCCC8 /* TextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547052A8CF3F9001BCCC8 /* TextFieldTableViewCell.m */; };
+		445547082A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 445547062A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib */; };
+		44965E412A8BE8D90023146C /* AddNewPlaceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965E402A8BE8D90023146C /* AddNewPlaceTableViewController.m */; };
 		44977CCF2A73F663006E1034 /* TablePlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CCE2A73F663006E1034 /* TablePlacesViewController.m */; };
 		44977CD22A74040A006E1034 /* TablePinnedPlaceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD12A74040A006E1034 /* TablePinnedPlaceViewController.m */; };
 		44977CD82A741220006E1034 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD72A741220006E1034 /* MapViewController.m */; };
@@ -25,8 +27,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		442F5B0F2A6D7B0A0089E298 /* Place.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Place.m; sourceTree = "<group>"; };
-		442F5B112A6D9ABB0089E298 /* Place.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
 		442F5B162A6ED4870089E298 /* Poi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Poi.m; sourceTree = "<group>"; };
 		442F5B182A6ED4980089E298 /* Poi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Poi.h; sourceTree = "<group>"; };
 		442F5B1C2A6EDD170089E298 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -43,6 +43,11 @@
 		4453F45B2A6D26170066FAEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4453F45C2A6D26170066FAEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4453F4642A6D27000066FAEA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		445547052A8CF3F9001BCCC8 /* TextFieldTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextFieldTableViewCell.m; sourceTree = "<group>"; };
+		445547062A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldTableViewCell.xib; sourceTree = "<group>"; };
+		445547092A8D06F0001BCCC8 /* TextFieldTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextFieldTableViewCell.h; sourceTree = "<group>"; };
+		44965E3F2A8BE8D90023146C /* AddNewPlaceTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AddNewPlaceTableViewController.h; path = PlaceReminder/AddNewPlaceTableViewController.h; sourceTree = SOURCE_ROOT; };
+		44965E402A8BE8D90023146C /* AddNewPlaceTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AddNewPlaceTableViewController.m; path = PlaceReminder/AddNewPlaceTableViewController.m; sourceTree = SOURCE_ROOT; };
 		44977CCD2A73F663006E1034 /* TablePlacesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TablePlacesViewController.h; sourceTree = "<group>"; };
 		44977CCE2A73F663006E1034 /* TablePlacesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TablePlacesViewController.m; sourceTree = "<group>"; };
 		44977CD02A74040A006E1034 /* TablePinnedPlaceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TablePinnedPlaceViewController.h; sourceTree = "<group>"; };
@@ -115,6 +120,8 @@
 		4453F4662A6D2DFA0066FAEA /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				44965E3F2A8BE8D90023146C /* AddNewPlaceTableViewController.h */,
+				44965E402A8BE8D90023146C /* AddNewPlaceTableViewController.m */,
 				44977CD62A741220006E1034 /* MapViewController.h */,
 				44977CD72A741220006E1034 /* MapViewController.m */,
 				44977CD02A74040A006E1034 /* TablePinnedPlaceViewController.h */,
@@ -123,6 +130,9 @@
 				44977CCE2A73F663006E1034 /* TablePlacesViewController.m */,
 				4453F4502A6D26150066FAEA /* ViewController.h */,
 				4453F4512A6D26150066FAEA /* ViewController.m */,
+				445547052A8CF3F9001BCCC8 /* TextFieldTableViewCell.m */,
+				445547062A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib */,
+				445547092A8D06F0001BCCC8 /* TextFieldTableViewCell.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -130,8 +140,6 @@
 		4453F4672A6D2E190066FAEA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				442F5B0F2A6D7B0A0089E298 /* Place.m */,
-				442F5B112A6D9ABB0089E298 /* Place.h */,
 				442F5B162A6ED4870089E298 /* Poi.m */,
 				442F5B182A6ED4980089E298 /* Poi.h */,
 			);
@@ -165,6 +173,11 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					1,
+					100,
+					101,
+				);
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					4453F4462A6D26150066FAEA = {
@@ -198,6 +211,7 @@
 				4453F45A2A6D26170066FAEA /* LaunchScreen.storyboard in Resources */,
 				4453F4572A6D26170066FAEA /* Assets.xcassets in Resources */,
 				4453F4552A6D26150066FAEA /* Main.storyboard in Resources */,
+				445547082A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,7 +222,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				442F5B102A6D7B0A0089E298 /* Place.m in Sources */,
 				4453F4522A6D26150066FAEA /* ViewController.m in Sources */,
 				44977CD22A74040A006E1034 /* TablePinnedPlaceViewController.m in Sources */,
 				44977CD82A741220006E1034 /* MapViewController.m in Sources */,
@@ -218,6 +231,8 @@
 				4453F45D2A6D26170066FAEA /* main.m in Sources */,
 				4453F44F2A6D26150066FAEA /* SceneDelegate.m in Sources */,
 				44977CCF2A73F663006E1034 /* TablePlacesViewController.m in Sources */,
+				44965E412A8BE8D90023146C /* AddNewPlaceTableViewController.m in Sources */,
+				445547072A8CF3F9001BCCC8 /* TextFieldTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
