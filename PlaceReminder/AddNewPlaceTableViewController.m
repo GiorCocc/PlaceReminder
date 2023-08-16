@@ -208,11 +208,18 @@
         
         
         
-        
         return cell;
     }
     
     return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return 250;
+    }
+    
+    return 44;
 }
 
 - (UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
