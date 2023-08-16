@@ -22,6 +22,8 @@
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"
+#import "CoreDataManager.h"
+#import "PlaceMO+CoreDataClass.h"
 
 
 
@@ -76,10 +78,39 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Conferma"
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
-        // Qui puoi eseguire l'azione di conferma, ad esempio, salvare i dati e tornare alla schermata precedente
-        // TODO: leggi i valori dai campi di testo e carica i dati nel database
+        // preleva i dati dai text field
+        TextFieldTableViewCell *nameCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        TextFieldTableViewCell *addressCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+        NSString *placeName = nameCell.textField.text;
+        NSString *placeAddress = addressCell.textField.text;
         
-        [self.navigationController popViewControllerAnimated:YES];
+        self.placeName = placeName;
+        self.placeAddress = placeAddress;
+        
+        
+        
+        NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+        if (context) {
+            PlaceMO *newPlace = [NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
+            
+            newPlace.name = self.placeName;
+            newPlace.address = self.placeAddress;
+            
+            NSLog(@"Place: name: %@, address: %@\n", newPlace.name, newPlace.address);
+            
+            
+            NSError *error = nil;
+            if (![context save:&error]) {
+                NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
+            } else {
+                NSLog(@"Dati salvati con successo!\n");
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        } else {
+            NSLog(@"Errore: contesto di gestion del database non trovato!\n");
+        }
+        
+        
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Annulla"
@@ -100,6 +131,8 @@
         self.placeAddress = textField.text;
     else if (textField.tag == 2)            // note
         self.placeNotes = textField.text;
+    
+    NSLog(@"Text field: %@\n", textField.text);
     
     
     
