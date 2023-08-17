@@ -36,7 +36,7 @@
         <!--Show place details-->
         <scene sceneID="uAC-f0-Js5">
             <objects>
-                <tableViewController title="Show place details" id="zif-rT-DkN" customClass="TablePinnedPlaceViewController" sceneMemberID="viewController">
+                <tableViewController title="Show place details" id="zif-rT-DkN" customClass="PlaceDetailsViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="ZoL-y7-xe4">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -272,9 +272,6 @@
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="zif-rT-DkN" kind="show" id="7qm-cF-mUc"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -309,6 +306,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="gZY-co-KyN" id="4uH-Yi-tPw"/>
+                        <segue destination="zif-rT-DkN" kind="show" identifier="ShowDetailsSegue" id="fSZ-Db-HVW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ga9-RQ-XrJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

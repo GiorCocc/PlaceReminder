@@ -2,7 +2,7 @@
 //  PlaceMO+CoreDataProperties.h
 //  PlaceReminder
 //
-//  Created by Giorgio Coccapani on 16/08/23.
+//  Created by Giorgio Coccapani on 17/08/23.
 //
 //
 
@@ -15,11 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSFetchRequest<PlaceMO *> *)fetchRequest NS_SWIFT_NAME(fetchRequest());
 
-@property (nonatomic) int16_t id;
-@property (nullable, nonatomic, copy) NSString *name;
 @property (nullable, nonatomic, copy) NSString *address;
-@property (nonatomic) BOOL remember;
+@property (nullable, nonatomic, copy) NSString *name;
 @property (nullable, nonatomic, copy) NSString *notes;
+@property (nonatomic) BOOL remember;
+@property (nullable, nonatomic, copy) NSDate *insert_time;
 
 @end
 

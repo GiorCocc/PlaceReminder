@@ -2,7 +2,7 @@
 //  PlaceMO+CoreDataProperties.m
 //  PlaceReminder
 //
-//  Created by Giorgio Coccapani on 16/08/23.
+//  Created by Giorgio Coccapani on 17/08/23.
 //
 //
 
@@ -14,10 +14,10 @@
 	return [NSFetchRequest fetchRequestWithEntityName:@"Place"];
 }
 
-@dynamic id;
-@dynamic name;
 @dynamic address;
-@dynamic remember;
+@dynamic name;
 @dynamic notes;
+@dynamic remember;
+@dynamic insert_time;
 
 @end

@@ -217,6 +217,8 @@
             
             [cell configureWithTitle:@"Address" placeholder:@"Place address"];
             cell.textField.tag = 1;
+            cell.textField.textContentType = UITextContentTypeAddressCityAndState;
+            
             
             
             

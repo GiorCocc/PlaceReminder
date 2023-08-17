@@ -6,6 +6,7 @@
 //
 
 #import "PlaceDetailsViewController.h"
+#import "CoreDataManager.h"
 
 @interface PlaceDetailsViewController ()
 
@@ -15,6 +16,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSLog(@"Showing selected place details: %@", self.selectedPlaceMO);
+    
+    // titolo
+    self.title = self.selectedPlaceMO.name;
+    
+    
+    
+    
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -26,12 +36,21 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+    // return the number of sections
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
+    // return the number of rows
+    if (section == 0)       // mappa
+        return 1;           // cella con la mappa
+    else if (section == 1)  // informazioni
+        return 2;           // nome e indirizzo
+    else if (section == 2)  // promemoria
+        return 1;           // switch promemoria
+    else if (section == 3)  // note
+        return 1;           // text field per le note
+    
     return 0;
 }
 

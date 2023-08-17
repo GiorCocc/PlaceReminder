@@ -16,6 +16,9 @@
 #import "CoreDataManager.h"
 #import "PlaceMO+CoreDataProperties.h"
 #import "AddNewPlaceTableViewController.h"
+#import "PlaceDetailsViewController.h"
+
+
 
 
 
@@ -25,6 +28,7 @@
 
 @property (nonatomic, strong) NSMutableArray *places;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) PlaceMO *selectedPlaceMO;
 
 @end
 
@@ -141,14 +145,33 @@
     }
 }
 
-/*
+
 #pragma mark - Navigation
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES]; // Deseleziona la cella
+        
+    // Ottieni il PlaceMO corrispondente all'indice selezionato
+    PlaceMO *selectedPlace = self.places[indexPath.row];
+    self.selectedPlaceMO = selectedPlace;
+    
+        
+    // Passa l'oggetto PlaceMO a prepareForSegue
+    [self performSegueWithIdentifier:@"ShowDetailsSegue" sender:selectedPlace];
+}
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"ShowDetailsSegue"]) {
+        if ([segue.destinationViewController isKindOfClass:[PlaceDetailsViewController class]]) {
+            PlaceDetailsViewController *detailVC = (PlaceDetailsViewController *)segue.destinationViewController;
+            
+            // Passa il PlaceMO selezionato alla schermata dei dettagli
+            detailVC.selectedPlaceMO = sender;
+        
+        }
+    }
 }
-*/
+
 
 @end

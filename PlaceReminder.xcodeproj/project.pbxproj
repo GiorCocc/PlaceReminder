@@ -18,12 +18,12 @@
 		4453F4652A6D27000066FAEA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4453F4642A6D27000066FAEA /* CoreLocation.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		445547072A8CF3F9001BCCC8 /* TextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547052A8CF3F9001BCCC8 /* TextFieldTableViewCell.m */; };
 		445547082A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 445547062A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib */; };
-		445547142A8D53ED001BCCC8 /* PlaceMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547122A8D53ED001BCCC8 /* PlaceMO+CoreDataClass.m */; };
 		4455471B2A8D5677001BCCC8 /* CoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4455471A2A8D5677001BCCC8 /* CoreDataManager.m */; };
-		4455471C2A8D5CA2001BCCC8 /* PlaceMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547132A8D53ED001BCCC8 /* PlaceMO+CoreDataProperties.m */; };
 		4455471E2A8D5E93001BCCC8 /* PlaceCoreDataModel.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = 44CFEE062A89614E00668998 /* PlaceCoreDataModel.xcdatamodeld */; };
+		445547232A8E996C001BCCC8 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547222A8E996C001BCCC8 /* HomePageViewController.m */; };
+		445547312A8EA97E001BCCC8 /* PlaceMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 4455472F2A8EA97E001BCCC8 /* PlaceMO+CoreDataClass.m */; };
+		445547322A8EA97E001BCCC8 /* PlaceMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547302A8EA97E001BCCC8 /* PlaceMO+CoreDataProperties.m */; };
 		44965E412A8BE8D90023146C /* AddNewPlaceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965E402A8BE8D90023146C /* AddNewPlaceTableViewController.m */; };
-		44977CCF2A73F663006E1034 /* TablePlacesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CCE2A73F663006E1034 /* TablePlacesViewController.m */; };
 		44977CD22A74040A006E1034 /* PlaceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD12A74040A006E1034 /* PlaceDetailsViewController.m */; };
 		44977CD82A741220006E1034 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD72A741220006E1034 /* MapViewController.m */; };
 		44CFEE0A2A89631000668998 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CFEE092A89631000668998 /* CoreData.framework */; };
@@ -49,16 +49,16 @@
 		445547052A8CF3F9001BCCC8 /* TextFieldTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextFieldTableViewCell.m; sourceTree = "<group>"; };
 		445547062A8CF3F9001BCCC8 /* TextFieldTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldTableViewCell.xib; sourceTree = "<group>"; };
 		445547092A8D06F0001BCCC8 /* TextFieldTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextFieldTableViewCell.h; sourceTree = "<group>"; };
-		445547102A8D53ED001BCCC8 /* PlaceMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlaceMO+CoreDataProperties.h"; sourceTree = SOURCE_ROOT; };
-		445547112A8D53ED001BCCC8 /* PlaceMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlaceMO+CoreDataClass.h"; sourceTree = SOURCE_ROOT; };
-		445547122A8D53ED001BCCC8 /* PlaceMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaceMO+CoreDataClass.m"; sourceTree = SOURCE_ROOT; };
-		445547132A8D53ED001BCCC8 /* PlaceMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaceMO+CoreDataProperties.m"; sourceTree = SOURCE_ROOT; };
 		445547192A8D5677001BCCC8 /* CoreDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataManager.h; sourceTree = "<group>"; };
 		4455471A2A8D5677001BCCC8 /* CoreDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataManager.m; sourceTree = "<group>"; };
+		445547212A8E996C001BCCC8 /* HomePageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomePageViewController.h; sourceTree = "<group>"; };
+		445547222A8E996C001BCCC8 /* HomePageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomePageViewController.m; sourceTree = "<group>"; };
+		4455472D2A8EA97E001BCCC8 /* PlaceMO+CoreDataProperties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlaceMO+CoreDataProperties.h"; sourceTree = SOURCE_ROOT; };
+		4455472E2A8EA97E001BCCC8 /* PlaceMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlaceMO+CoreDataClass.h"; sourceTree = SOURCE_ROOT; };
+		4455472F2A8EA97E001BCCC8 /* PlaceMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaceMO+CoreDataClass.m"; sourceTree = SOURCE_ROOT; };
+		445547302A8EA97E001BCCC8 /* PlaceMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaceMO+CoreDataProperties.m"; sourceTree = SOURCE_ROOT; };
 		44965E3F2A8BE8D90023146C /* AddNewPlaceTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AddNewPlaceTableViewController.h; path = PlaceReminder/AddNewPlaceTableViewController.h; sourceTree = SOURCE_ROOT; };
 		44965E402A8BE8D90023146C /* AddNewPlaceTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AddNewPlaceTableViewController.m; path = PlaceReminder/AddNewPlaceTableViewController.m; sourceTree = SOURCE_ROOT; };
-		44977CCD2A73F663006E1034 /* TablePlacesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TablePlacesViewController.h; sourceTree = "<group>"; };
-		44977CCE2A73F663006E1034 /* TablePlacesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TablePlacesViewController.m; sourceTree = "<group>"; };
 		44977CD02A74040A006E1034 /* PlaceDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaceDetailsViewController.h; sourceTree = "<group>"; };
 		44977CD12A74040A006E1034 /* PlaceDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlaceDetailsViewController.m; sourceTree = "<group>"; };
 		44977CD62A741220006E1034 /* MapViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
@@ -137,10 +137,10 @@
 				44977CD72A741220006E1034 /* MapViewController.m */,
 				44977CD02A74040A006E1034 /* PlaceDetailsViewController.h */,
 				44977CD12A74040A006E1034 /* PlaceDetailsViewController.m */,
-				44977CCD2A73F663006E1034 /* TablePlacesViewController.h */,
-				44977CCE2A73F663006E1034 /* TablePlacesViewController.m */,
 				4453F4502A6D26150066FAEA /* ViewController.h */,
 				4453F4512A6D26150066FAEA /* ViewController.m */,
+				445547212A8E996C001BCCC8 /* HomePageViewController.h */,
+				445547222A8E996C001BCCC8 /* HomePageViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -148,10 +148,10 @@
 		4453F4672A6D2E190066FAEA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				445547102A8D53ED001BCCC8 /* PlaceMO+CoreDataProperties.h */,
-				445547112A8D53ED001BCCC8 /* PlaceMO+CoreDataClass.h */,
-				445547122A8D53ED001BCCC8 /* PlaceMO+CoreDataClass.m */,
-				445547132A8D53ED001BCCC8 /* PlaceMO+CoreDataProperties.m */,
+				4455472D2A8EA97E001BCCC8 /* PlaceMO+CoreDataProperties.h */,
+				4455472E2A8EA97E001BCCC8 /* PlaceMO+CoreDataClass.h */,
+				4455472F2A8EA97E001BCCC8 /* PlaceMO+CoreDataClass.m */,
+				445547302A8EA97E001BCCC8 /* PlaceMO+CoreDataProperties.m */,
 				442F5B162A6ED4870089E298 /* Poi.m */,
 				442F5B182A6ED4980089E298 /* Poi.h */,
 			);
@@ -254,17 +254,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4455471C2A8D5CA2001BCCC8 /* PlaceMO+CoreDataProperties.m in Sources */,
 				4453F4522A6D26150066FAEA /* ViewController.m in Sources */,
 				44977CD22A74040A006E1034 /* PlaceDetailsViewController.m in Sources */,
 				44977CD82A741220006E1034 /* MapViewController.m in Sources */,
+				445547322A8EA97E001BCCC8 /* PlaceMO+CoreDataProperties.m in Sources */,
+				445547232A8E996C001BCCC8 /* HomePageViewController.m in Sources */,
 				4453F44C2A6D26150066FAEA /* AppDelegate.m in Sources */,
 				442F5B172A6ED4870089E298 /* Poi.m in Sources */,
 				4453F45D2A6D26170066FAEA /* main.m in Sources */,
+				445547312A8EA97E001BCCC8 /* PlaceMO+CoreDataClass.m in Sources */,
 				4455471B2A8D5677001BCCC8 /* CoreDataManager.m in Sources */,
-				445547142A8D53ED001BCCC8 /* PlaceMO+CoreDataClass.m in Sources */,
 				4453F44F2A6D26150066FAEA /* SceneDelegate.m in Sources */,
-				44977CCF2A73F663006E1034 /* TablePlacesViewController.m in Sources */,
 				44965E412A8BE8D90023146C /* AddNewPlaceTableViewController.m in Sources */,
 				445547072A8CF3F9001BCCC8 /* TextFieldTableViewCell.m in Sources */,
 			);
