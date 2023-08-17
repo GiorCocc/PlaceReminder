@@ -98,7 +98,13 @@
         self.placeName = placeName;
         self.placeAddress = placeAddress;
         self.placeNotes = notes;
-        self.placeInsertTime = [NSDate date];
+        NSDate *currentDate = [NSDate date];
+        NSTimeZone *timeZone = [NSTimeZone localTimeZone];
+        NSInteger timeZoneOffset = [timeZone secondsFromGMTForDate:currentDate];
+
+        NSDate *localDate = [currentDate dateByAddingTimeInterval:timeZoneOffset];
+        self.placeInsertTime = localDate;
+        
         
         
         
