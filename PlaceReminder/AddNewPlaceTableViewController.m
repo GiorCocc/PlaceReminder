@@ -15,7 +15,6 @@
 //
 // TODO: altre informazioni e sezioni da inserire:
 // - Immagini (per visualizzare foto relative al posto segnato)
-// TODO: implementare la lettura dello switch
 // TODO: implementare l'espansione della cella delle note
 // TODO: implementare la cella con la mappa in cima alla tabella come prima sezione
 
@@ -35,6 +34,8 @@
 @property (nonatomic, strong) NSString *placeName;
 @property (nonatomic, strong) NSString *placeAddress;
 @property (nonatomic, strong) NSString *placeNotes;
+@property (nonatomic, assign) BOOL placeRemember;
+@property (nonatomic, strong) NSDate *placeInsertTime;
 
 @end
 
@@ -70,6 +71,14 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+// preleva lo stato dello switch
+- (void)switchChanged:(UISwitch *)sender {
+    NSLog(@"Switch changed %d", sender.isOn);
+    
+    self.placeRemember = sender.isOn;
+}
+
+
 - (void)doneButtonTapped {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Conferma"
                                                                    message:@"Vuoi confermare?"
@@ -81,12 +90,16 @@
         // preleva i dati dai text field
         TextFieldTableViewCell *nameCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
         TextFieldTableViewCell *addressCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+        TextFieldTableViewCell *notesCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:3]];
         NSString *placeName = nameCell.textField.text;
         NSString *placeAddress = addressCell.textField.text;
-        // TODO: recuperare ancora le note e lo switch
+        NSString *notes = notesCell.textField.text;
         
         self.placeName = placeName;
         self.placeAddress = placeAddress;
+        self.placeNotes = notes;
+        self.placeInsertTime = [NSDate date];
+        
         
         
         
@@ -96,8 +109,21 @@
             
             newPlace.name = self.placeName;
             newPlace.address = self.placeAddress;
+            newPlace.notes = self.placeNotes;
+            newPlace.remember = self.placeRemember;
+            newPlace.insert_time = self.placeInsertTime;
             
-            NSLog(@"Place: name: %@, address: %@\n", newPlace.name, newPlace.address);
+            
+            
+            NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@\n",
+                  newPlace.name,
+                  newPlace.address,
+                  newPlace.notes,
+                  newPlace.remember,
+                  newPlace.insert_time);
+            
+            
+            
             
             
             NSError *error = nil;
@@ -105,7 +131,12 @@
                 NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
             } else {
                 NSLog(@"Dati salvati con successo!\n");
+                
+                // Avvisa il delegate dell'aggiunta di un nuovo posto
+                [self.delegate didAddNewPlace:newPlace];
+                
                 [self.navigationController popViewControllerAnimated:YES];
+                
             }
         } else {
             NSLog(@"Errore: contesto di gestion del database non trovato!\n");
@@ -207,6 +238,11 @@
         
         UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
         cell.accessoryView = switchView;
+        
+        // setta lo stato dello switch
+        [switchView setOn:self.placeRemember animated:NO];
+        [switchView addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+
         
         
         return cell;

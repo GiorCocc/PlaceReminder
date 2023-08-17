@@ -6,10 +6,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PlaceMO+CoreDataProperties.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+// delegate responsible for communicating with the HomePageViewController
+@protocol AddNewPlaceDelegate <NSObject>
+
+- (void)didAddNewPlace: (PlaceMO *)place;
+
+@end
+
+
 @interface AddNewPlaceTableViewController : UITableViewController
+
+@property (nonatomic, weak) id<AddNewPlaceDelegate> delegate;
 
 @end
 
