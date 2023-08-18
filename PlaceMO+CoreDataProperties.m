@@ -2,7 +2,7 @@
 //  PlaceMO+CoreDataProperties.m
 //  PlaceReminder
 //
-//  Created by Giorgio Coccapani on 17/08/23.
+//  Created by Giorgio Coccapani on 18/08/23.
 //
 //
 
@@ -19,5 +19,7 @@
 @dynamic notes;
 @dynamic remember;
 @dynamic insert_time;
+@dynamic latitude;
+@dynamic longitude;
 
 @end

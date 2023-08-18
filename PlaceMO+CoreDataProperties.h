@@ -2,7 +2,7 @@
 //  PlaceMO+CoreDataProperties.h
 //  PlaceReminder
 //
-//  Created by Giorgio Coccapani on 17/08/23.
+//  Created by Giorgio Coccapani on 18/08/23.
 //
 //
 
@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSString *notes;
 @property (nonatomic) BOOL remember;
 @property (nullable, nonatomic, copy) NSDate *insert_time;
+@property (nonatomic) double latitude;
+@property (nonatomic) double longitude;
 
 @end
 

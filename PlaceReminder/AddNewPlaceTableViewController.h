@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 #import "PlaceMO+CoreDataProperties.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -19,10 +20,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface AddNewPlaceTableViewController : UITableViewController
+@interface AddNewPlaceTableViewController : UITableViewController <CLLocationManagerDelegate>
 
 @property (nonatomic, weak) id<AddNewPlaceDelegate> delegate;
 @property (nonatomic, strong) PlaceMO *placeToEdit;
+@property (nonatomic, strong) CLLocationManager *locationManager;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

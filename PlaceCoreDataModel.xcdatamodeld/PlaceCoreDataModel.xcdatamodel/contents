@@ -7,6 +7,8 @@
     <entity name="Place" representedClassName="PlaceMO" syncable="YES" codeGenerationType="class">
         <attribute name="address" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="insert_time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="notes" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="remember" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" spotlightIndexingEnabled="YES"/>

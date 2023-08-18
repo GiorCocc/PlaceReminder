@@ -4,26 +4,27 @@
 //
 //  Created by Giorgio Coccapani on 15/08/23.
 //
-// In questa schermata viene aggiunto un nuovo elemento alla lista dei luoghi preferiti.
-// La schermata è composta da una TableView che comprende 1 sezioni e ogni cella è un elemento statico
-// Le sezioni e le informazioni in esse contenute sono:
-// - Informazioni sul posto:
-//  - Nome del posto        (text field)
-//  - Indirizzo del posto   (text field)
-// - Promemoria             (switch)
-// - Note                   (text field)
+//  In questa schermata viene aggiunto un nuovo elemento alla lista dei luoghi preferiti.
+//  La schermata è composta da una TableView che comprende 1 sezioni e ogni cella è un elemento statico
+//  Le sezioni e le informazioni in esse contenute sono:
+//  - Informazioni sul posto:
+//      - Nome del posto        (text field)
+//      - Indirizzo del posto   (text field)
+//  - Promemoria                (switch)
+//  - Note                      (text field)
 //
-// TODO: altre informazioni e sezioni da inserire:
-// - Immagini (per visualizzare foto relative al posto segnato)
-// - Note audio (per registrare note audio)
-// TODO: implementare l'espansione della cella delle note
-// TODO: implementare la cella con la mappa in cima alla tabella come prima sezione
-// TODO: trasformare le informazioni dell'inidirizzo in coordinate per visualizzare il pin sulla mappa
+//  TODO: altre informazioni e sezioni da inserire:
+//      - Immagini (per visualizzare foto relative al posto segnato)
+//  - Note audio (per registrare note audio)
+//  TODO: implementare l'espansione della cella delle note
+//  TODO: implementare la cella con la mappa in cima alla tabella come prima sezione
+//  TODO: trasformare le informazioni dell'inidirizzo in coordinate per visualizzare il pin sulla mappa
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"
 #import "CoreDataManager.h"
 #import "PlaceMO+CoreDataClass.h"
+
 
 
 
@@ -38,6 +39,8 @@
 @property (nonatomic, strong) NSString *placeNotes;
 @property (nonatomic, assign) BOOL placeRemember;
 @property (nonatomic, strong) NSDate *placeInsertTime;
+@property (nonatomic) double placeLatitude;
+@property (nonatomic) double placeLongitude;
 
 @end
 
@@ -69,6 +72,14 @@
                                                                   target:self
                                                                   action:@selector(doneButtonTapped)];
     self.navigationItem.rightBarButtonItem = doneButton;
+    
+    // location
+    // Alloca ed inizializza il CLLocationManager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+        
+    // Richiedi l'autorizzazione all'accesso alla posizione
+    [self.locationManager requestWhenInUseAuthorization];
     
     
     // Uncomment the following line to preserve selection between presentations.
@@ -112,81 +123,117 @@
         NSDate *localDate = [currentDate dateByAddingTimeInterval:timeZoneOffset];
         self.placeInsertTime = localDate;
         
-        
-        
-        NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
-        
-        if (context) {
-            if (self.placeToEdit) {
-                // modifica un posto esistente
-                self.placeToEdit.name = self.placeName;
-                self.placeToEdit.address = self.placeAddress;
-                self.placeToEdit.notes = self.placeNotes;
-                self.placeToEdit.remember = self.placeRemember;
-                self.placeToEdit.insert_time = self.placeInsertTime;
-                
-                NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@\n",
-                      self.placeToEdit.name,
-                      self.placeToEdit.address,
-                      self.placeToEdit.notes,
-                      self.placeToEdit.remember,
-                      self.placeToEdit.insert_time);
-                
-                NSError *error = nil;
-                if (![context save:&error]) {
-                    NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
-                } else {
-                    NSLog(@"Dati salvati con successo!\n");
-                    
-                    // Avvisa il delegate dell'aggiunta di un nuovo posto
-                    [self.delegate didEditPlace:self.placeToEdit];
-                    
-                    [self.navigationController popViewControllerAnimated:YES];
-                    
-                }
-                
+        // location
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+        [geocoder geocodeAddressString:self.placeAddress completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Errore nella geocodifica: %@", error.localizedDescription);
                 return;
-            
-            } else {
-                PlaceMO *newPlace = [NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
-                
-                newPlace.name = self.placeName;
-                newPlace.address = self.placeAddress;
-                newPlace.notes = self.placeNotes;
-                newPlace.remember = self.placeRemember;
-                newPlace.insert_time = self.placeInsertTime;
-                
-                
-                
-                NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@\n",
-                      newPlace.name,
-                      newPlace.address,
-                      newPlace.notes,
-                      newPlace.remember,
-                      newPlace.insert_time);
-                
-                
-                
-                
-                
-                NSError *error = nil;
-                if (![context save:&error]) {
-                    NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
-                } else {
-                    NSLog(@"Dati salvati con successo!\n");
-                    
-                    // Avvisa il delegate dell'aggiunta di un nuovo posto
-                    [self.delegate didAddNewPlace:newPlace];
-                    
-                    [self.navigationController popViewControllerAnimated:YES];
-                    
-                }
             }
-        } else {
-            NSLog(@"Errore: contesto di gestione del database non trovato!\n");
-        }
-        
-        
+            
+            if (placemarks && placemarks.count > 0) {
+                CLPlacemark *placemark = placemarks.firstObject;
+                CLLocation *location = placemark.location;
+                
+                double latitude = location.coordinate.latitude;
+                double longitude = location.coordinate.longitude;
+                
+                // Ora hai le coordinate (latitude e longitude) da utilizzare
+                // NSLog(@"Coordinate: %f, %f", latitude, longitude);
+                
+                // Ora puoi inserire le coordinate nel tuo oggetto PlaceMO e salvarlo nel database
+                self.placeLatitude = latitude;
+                self.placeLongitude = longitude;
+            }
+            
+            NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+            
+            if (context) {
+                if (self.placeToEdit) {
+                    // modifica un posto esistente
+                    self.placeToEdit.name = self.placeName;
+                    self.placeToEdit.address = self.placeAddress;
+                    self.placeToEdit.notes = self.placeNotes;
+                    self.placeToEdit.remember = self.placeRemember;
+                    self.placeToEdit.insert_time = self.placeInsertTime;
+                    self.placeToEdit.latitude = self.placeLatitude;
+                    self.placeToEdit.longitude = self.placeLongitude;
+                    
+                    
+                    
+                    NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
+                          self.placeToEdit.name,
+                          self.placeToEdit.address,
+                          self.placeToEdit.notes,
+                          self.placeToEdit.remember,
+                          self.placeToEdit.insert_time,
+                          self.placeToEdit.latitude,
+                          self.placeToEdit.longitude);
+                    
+                    
+                    NSError *error = nil;
+                    if (![context save:&error]) {
+                        NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
+                    } else {
+                        NSLog(@"Dati salvati con successo!\n");
+                        
+                        // Avvisa il delegate dell'aggiunta di un nuovo posto
+                        [self.delegate didEditPlace:self.placeToEdit];
+                        
+                        [self.navigationController popViewControllerAnimated:YES];
+                        
+                    }
+                    
+                    return;
+                
+                } else {
+                    PlaceMO *newPlace = [NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
+                    
+                    newPlace.name = self.placeName;
+                    newPlace.address = self.placeAddress;
+                    newPlace.notes = self.placeNotes;
+                    newPlace.remember = self.placeRemember;
+                    newPlace.insert_time = self.placeInsertTime;
+                    newPlace.latitude = self.placeLatitude;
+                    newPlace.longitude = self.placeLongitude;
+                    
+                    
+                    
+                    
+                    
+                    NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
+                          newPlace.name,
+                          newPlace.address,
+                          newPlace.notes,
+                          newPlace.remember,
+                          newPlace.insert_time,
+                          newPlace.latitude,
+                          newPlace.longitude);
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    NSError *error = nil;
+                    if (![context save:&error]) {
+                        NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
+                    } else {
+                        NSLog(@"Dati salvati con successo!\n");
+                        
+                        // Avvisa il delegate dell'aggiunta di un nuovo posto
+                        [self.delegate didAddNewPlace:newPlace];
+                        
+                        [self.navigationController popViewControllerAnimated:YES];
+                        
+                    }
+                }
+            } else {
+                NSLog(@"Errore: contesto di gestione del database non trovato!\n");
+            }
+        }];
     }];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Annulla"

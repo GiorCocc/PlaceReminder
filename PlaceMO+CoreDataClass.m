@@ -2,7 +2,7 @@
 //  PlaceMO+CoreDataClass.m
 //  PlaceReminder
 //
-//  Created by Giorgio Coccapani on 16/08/23.
+//  Created by Giorgio Coccapani on 18/08/23.
 //
 //
 
