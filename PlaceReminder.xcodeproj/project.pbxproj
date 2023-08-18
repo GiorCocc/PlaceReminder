@@ -23,6 +23,7 @@
 		445547232A8E996C001BCCC8 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547222A8E996C001BCCC8 /* HomePageViewController.m */; };
 		445547372A8FF632001BCCC8 /* PlaceMO+CoreDataClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547352A8FF632001BCCC8 /* PlaceMO+CoreDataClass.m */; };
 		445547382A8FF632001BCCC8 /* PlaceMO+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 445547362A8FF632001BCCC8 /* PlaceMO+CoreDataProperties.m */; };
+		4455473B2A900022001BCCC8 /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4455473A2A900022001BCCC8 /* MapAnnotation.m */; };
 		44965E412A8BE8D90023146C /* AddNewPlaceTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44965E402A8BE8D90023146C /* AddNewPlaceTableViewController.m */; };
 		44977CD22A74040A006E1034 /* PlaceDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD12A74040A006E1034 /* PlaceDetailsViewController.m */; };
 		44977CD82A741220006E1034 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44977CD72A741220006E1034 /* MapViewController.m */; };
@@ -57,6 +58,8 @@
 		445547342A8FF632001BCCC8 /* PlaceMO+CoreDataClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlaceMO+CoreDataClass.h"; sourceTree = SOURCE_ROOT; };
 		445547352A8FF632001BCCC8 /* PlaceMO+CoreDataClass.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaceMO+CoreDataClass.m"; sourceTree = SOURCE_ROOT; };
 		445547362A8FF632001BCCC8 /* PlaceMO+CoreDataProperties.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "PlaceMO+CoreDataProperties.m"; sourceTree = SOURCE_ROOT; };
+		445547392A900022001BCCC8 /* MapAnnotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
+		4455473A2A900022001BCCC8 /* MapAnnotation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
 		44965E3F2A8BE8D90023146C /* AddNewPlaceTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AddNewPlaceTableViewController.h; path = PlaceReminder/AddNewPlaceTableViewController.h; sourceTree = SOURCE_ROOT; };
 		44965E402A8BE8D90023146C /* AddNewPlaceTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AddNewPlaceTableViewController.m; path = PlaceReminder/AddNewPlaceTableViewController.m; sourceTree = SOURCE_ROOT; };
 		44977CD02A74040A006E1034 /* PlaceDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlaceDetailsViewController.h; sourceTree = "<group>"; };
@@ -141,6 +144,8 @@
 				4453F4512A6D26150066FAEA /* ViewController.m */,
 				445547212A8E996C001BCCC8 /* HomePageViewController.h */,
 				445547222A8E996C001BCCC8 /* HomePageViewController.m */,
+				445547392A900022001BCCC8 /* MapAnnotation.h */,
+				4455473A2A900022001BCCC8 /* MapAnnotation.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -267,6 +272,7 @@
 				4453F44F2A6D26150066FAEA /* SceneDelegate.m in Sources */,
 				44965E412A8BE8D90023146C /* AddNewPlaceTableViewController.m in Sources */,
 				445547072A8CF3F9001BCCC8 /* TextFieldTableViewCell.m in Sources */,
+				4455473B2A900022001BCCC8 /* MapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

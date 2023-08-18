@@ -10,16 +10,24 @@
 
 #import "MapViewController.h"
 #import <CoreLocation/CoreLocation.h>
+#import "CoreDataManager.h"
 #import <MapKit/MapKit.h>
+#import "PlaceMO+CoreDataProperties.h"
+#import "PlaceDetailsViewController.h"
+#import "MapAnnotation.h"
+
+
 
 
 
 @interface MapViewController () <CLLocationManagerDelegate>
 
-
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) NSMutableArray *places;
 
 @end
+
+
 
 @implementation MapViewController
 
@@ -30,6 +38,18 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    // preleva i luoghi dal database
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
+    NSError *error = nil;
+    
+    self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    if (error) {
+        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+    }
+    
+    // Set the map view delegate
     self.mapView.delegate = self;
     
     // Create a location manager and set ourselves as the delegate
@@ -39,14 +59,24 @@
     
     // Add annotation to the map
     // TODO: sostituire con la lista delle annotazioni salvate in locale e salvate in un file json
-    MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-    annotation.coordinate = CLLocationCoordinate2DMake(45.464664, 9.188540);    // Milan
-    annotation.title = @"Milan";
-    annotation.subtitle = @"Italy";
-    [self.mapView addAnnotation:annotation];
+    for (PlaceMO *place in self.places) {
+        // NSLog(@"Place: %@", place.name);
+        
+        MapAnnotation *annotation = [[MapAnnotation alloc] init];
+        // layout della annotatio
+        
+        annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+        annotation.place = place;
+        annotation.title = place.name;
+        annotation.subtitle = place.address;
+        
+        
+        [self.mapView addAnnotation:annotation];
+    }
     
 }
 
+#pragma mark Location
 
 -(void) locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
     if (manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse || manager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways) {
@@ -57,33 +87,31 @@
     }
 }
 
+#pragma mark Map
 
--(MKAnnotationView *) mapView:(MKMapView *)mapView
-            viewForAnnotation:(nonnull id<MKAnnotation>)annotation {
-    
-    // check if the annotation is the user location
-    if([annotation isKindOfClass:[MKUserLocation class]]) {
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
         return nil;
     }
     
-    // check if the annotation is a custom annotation
-    if([annotation isKindOfClass:[MKPointAnnotation class]]) {
+    if ([annotation isKindOfClass:[MapAnnotation class]]) {
         static NSString *annotationIdentifier = @"annotationIdentifier";
         
         MKMarkerAnnotationView *pinView = (MKMarkerAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
         
-        if(!pinView) {
-            
-            pinView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation
-                                                         reuseIdentifier:annotationIdentifier];
+        if (!pinView) {
+            pinView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
             pinView.canShowCallout = YES;
             
-            // Add a button to the annotation callout
             UIButton *detailButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-            [detailButton addTarget:self action:@selector(annotationCalloutTapped:) forControlEvents:UIControlEventTouchUpInside];
             pinView.rightCalloutAccessoryView = detailButton;
             
-        
+            // Creazione di una vista personalizzata per il callout
+            UIView *calloutView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 70)];
+            calloutView.backgroundColor = [UIColor whiteColor];
+            
+            
+            pinView.detailCalloutAccessoryView = calloutView;
         } else {
             pinView.annotation = annotation;
         }
@@ -95,20 +123,36 @@
 }
 
 
-- (void) annotationCalloutTapped:(id<MKAnnotation>)annotation {
-    // TODO: sostituire il log con l'accesso alle informazioni sul pin corrispondete all'annotation
-    
-    NSLog(@"Annotation callout tapped");
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    if ([view.annotation isKindOfClass:[MapAnnotation class]]) {
+        MapAnnotation *customAnnotation = (MapAnnotation *)view.annotation;
+        PlaceMO *selectedPlace = customAnnotation.place;
+        
+        // Esegui il segue verso la schermata dei dettagli, passando l'oggetto PlaceMO
+        [self performSegueWithIdentifier:@"ShowDetailSegue" sender:selectedPlace];
+    }
 }
 
-/*
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    
+    if ([segue.identifier isEqualToString:@"ShowDetailSegue"]) {
+        if ([segue.destinationViewController isKindOfClass:[PlaceDetailsViewController class]]) {
+            PlaceDetailsViewController *detailVC = (PlaceDetailsViewController *)segue.destinationViewController;
+            
+            // Passa il PlaceMO selezionato alla schermata dei dettagli
+            detailVC.selectedPlaceMO = sender;
+            
+        }
+    }
 }
-*/
+
 
 @end

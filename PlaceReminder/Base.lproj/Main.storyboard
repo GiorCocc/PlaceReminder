@@ -352,7 +352,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="Map" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="opH-uy-VXt"/>
                     <connections>
-                        <outlet property="mapView" destination="3Q6-YQ-KmB" id="zdE-km-Qfo"/>
+                        <outlet property="mapView" destination="3Q6-YQ-KmB" id="Fz4-cs-T6U"/>
+                        <segue destination="zif-rT-DkN" kind="show" identifier="ShowDetailSegue" id="qhE-0K-a7j"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UcV-u2-S54" sceneMemberID="firstResponder"/>
@@ -444,6 +445,9 @@
             <point key="canvasLocation" x="2604" y="-2"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="qhE-0K-a7j"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" name="AccentColor"/>
     <resources>
         <image name="add" width="128" height="128"/>

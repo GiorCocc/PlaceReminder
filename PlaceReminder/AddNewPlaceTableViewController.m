@@ -135,15 +135,8 @@
                 CLPlacemark *placemark = placemarks.firstObject;
                 CLLocation *location = placemark.location;
                 
-                double latitude = location.coordinate.latitude;
-                double longitude = location.coordinate.longitude;
-                
-                // Ora hai le coordinate (latitude e longitude) da utilizzare
-                // NSLog(@"Coordinate: %f, %f", latitude, longitude);
-                
-                // Ora puoi inserire le coordinate nel tuo oggetto PlaceMO e salvarlo nel database
-                self.placeLatitude = latitude;
-                self.placeLongitude = longitude;
+                self.placeLatitude = location.coordinate.latitude;
+                self.placeLongitude = location.coordinate.longitude;
             }
             
             NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
