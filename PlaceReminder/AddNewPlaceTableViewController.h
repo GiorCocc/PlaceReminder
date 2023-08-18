@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 // delegate responsible for communicating with the HomePageViewController
 @protocol AddNewPlaceDelegate <NSObject>
 
-- (void)didAddNewPlace: (PlaceMO *)place;
+- (void) didAddNewPlace: (PlaceMO *)place;
 
 @end
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AddNewPlaceTableViewController : UITableViewController
 
 @property (nonatomic, weak) id<AddNewPlaceDelegate> delegate;
-
+@property (nonatomic, strong) PlaceMO *placeToEdit;
 @end
 
 NS_ASSUME_NONNULL_END

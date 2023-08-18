@@ -4,11 +4,27 @@
 //
 //  Created by Giorgio Coccapani on 28/07/23.
 //
+//  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
+//  TODO: aggiungere la mappa
+//  TODO: aggiungere la possibilità di modificare i dati del posto
+//  TODO: aggiungere la possibilità di cancellare il posto
+//  TODO: aggiungere la possibilità di aprire il posto in Maps
+//  TODO: aggiungere la possibilità di impostare un promemoria per il posto
 
 #import "PlaceDetailsViewController.h"
 #import "CoreDataManager.h"
+#import "AddNewPlaceTableViewController.h"
 
 @interface PlaceDetailsViewController ()
+
+@property (weak, nonatomic) IBOutlet UITableViewCell *mapCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *nameCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *addressCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *insertTimeCell;
+@property (weak, nonatomic) IBOutlet UISwitch *switchReminder;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editBarButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *removeBarButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *openInMapBarButton;
 
 @end
 
@@ -26,11 +42,164 @@
     
     
     
+    
+    
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (IBAction)removePlaceButtonPressed:(id)sender {
+    NSLog(@"Remove place button pressed");
+    
+    // crea un alert per chiedere conferma
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Remove"
+                                                                   message:@"Sei sicuro di voler rimuovere questo posto?"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Rimuovi"
+                                                            style:UIAlertActionStyleDestructive
+                                                          handler:^(UIAlertAction *action) {
+        // rimuovi il posto dal database
+        NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+        [context deleteObject:self.selectedPlaceMO];
+        
+        NSError *error = nil;
+        [context save:&error];
+            
+        if (error) {
+            NSLog(@"Errore nel salvataggio del contesto: %@", error);
+        }
+        
+        [self.delegate didRemovePlace:self.selectedPlaceMO];
+                                                              
+        // torna indietro
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Annulla"
+                                                           style:UIAlertActionStyleCancel handler:nil];
+    
+    [alert addAction:confirmAction];
+    [alert addAction:cancelAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+
+    
+    // rimuovi il posto dal database
+    // [[CoreDataManager sharedManager] removePlace:self.selectedPlaceMO];
+    
+    // torna indietro
+    // [self.navigationController popViewControllerAnimated:YES];
+}
+- (IBAction)editPlace:(id)sender {
+    NSLog(@"Edit place button pressed");
+    
+    // crea il controller per la modifica
+    AddNewPlaceTableViewController *editPlaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AddNewPlaceTableViewController"];
+    
+    // passa il posto da modificare
+    editPlaceVC.placeToEdit = self.selectedPlaceMO;
+    
+    // mostra il controller
+    [self.navigationController pushViewController:editPlaceVC animated:YES];
+
+}
+
+- (IBAction)openInMap:(id)sender {
+    NSLog(@"Open in map button pressed");
+    
+    // TODO: apri il posto in Maps
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Open in Maps"
+                                                                   message:@"Apri il posto in Maps? L'opzione sarà disponibile nella prossima versione."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Annulla" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:confirmAction];
+    [alert addAction:cancelAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+        
+    
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    
+    if (indexPath.section == 0) {
+        // mappa
+        return cell;
+        
+    } else if (indexPath.section == 1) {
+        if (indexPath.row == 0) {
+            cell.detailTextLabel.text = self.selectedPlaceMO.name;
+        } else if (indexPath.row == 1) {
+            cell.detailTextLabel.text = self.selectedPlaceMO.address;
+        } else if (indexPath.row == 2) {
+            NSString *insertTime = [NSDateFormatter localizedStringFromDate:self.selectedPlaceMO.insert_time
+                                                                  dateStyle:NSDateFormatterMediumStyle
+                                                                  timeStyle:NSDateFormatterShortStyle];
+            
+            cell.detailTextLabel.text = insertTime;
+        }
+        
+        return cell;
+    } else if (indexPath.section == 2) {
+        // promemoria
+        // imposta lo switch in base al valore del reminder
+        if (self.selectedPlaceMO.remember) {
+            [self.switchReminder setOn:YES];
+        } else {
+            [self.switchReminder setOn:NO];
+        }
+        
+        
+        return cell;
+    } else if (indexPath.section == 3) {
+        // note
+        if (self.selectedPlaceMO.notes == nil || [self.selectedPlaceMO.notes isEqualToString:@""]) {
+            cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+            
+            
+            cell.detailTextLabel.text = @"Nessuna nota";
+        } else {
+            cell.detailTextLabel.text = self.selectedPlaceMO.notes;
+        }
+        
+        
+        
+        return cell;
+    }
+    
+    
+    
+    
+    return nil;
+}
+
+// update the place reminder flag when the switch is toggled
+- (IBAction)updatePlaceReminder:(id)sender {
+    NSLog(@"Update place reminder");
+    
+    // aggiorna il posto con il nuovo valore del reminder
+    self.selectedPlaceMO.remember = self.switchReminder.isOn;
+    
+    // salva il contesto
+    NSError *error = nil;
+    [[CoreDataManager sharedManager].managedObjectContext save:&error];
+    
+    if (error) {
+        NSLog(@"Errore nel salvataggio del contesto: %@", error);
+    }
+}
+
+// rimuove la selezione fissa della cella
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Table view data source
@@ -45,7 +214,7 @@
     if (section == 0)       // mappa
         return 1;           // cella con la mappa
     else if (section == 1)  // informazioni
-        return 2;           // nome e indirizzo
+        return 3;           // nome e indirizzo
     else if (section == 2)  // promemoria
         return 1;           // switch promemoria
     else if (section == 3)  // note

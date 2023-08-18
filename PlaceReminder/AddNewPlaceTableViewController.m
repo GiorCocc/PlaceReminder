@@ -56,7 +56,7 @@
     // set the title of the navigation bar
     self.navigationItem.title = @"Add new place";
     
-    // TODO: done button: display an alert view to confirm the new place
+    // set the left bar button item
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
                                                                    style:UIBarButtonItemStyleDone
                                                                   target:self

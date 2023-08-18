@@ -59,8 +59,20 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void) viewWillAppear:(BOOL)animated {
-    // Aggiorna la tabella per mostrare i luoghi aggiunti
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Esegui la query per ottenere i luoghi dal database
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
+    NSError *error = nil;
+    self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    if (error) {
+        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+    }
+    
+    // Aggiorna la tabella con i dati aggiornati
     [self.tableView reloadData];
 }
 
@@ -68,6 +80,13 @@
     // Aggiorna i dati (array places) e ricarica la tabella
     NSLog(@"didAddNewPlace chiamato dal delegate");
     [self.places addObject:newPlace];
+    [self.tableView reloadData];
+}
+
+- (void) didRemovePlace: (PlaceMO *) place {
+    // Aggiorna i dati (array places) e ricarica la tabella
+    NSLog(@"didRemovePlace chiamato dal delegate");
+    [self.places removeObject:place];
     [self.tableView reloadData];
 }
 
