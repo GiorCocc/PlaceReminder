@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol AddNewPlaceDelegate <NSObject>
 
 - (void) didAddNewPlace: (PlaceMO *)place;
+- (void) didEditPlace: (PlaceMO *) place;
 
 @end
 

@@ -9,7 +9,6 @@
 //  Cliccando su una cella si apre una nuova schermata che mostra i dettagli del luogo selezionato
 //  I luoghi sono presenti nel database e vanno recuperati da li
 //  In alto a destra è presente un bottone che permette di aggiungere un nuovo luogo e il pulsante per andare a vedere la mappa a tutto schermo
-//  TODO: implementare il passaggio alla schermata dei dettagli del luogo selezionato
 //  TODO: visualizzazione mappa
 
 #import "HomePageViewController.h"
@@ -83,6 +82,9 @@
     [self.tableView reloadData];
 }
 
+- (void)didEditPlace:(nonnull PlaceMO *)place {}
+
+
 - (void) didRemovePlace: (PlaceMO *) place {
     // Aggiorna i dati (array places) e ricarica la tabella
     NSLog(@"didRemovePlace chiamato dal delegate");
@@ -95,7 +97,7 @@
     addNewPlaceVC.delegate = self;
     // presenta il view controller come push
     [self.navigationController pushViewController:addNewPlaceVC animated:YES];
-
+    
 }
 
 
@@ -169,12 +171,12 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES]; // Deseleziona la cella
-        
+    
     // Ottieni il PlaceMO corrispondente all'indice selezionato
     PlaceMO *selectedPlace = self.places[indexPath.row];
     self.selectedPlaceMO = selectedPlace;
     
-        
+    
     // Passa l'oggetto PlaceMO a prepareForSegue
     [self performSegueWithIdentifier:@"ShowDetailsSegue" sender:selectedPlace];
 }
@@ -187,10 +189,9 @@
             
             // Passa il PlaceMO selezionato alla schermata dei dettagli
             detailVC.selectedPlaceMO = sender;
-        
+            
         }
     }
 }
-
 
 @end

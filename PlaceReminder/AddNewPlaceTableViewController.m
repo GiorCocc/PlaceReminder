@@ -15,8 +15,10 @@
 //
 // TODO: altre informazioni e sezioni da inserire:
 // - Immagini (per visualizzare foto relative al posto segnato)
+// - Note audio (per registrare note audio)
 // TODO: implementare l'espansione della cella delle note
 // TODO: implementare la cella con la mappa in cima alla tabella come prima sezione
+// TODO: trasformare le informazioni dell'inidirizzo in coordinate per visualizzare il pin sulla mappa
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"
@@ -54,7 +56,12 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"MapCell"];
 
     // set the title of the navigation bar
-    self.navigationItem.title = @"Add new place";
+    if (self.placeToEdit){
+        self.title = @"Edit: ";
+        self.navigationItem.title = [self.navigationItem.title stringByAppendingString:self.placeToEdit.name];
+    } else {
+        self.navigationItem.title = @"Add new place";
+    }
     
     // set the left bar button item
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done"
@@ -107,45 +114,76 @@
         
         
         
-        
-        
         NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+        
         if (context) {
-            PlaceMO *newPlace = [NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
+            if (self.placeToEdit) {
+                // modifica un posto esistente
+                self.placeToEdit.name = self.placeName;
+                self.placeToEdit.address = self.placeAddress;
+                self.placeToEdit.notes = self.placeNotes;
+                self.placeToEdit.remember = self.placeRemember;
+                self.placeToEdit.insert_time = self.placeInsertTime;
+                
+                NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@\n",
+                      self.placeToEdit.name,
+                      self.placeToEdit.address,
+                      self.placeToEdit.notes,
+                      self.placeToEdit.remember,
+                      self.placeToEdit.insert_time);
+                
+                NSError *error = nil;
+                if (![context save:&error]) {
+                    NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
+                } else {
+                    NSLog(@"Dati salvati con successo!\n");
+                    
+                    // Avvisa il delegate dell'aggiunta di un nuovo posto
+                    [self.delegate didEditPlace:self.placeToEdit];
+                    
+                    [self.navigationController popViewControllerAnimated:YES];
+                    
+                }
+                
+                return;
             
-            newPlace.name = self.placeName;
-            newPlace.address = self.placeAddress;
-            newPlace.notes = self.placeNotes;
-            newPlace.remember = self.placeRemember;
-            newPlace.insert_time = self.placeInsertTime;
-            
-            
-            
-            NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@\n",
-                  newPlace.name,
-                  newPlace.address,
-                  newPlace.notes,
-                  newPlace.remember,
-                  newPlace.insert_time);
-            
-            
-            
-            
-            
-            NSError *error = nil;
-            if (![context save:&error]) {
-                NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
             } else {
-                NSLog(@"Dati salvati con successo!\n");
+                PlaceMO *newPlace = [NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
                 
-                // Avvisa il delegate dell'aggiunta di un nuovo posto
-                [self.delegate didAddNewPlace:newPlace];
+                newPlace.name = self.placeName;
+                newPlace.address = self.placeAddress;
+                newPlace.notes = self.placeNotes;
+                newPlace.remember = self.placeRemember;
+                newPlace.insert_time = self.placeInsertTime;
                 
-                [self.navigationController popViewControllerAnimated:YES];
                 
+                
+                NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@\n",
+                      newPlace.name,
+                      newPlace.address,
+                      newPlace.notes,
+                      newPlace.remember,
+                      newPlace.insert_time);
+                
+                
+                
+                
+                
+                NSError *error = nil;
+                if (![context save:&error]) {
+                    NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
+                } else {
+                    NSLog(@"Dati salvati con successo!\n");
+                    
+                    // Avvisa il delegate dell'aggiunta di un nuovo posto
+                    [self.delegate didAddNewPlace:newPlace];
+                    
+                    [self.navigationController popViewControllerAnimated:YES];
+                    
+                }
             }
         } else {
-            NSLog(@"Errore: contesto di gestion del database non trovato!\n");
+            NSLog(@"Errore: contesto di gestione del database non trovato!\n");
         }
         
         
@@ -206,6 +244,11 @@
             }
             
             [cell configureWithTitle:@"Name" placeholder:@"Place name"];
+            
+            if (self.placeToEdit) {
+                cell.textField.text = self.placeToEdit.name;
+            }
+            
             cell.textField.tag = 0;
            
             return cell;
@@ -222,6 +265,9 @@
             }
             
             [cell configureWithTitle:@"Address" placeholder:@"Place address"];
+            if (self.placeToEdit) {
+                cell.textField.text = self.placeToEdit.address;
+            }
             cell.textField.tag = 1;
             cell.textField.textContentType = UITextContentTypeAddressCityAndState;
             
@@ -248,6 +294,10 @@
         cell.accessoryView = switchView;
         
         // setta lo stato dello switch
+        if (self.placeToEdit) {
+            self.placeRemember = self.placeToEdit.remember;
+        }
+        
         [switchView setOn:self.placeRemember animated:NO];
         [switchView addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
 
@@ -269,15 +319,15 @@
         }
         
         [cell configureWithTitle:@"Notes" placeholder:@"Place notes"];
+        
+        if (self.placeToEdit) {
+            cell.textField.text = self.placeToEdit.notes;
+        }
+        
+        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        
+        
         cell.textField.tag = 2;
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         return cell;

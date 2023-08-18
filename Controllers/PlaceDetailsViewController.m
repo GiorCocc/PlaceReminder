@@ -6,9 +6,8 @@
 //
 //  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
 //  TODO: aggiungere la mappa
-//  TODO: aggiungere la possibilità di modificare i dati del posto
-//  TODO: aggiungere la possibilità di cancellare il posto
 //  TODO: aggiungere la possibilità di aprire il posto in Maps
+//  TODO: aggiungere la possibilità di condividere il posto
 //  TODO: aggiungere la possibilità di impostare un promemoria per il posto
 
 #import "PlaceDetailsViewController.h"
@@ -25,6 +24,8 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *removeBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *openInMapBarButton;
+@property (weak, nonatomic) IBOutlet UITableViewCell *notesCell;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
 
 @end
 
@@ -45,12 +46,40 @@
     
     
     
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // aggiorna i dati nella schermata
+    [self updateUIWithData:self.selectedPlaceMO];
+}
+
+
+- (void)updateUIWithData:(PlaceMO *)place {
+    // aggiorna i dati nella schermata
+    self.nameCell.detailTextLabel.text = place.name;
+    self.addressCell.detailTextLabel.text = place.address;
+    self.insertTimeCell.detailTextLabel.text = [place.insert_time description];
+    self.switchReminder.on = place.remember;
+    self.notesCell.detailTextLabel.text = place.notes;
+}
+
+- (void) didEditPlace:(PlaceMO *)editedPlace {
+    // Aggiorna l'oggetto PlaceMO visualizzato e i dati nella schermata
+    NSLog(@"Edited place: %@", editedPlace);
+    self.selectedPlaceMO = editedPlace;
+    [self updateUIWithData:editedPlace];
+}
+
+- (void) didAddNewPlace:(nonnull PlaceMO *)place {}
+
 
 - (IBAction)removePlaceButtonPressed:(id)sender {
     NSLog(@"Remove place button pressed");
@@ -68,13 +97,13 @@
         
         NSError *error = nil;
         [context save:&error];
-            
+        
         if (error) {
             NSLog(@"Errore nel salvataggio del contesto: %@", error);
         }
         
         [self.delegate didRemovePlace:self.selectedPlaceMO];
-                                                              
+        
         // torna indietro
         [self.navigationController popViewControllerAnimated:YES];
     }];
@@ -86,7 +115,7 @@
     [alert addAction:cancelAction];
     
     [self presentViewController:alert animated:YES completion:nil];
-
+    
     
     // rimuovi il posto dal database
     // [[CoreDataManager sharedManager] removePlace:self.selectedPlaceMO];
@@ -94,19 +123,7 @@
     // torna indietro
     // [self.navigationController popViewControllerAnimated:YES];
 }
-- (IBAction)editPlace:(id)sender {
-    NSLog(@"Edit place button pressed");
-    
-    // crea il controller per la modifica
-    AddNewPlaceTableViewController *editPlaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AddNewPlaceTableViewController"];
-    
-    // passa il posto da modificare
-    editPlaceVC.placeToEdit = self.selectedPlaceMO;
-    
-    // mostra il controller
-    [self.navigationController pushViewController:editPlaceVC animated:YES];
 
-}
 
 - (IBAction)openInMap:(id)sender {
     NSLog(@"Open in map button pressed");
@@ -122,7 +139,7 @@
     [alert addAction:cancelAction];
     
     [self presentViewController:alert animated:YES completion:nil];
-        
+    
     
 }
 
@@ -224,57 +241,78 @@
 }
 
 /*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
-}
-*/
+ - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+ UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+ 
+ // Configure the cell...
+ 
+ return cell;
+ }
+ */
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
-/*
+
 #pragma mark - Navigation
+
+- (IBAction)editPlace:(id)sender {
+    NSLog(@"Edit place button pressed");
+    
+    PlaceMO *place = self.selectedPlaceMO;
+    
+    [self performSegueWithIdentifier:@"EditSelectedPlaceSegue" sender:place];
+    
+}
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    
+    if ([segue.identifier isEqualToString:@"EditSelectedPlaceSegue"]) {
+        if ([segue.destinationViewController isKindOfClass:[AddNewPlaceTableViewController class]]) {
+            AddNewPlaceTableViewController *detailVC = (AddNewPlaceTableViewController *)segue.destinationViewController;
+            
+            // Passa il PlaceMO selezionato alla schermata dei dettagli
+            detailVC.placeToEdit = sender;
+            
+        }
+    }
 }
-*/
+
+
+
 
 @end

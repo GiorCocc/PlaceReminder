@@ -7,19 +7,23 @@
 
 #import <UIKit/UIKit.h>
 #import "PlaceMO+CoreDataProperties.h"
+#import "AddNewPlaceTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol PlaceDetailsDelegate <NSObject>
 
-- (void) didRemovePlace: (PlaceMO *)place;
+- (void) didRemovePlace: (PlaceMO *) place;
+
 
 @end
 
-@interface PlaceDetailsViewController : UITableViewController
+@interface PlaceDetailsViewController : UITableViewController <AddNewPlaceDelegate>
 
 @property (nonatomic, strong) PlaceMO *selectedPlaceMO;
 @property (nonatomic, weak) id<PlaceDetailsDelegate> delegate;
+
+- (void) updateUIWithData: (PlaceMO *) place;
 
 @end
 

@@ -172,7 +172,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Notes" id="WGn-P1-HqD">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Kcm-jK-BXL" detailTextLabel="XM1-gy-MuO" style="IBUITableViewCellStyleValue2" id="DZw-3c-u1f">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NotesCell" textLabel="Kcm-jK-BXL" detailTextLabel="XM1-gy-MuO" style="IBUITableViewCellStyleValue2" id="DZw-3c-u1f">
                                         <rect key="frame" x="20" y="636.00000381469727" width="353" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DZw-3c-u1f" id="88n-GA-bC2">
@@ -208,6 +208,7 @@
                         <centerItemGroups>
                             <barButtonItemGroup customizationDisposition="fixed" id="fIj-38-GCS">
                                 <barButtonItems>
+                                    <barButtonItem title="Share" image="square.and.arrow.up" catalog="system" id="tCi-yn-2i5"/>
                                     <barButtonItem title="Remove" image="trash" catalog="system" id="gso-60-uuH">
                                         <color key="tintColor" systemColor="systemRedColor"/>
                                         <connections>
@@ -225,7 +226,6 @@
                         <barButtonItem key="rightBarButtonItem" title="Edit" id="6LM-If-39Z">
                             <connections>
                                 <action selector="editPlace:" destination="zif-rT-DkN" id="dkR-Zc-s1t"/>
-                                <segue destination="E2J-f7-6Zy" kind="show" id="CNh-BO-RMj"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -235,9 +235,12 @@
                         <outlet property="insertTimeCell" destination="HjX-zU-mpk" id="qdn-nd-TJi"/>
                         <outlet property="mapCell" destination="GoI-Ds-vwL" id="uDV-Na-GTA"/>
                         <outlet property="nameCell" destination="x9e-gu-Mf8" id="kVY-u1-iZ8"/>
+                        <outlet property="notesCell" destination="DZw-3c-u1f" id="QyI-ZQ-CRx"/>
                         <outlet property="openInMapBarButton" destination="Rtb-dJ-asI" id="EWa-t1-9uC"/>
                         <outlet property="removeBarButton" destination="gso-60-uuH" id="IE1-W5-Dto"/>
+                        <outlet property="shareButton" destination="tCi-yn-2i5" id="z5A-AI-5or"/>
                         <outlet property="switchReminder" destination="lc9-dH-sxn" id="0AX-CT-Ja0"/>
+                        <segue destination="E2J-f7-6Zy" kind="show" identifier="EditSelectedPlaceSegue" id="LEZ-ew-xMK"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sem-UZ-9V8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -447,6 +450,7 @@
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="mappin.and.ellipse" catalog="system" width="117" height="128"/>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
         <image name="trash" catalog="system" width="117" height="128"/>
         <namedColor name="AccentColor">
             <color red="0.0" green="0.7803921568627451" blue="0.74509803921568629" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
