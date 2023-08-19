@@ -245,6 +245,7 @@
                         <outlet property="editBarButton" destination="6LM-If-39Z" id="8D9-El-zKs"/>
                         <outlet property="insertTimeCell" destination="HjX-zU-mpk" id="qdn-nd-TJi"/>
                         <outlet property="mapCell" destination="GoI-Ds-vwL" id="uDV-Na-GTA"/>
+                        <outlet property="mapView" destination="mTS-0R-UFq" id="f87-V7-2cl"/>
                         <outlet property="nameCell" destination="x9e-gu-Mf8" id="kVY-u1-iZ8"/>
                         <outlet property="notesCell" destination="DZw-3c-u1f" id="QyI-ZQ-CRx"/>
                         <outlet property="openInMapBarButton" destination="Rtb-dJ-asI" id="EWa-t1-9uC"/>

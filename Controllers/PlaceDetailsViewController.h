@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 #import "PlaceMO+CoreDataProperties.h"
 #import "AddNewPlaceTableViewController.h"
 
@@ -22,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) PlaceMO *selectedPlaceMO;
 @property (nonatomic, weak) id<PlaceDetailsDelegate> delegate;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+
 
 - (void) updateUIWithData: (PlaceMO *) place;
 

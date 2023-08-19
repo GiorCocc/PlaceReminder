@@ -5,7 +5,6 @@
 //  Created by Giorgio Coccapani on 28/07/23.
 //
 //  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
-//  TODO: aggiungere la mappa
 //  TODO: aggiungere la possibilità di aprire il posto in Maps
 //  TODO: aggiungere la possibilità di impostare un promemoria per il posto
 
@@ -13,7 +12,7 @@
 #import "CoreDataManager.h"
 #import "AddNewPlaceTableViewController.h"
 
-@interface PlaceDetailsViewController ()
+@interface PlaceDetailsViewController () <CLLocationManagerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *mapCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *nameCell;
@@ -25,10 +24,13 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *openInMapBarButton;
 @property (weak, nonatomic) IBOutlet UITableViewCell *notesCell;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 
 @end
 
 @implementation PlaceDetailsViewController
+
+@synthesize mapView = _mapView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,6 +39,24 @@
     
     // titolo
     self.title = self.selectedPlaceMO.name;
+    
+    // map
+    self.mapView.delegate = self;
+    // Create a location manager and set ourselves as the delegate
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    [self.locationManager requestWhenInUseAuthorization];
+    
+    // annotazione sulla mappa
+    MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+    annotation.coordinate = CLLocationCoordinate2DMake(self.selectedPlaceMO.latitude, self.selectedPlaceMO.longitude);
+    [self.mapView addAnnotation:annotation];
+    // centra la mappa sulla posizione dell'annotazione
+    [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    // zoom sulla posizione dell'annotazione
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 500, 500);
+    [self.mapView setRegion:region animated:YES];
+    
     
     
     
@@ -60,14 +80,32 @@
     [self updateUIWithData:self.selectedPlaceMO];
 }
 
+#pragma mark Map
+
+- (void) updateMapViewWithPlace:(PlaceMO *)place {
+    // aggiorna la mappa con il posto selezionato
+    MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+    annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+    [self.mapView addAnnotation:annotation];
+    // centra la mappa sulla posizione dell'annotazione
+    [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    // zoom sulla posizione dell'annotazione
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 500, 500);
+    [self.mapView setRegion:region animated:YES];
+}
+
+
 
 - (void)updateUIWithData:(PlaceMO *)place {
     // aggiorna i dati nella schermata
+    self.title = place.name;
+    
     self.nameCell.detailTextLabel.text = place.name;
     self.addressCell.detailTextLabel.text = place.address;
     self.insertTimeCell.detailTextLabel.text = [place.insert_time description];
     self.switchReminder.on = place.remember;
     self.notesCell.detailTextLabel.text = place.notes;
+    [self updateMapViewWithPlace:place];
 }
 
 - (void) didEditPlace:(PlaceMO *)editedPlace {
@@ -75,6 +113,7 @@
     NSLog(@"Edited place: %@", editedPlace);
     self.selectedPlaceMO = editedPlace;
     [self updateUIWithData:editedPlace];
+    [self updateMapViewWithPlace:editedPlace];
 }
 
 - (void) didAddNewPlace:(nonnull PlaceMO *)place {}
