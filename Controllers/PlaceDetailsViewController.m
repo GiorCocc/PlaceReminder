@@ -169,12 +169,13 @@
 - (IBAction)openInMap:(id)sender {
     NSLog(@"Open in map button pressed");
     
-    // apri il posto in Maps
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(self.selectedPlaceMO.latitude, self.selectedPlaceMO.longitude);
-    MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate addressDictionary:nil];
-    MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
-    mapItem.name = self.selectedPlaceMO.name;
-    [mapItem openInMapsWithLaunchOptions:nil];
+    // apri il posto in Apple Maps usando l'indirizzo
+    NSString *address = self.selectedPlaceMO.address;
+    address = [address stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    address = [address stringByReplacingOccurrencesOfString:@"," withString:@""];
+    NSString *urlString = [NSString stringWithFormat:@"http://maps.apple.com/?q=%@", address];
+    NSURL *url = [NSURL URLWithString:urlString];
+    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
     
 }
 
@@ -182,7 +183,7 @@
     NSLog(@"Share place info button pressed");
     
     // open the share menu
-    NSString *textToShare = [NSString stringWithFormat:@"Ti condivido volentieri questo posto che ho trovato: %@, %@",
+    NSString *textToShare = [NSString stringWithFormat:@"Ti condivido volentieri questo posto che ho trovato:\n - Nome: %@\n - Indirizzo: %@",
                              self.selectedPlaceMO.name, self.selectedPlaceMO.address];
     NSArray *objectsToShare = @[textToShare];
     
@@ -208,6 +209,7 @@
             cell.detailTextLabel.text = self.selectedPlaceMO.name;
         } else if (indexPath.row == 1) {
             cell.detailTextLabel.text = self.selectedPlaceMO.address;
+            
         } else if (indexPath.row == 2) {
             NSString *insertTime = [NSDateFormatter localizedStringFromDate:self.selectedPlaceMO.insert_time
                                                                   dateStyle:NSDateFormatterMediumStyle
@@ -269,6 +271,14 @@
 // rimuove la selezione fissa della cella
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (indexPath.section == 1 && indexPath.row == 1){
+        // fai comparire il popup per la copia dell'inidirizzo
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = self.selectedPlaceMO.address;
+        
+        
+    }
 }
 
 #pragma mark - Table view data source
