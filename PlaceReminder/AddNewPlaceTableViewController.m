@@ -17,8 +17,6 @@
 //      - Immagini (per visualizzare foto relative al posto segnato)
 //  - Note audio (per registrare note audio)
 //  TODO: implementare l'espansione della cella delle note
-//  TODO: implementare la cella con la mappa in cima alla tabella come prima sezione
-//  TODO: trasformare le informazioni dell'inidirizzo in coordinate per visualizzare il pin sulla mappa
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"

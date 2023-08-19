@@ -5,7 +5,6 @@
 //  Created by Giorgio Coccapani on 28/07/23.
 //
 //  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
-//  TODO: aggiungere la possibilità di aprire il posto in Maps
 //  TODO: aggiungere la possibilità di impostare un promemoria per il posto
 
 #import "PlaceDetailsViewController.h"
@@ -170,18 +169,12 @@
 - (IBAction)openInMap:(id)sender {
     NSLog(@"Open in map button pressed");
     
-    // TODO: apri il posto in Maps
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Open in Maps"
-                                                                   message:@"Apri il posto in Maps? L'opzione sarà disponibile nella prossima versione."
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Annulla" style:UIAlertActionStyleCancel handler:nil];
-    [alert addAction:confirmAction];
-    [alert addAction:cancelAction];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-    
+    // apri il posto in Maps
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(self.selectedPlaceMO.latitude, self.selectedPlaceMO.longitude);
+    MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coordinate addressDictionary:nil];
+    MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemark];
+    mapItem.name = self.selectedPlaceMO.name;
+    [mapItem openInMapsWithLaunchOptions:nil];
     
 }
 
