@@ -127,6 +127,22 @@
         NSString *placeAddress = addressCell.textField.text;
         NSString *notes = notesCell.textField.text;
         
+        // controlla che i campi di nome e indirizzo non siano vuoti
+        if ([placeName isEqualToString:@""] || [placeAddress isEqualToString:@""]) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Errore"
+                                                                           message:@"Nome e indirizzo non possono essere vuoti"
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:nil];
+            
+            [alert addAction:confirmAction];
+            [self presentViewController:alert animated:YES completion:nil];
+            return;
+        }
+        
+        
         self.placeName = placeName;
         self.placeAddress = placeAddress;
         self.placeNotes = notes;
@@ -164,7 +180,7 @@
                         CLPlacemark *placemark = placemarks.firstObject;
                         NSString *address = [NSString stringWithFormat:@"%@ %@, %@, %@, %@, %@",
                                              placemark.thoroughfare,
-                                             placemark.subThoroughfare,
+                                             placemark.subThoroughfare ? placemark.subThoroughfare : @"",
                                              placemark.postalCode,
                                              placemark.locality,
                                              placemark.administrativeArea,
@@ -173,96 +189,95 @@
                         self.placeAddress = address;
                     }
                     
+                    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+                    
+                    if (context) {
+                        if (self.placeToEdit) {
+                            // modifica un posto esistente
+                            self.placeToEdit.name = self.placeName;
+                            self.placeToEdit.address = self.placeAddress;
+                            self.placeToEdit.notes = self.placeNotes;
+                            self.placeToEdit.remember = self.placeRemember;
+                            self.placeToEdit.insert_time = self.placeInsertTime;
+                            self.placeToEdit.latitude = self.placeLatitude;
+                            self.placeToEdit.longitude = self.placeLongitude;
+                            
+                            
+                            
+                            NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
+                                  self.placeToEdit.name,
+                                  self.placeToEdit.address,
+                                  self.placeToEdit.notes,
+                                  self.placeToEdit.remember,
+                                  self.placeToEdit.insert_time,
+                                  self.placeToEdit.latitude,
+                                  self.placeToEdit.longitude);
+                            
+                            
+                            NSError *error = nil;
+                            if (![context save:&error]) {
+                                NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
+                            } else {
+                                NSLog(@"Dati salvati con successo!\n");
+                                
+                                // Avvisa il delegate dell'aggiunta di un nuovo posto
+                                [self.delegate didEditPlace:self.placeToEdit];
+                                
+                                [self.navigationController popViewControllerAnimated:YES];
+                                
+                            }
+                            
+                            return;
+                        
+                        } else {
+                            PlaceMO *newPlace = [NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
+                            
+                            newPlace.name = self.placeName;
+                            newPlace.address = self.placeAddress;
+                            newPlace.notes = self.placeNotes;
+                            newPlace.remember = self.placeRemember;
+                            newPlace.insert_time = self.placeInsertTime;
+                            newPlace.latitude = self.placeLatitude;
+                            newPlace.longitude = self.placeLongitude;
+                            
+                            
+                            
+                            
+                            
+                            NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
+                                  newPlace.name,
+                                  newPlace.address,
+                                  newPlace.notes,
+                                  newPlace.remember,
+                                  newPlace.insert_time,
+                                  newPlace.latitude,
+                                  newPlace.longitude);
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            NSError *error = nil;
+                            if (![context save:&error]) {
+                                NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
+                            } else {
+                                NSLog(@"Dati salvati con successo!\n");
+                                
+                                // Avvisa il delegate dell'aggiunta di un nuovo posto
+                                [self.delegate didAddNewPlace:newPlace];
+                                
+                                [self.navigationController popViewControllerAnimated:YES];
+                                
+                            }
+                        }
+                    } else {
+                        NSLog(@"Errore: contesto di gestione del database non trovato!\n");
+                    }
+                    
                 }];
-            }
-            
-            
-            NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
-            
-            if (context) {
-                if (self.placeToEdit) {
-                    // modifica un posto esistente
-                    self.placeToEdit.name = self.placeName;
-                    self.placeToEdit.address = self.placeAddress;
-                    self.placeToEdit.notes = self.placeNotes;
-                    self.placeToEdit.remember = self.placeRemember;
-                    self.placeToEdit.insert_time = self.placeInsertTime;
-                    self.placeToEdit.latitude = self.placeLatitude;
-                    self.placeToEdit.longitude = self.placeLongitude;
-                    
-                    
-                    
-                    NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
-                          self.placeToEdit.name,
-                          self.placeToEdit.address,
-                          self.placeToEdit.notes,
-                          self.placeToEdit.remember,
-                          self.placeToEdit.insert_time,
-                          self.placeToEdit.latitude,
-                          self.placeToEdit.longitude);
-                    
-                    
-                    NSError *error = nil;
-                    if (![context save:&error]) {
-                        NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
-                    } else {
-                        NSLog(@"Dati salvati con successo!\n");
-                        
-                        // Avvisa il delegate dell'aggiunta di un nuovo posto
-                        [self.delegate didEditPlace:self.placeToEdit];
-                        
-                        [self.navigationController popViewControllerAnimated:YES];
-                        
-                    }
-                    
-                    return;
-                
-                } else {
-                    PlaceMO *newPlace = [NSEntityDescription insertNewObjectForEntityForName:@"Place" inManagedObjectContext:context];
-                    
-                    newPlace.name = self.placeName;
-                    newPlace.address = self.placeAddress;
-                    newPlace.notes = self.placeNotes;
-                    newPlace.remember = self.placeRemember;
-                    newPlace.insert_time = self.placeInsertTime;
-                    newPlace.latitude = self.placeLatitude;
-                    newPlace.longitude = self.placeLongitude;
-                    
-                    
-                    
-                    
-                    
-                    NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
-                          newPlace.name,
-                          newPlace.address,
-                          newPlace.notes,
-                          newPlace.remember,
-                          newPlace.insert_time,
-                          newPlace.latitude,
-                          newPlace.longitude);
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    NSError *error = nil;
-                    if (![context save:&error]) {
-                        NSLog(@"Errore durante il salvataggio dei dati: %@\n", error);
-                    } else {
-                        NSLog(@"Dati salvati con successo!\n");
-                        
-                        // Avvisa il delegate dell'aggiunta di un nuovo posto
-                        [self.delegate didAddNewPlace:newPlace];
-                        
-                        [self.navigationController popViewControllerAnimated:YES];
-                        
-                    }
-                }
-            } else {
-                NSLog(@"Errore: contesto di gestione del database non trovato!\n");
             }
         }];
     }];
