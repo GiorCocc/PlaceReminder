@@ -151,21 +151,28 @@
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lc9-dH-sxn">
-                                                    <rect key="frame" x="284" y="6" width="49" height="31"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lc9-dH-sxn">
+                                                    <rect key="frame" x="284" y="6.3333333333333321" width="51" height="30.999999999999996"/>
                                                     <connections>
                                                         <action selector="updatePlaceReminder:" destination="zif-rT-DkN" eventType="valueChanged" id="Nhe-lU-TcF"/>
                                                     </connections>
                                                 </switch>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLQ-ZS-iEE">
-                                                    <rect key="frame" x="20" y="11" width="73" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLQ-ZS-iEE">
+                                                    <rect key="frame" x="20" y="11.333333333333336" width="73" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="kLQ-ZS-iEE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BXz-z5-HbU" secondAttribute="leadingMargin" id="0dQ-Td-8Ya"/>
+                                                <constraint firstItem="lc9-dH-sxn" firstAttribute="centerY" secondItem="kLQ-ZS-iEE" secondAttribute="centerY" id="MfL-1m-DQT"/>
+                                                <constraint firstItem="lc9-dH-sxn" firstAttribute="centerY" secondItem="kLQ-ZS-iEE" secondAttribute="centerY" id="Q9g-Jk-exv"/>
+                                                <constraint firstItem="lc9-dH-sxn" firstAttribute="trailing" secondItem="BXz-z5-HbU" secondAttribute="trailingMargin" id="fp8-lu-hdZ"/>
+                                                <constraint firstItem="lc9-dH-sxn" firstAttribute="leading" secondItem="kLQ-ZS-iEE" secondAttribute="trailing" constant="191" id="qfO-xg-RLi"/>
+                                                <constraint firstItem="lc9-dH-sxn" firstAttribute="centerY" secondItem="BXz-z5-HbU" secondAttribute="centerY" id="xdX-li-OEh"/>
+                                                <constraint firstItem="kLQ-ZS-iEE" firstAttribute="centerY" secondItem="BXz-z5-HbU" secondAttribute="centerY" id="yVS-sp-tBV"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -208,7 +215,11 @@
                         <centerItemGroups>
                             <barButtonItemGroup customizationDisposition="fixed" id="fIj-38-GCS">
                                 <barButtonItems>
-                                    <barButtonItem title="Share" image="square.and.arrow.up" catalog="system" id="tCi-yn-2i5"/>
+                                    <barButtonItem title="Share" image="square.and.arrow.up" catalog="system" id="tCi-yn-2i5">
+                                        <connections>
+                                            <action selector="sharePlaceInfo:" destination="zif-rT-DkN" id="slT-RN-Gnd"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem title="Remove" image="trash" catalog="system" id="gso-60-uuH">
                                         <color key="tintColor" systemColor="systemRedColor"/>
                                         <connections>
@@ -255,15 +266,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VHX-ki-FAo">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VHX-ki-FAo">
                                 <rect key="frame" x="16" y="155" width="361" height="250"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="gZY-co-KyN">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="gZY-co-KyN">
                                 <rect key="frame" x="16" y="456" width="361" height="706"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="706" id="4pX-dB-emW"/>
+                                </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="mM6-UK-ywA" detailTextLabel="hoC-SE-4w9" imageView="bla-dt-sya" style="IBUITableViewCellStyleSubtitle" id="DeF-Jk-Ced">
                                         <rect key="frame" x="0.0" y="50" width="361" height="43.666667938232422"/>
@@ -299,9 +311,8 @@
                                     <outlet property="delegate" destination="UqE-6A-1q2" id="rqc-uh-9k1"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="📍Places" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gN-SQ-D5T">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="📍Places" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gN-SQ-D5T">
                                 <rect key="frame" x="16" y="416" width="361" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -309,10 +320,22 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2bA-nL-YJF"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="trailing" secondItem="VHX-ki-FAo" secondAttribute="trailing" id="1sw-MU-gBi"/>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="leading" secondItem="gZY-co-KyN" secondAttribute="leading" id="3X3-O1-30z"/>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="top" secondItem="VHX-ki-FAo" secondAttribute="bottom" constant="11" id="L3X-G7-rfE"/>
+                            <constraint firstItem="VHX-ki-FAo" firstAttribute="top" secondItem="2bA-nL-YJF" secondAttribute="top" id="TVn-Dg-zQ3"/>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="leading" secondItem="VHX-ki-FAo" secondAttribute="leading" id="VoC-9l-MWe"/>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="top" secondItem="UqE-6A-1q2" secondAttribute="top" constant="416" id="YL7-XO-040"/>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="leading" secondItem="UqE-6A-1q2" secondAttribute="leadingMargin" id="rRr-QC-4lD"/>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="trailing" secondItem="UqE-6A-1q2" secondAttribute="trailingMargin" id="u7K-WB-UBH"/>
+                            <constraint firstItem="gZY-co-KyN" firstAttribute="top" secondItem="1gN-SQ-D5T" secondAttribute="bottom" constant="8" id="uOp-o1-u5M"/>
+                            <constraint firstItem="1gN-SQ-D5T" firstAttribute="trailing" secondItem="gZY-co-KyN" secondAttribute="trailing" id="wr3-iE-M5s"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="PlaceReminder" largeTitleDisplayMode="always" id="NI2-my-dkx">
                         <rightBarButtonItems>
-                            <barButtonItem largeContentSizeImage="plus" catalog="system" systemItem="add" id="JQ6-wX-36t">
+                            <barButtonItem image="plus" catalog="system" id="JQ6-wX-36t">
                                 <connections>
                                     <action selector="presentAddNewPlaceViewController" destination="4KF-2l-02u" id="P15-T2-egN"/>
                                 </connections>

@@ -7,7 +7,6 @@
 //  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
 //  TODO: aggiungere la mappa
 //  TODO: aggiungere la possibilità di aprire il posto in Maps
-//  TODO: aggiungere la possibilità di condividere il posto
 //  TODO: aggiungere la possibilità di impostare un promemoria per il posto
 
 #import "PlaceDetailsViewController.h"
@@ -139,6 +138,23 @@
     [alert addAction:cancelAction];
     
     [self presentViewController:alert animated:YES completion:nil];
+    
+    
+}
+
+- (IBAction)sharePlaceInfo:(id)sender {
+    NSLog(@"Share place info button pressed");
+    
+    // open the share menu
+    NSString *textToShare = [NSString stringWithFormat:@"Ti condivido volentieri questo posto che ho trovato: %@, %@",
+                             self.selectedPlaceMO.name, self.selectedPlaceMO.address];
+    NSArray *objectsToShare = @[textToShare];
+    
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare
+                                                                             applicationActivities:nil];
+    
+    [self presentViewController:activityVC animated:YES completion:nil];
+    
     
     
 }
