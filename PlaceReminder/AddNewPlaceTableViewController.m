@@ -48,11 +48,12 @@
 
 @implementation AddNewPlaceTableViewController
 
+@synthesize mapView = _mapView;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     // registra nib
-    
     [self.tableView registerNib:[UINib nibWithNibName:@"TextFieldTableViewCell" bundle:nil] forCellReuseIdentifier:@"TextFieldTableViewCell"];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"ReminderCell"];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"NotesCell"];
@@ -75,10 +76,9 @@
     
     // location
     // Alloca ed inizializza il CLLocationManager
+    self.mapView.delegate = self;
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-        
-    // Richiedi l'autorizzazione all'accesso alla posizione
     [self.locationManager requestWhenInUseAuthorization];
     
     
@@ -87,6 +87,22 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+#pragma mark Location
+
+-(void) locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
+    if (manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse || manager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways) {
+        self.mapView.showsUserLocation = YES;
+        
+        // Zoom the map to the user's location
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(manager.location.coordinate, 500, 500);
+        [self.mapView setRegion:region animated:YES];
+    
+    }
+    else {
+        self.mapView.showsUserLocation = NO;
+    }
 }
 
 // preleva lo stato dello switch
@@ -125,7 +141,7 @@
         
         // location
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
-        [geocoder geocodeAddressString:self.placeAddress completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        [geocoder geocodeAddressString:placeAddress completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
             if (error) {
                 NSLog(@"Errore nella geocodifica: %@", error.localizedDescription);
                 return;
@@ -137,7 +153,31 @@
                 
                 self.placeLatitude = location.coordinate.latitude;
                 self.placeLongitude = location.coordinate.longitude;
+                
+                // dalle coordinate ottenute, ricava l'indirizzo completo (via, numero civico, cap, città, provincia, nazione)
+                location = [[CLLocation alloc] initWithLatitude:self.placeLatitude longitude:self.placeLongitude];
+                [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+                    if (error) {
+                        NSLog(@"Errore nella geocodifica: %@", error.localizedDescription);
+                        return;
+                    }
+                    
+                    if (placemarks && placemarks.count > 0) {
+                        CLPlacemark *placemark = placemarks.firstObject;
+                        NSString *address = [NSString stringWithFormat:@"%@ %@, %@, %@, %@, %@",
+                                             placemark.thoroughfare,
+                                             placemark.subThoroughfare,
+                                             placemark.postalCode,
+                                             placemark.locality,
+                                             placemark.administrativeArea,
+                                             placemark.country];
+                        
+                        self.placeAddress = address;
+                    }
+                    
+                }];
             }
+            
             
             NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
             
@@ -259,15 +299,20 @@
     
     if (indexPath.section == 0) {
         // mappa
-        static NSString *MapCellIdentifier = @"MapCell";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:MapCellIdentifier forIndexPath:indexPath];
+        UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
         
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MapCellIdentifier];
+        if (self.placeToEdit) {
+            MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+            annotation.coordinate = CLLocationCoordinate2DMake(self.placeToEdit.latitude, self.placeToEdit.longitude);
+            [self.mapView addAnnotation:annotation];
+            
+            // centra la mappa sulla posizione del posto
+            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 500, 500);
+            [self.mapView setRegion:region animated:YES];
+            
         }
         
         return cell;
-    
     }
 
     else if (indexPath.section == 1) {
@@ -453,7 +498,7 @@
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    }
 }
 */
 

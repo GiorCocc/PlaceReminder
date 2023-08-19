@@ -78,6 +78,8 @@
     
     // aggiorna i dati nella schermata
     [self updateUIWithData:self.selectedPlaceMO];
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self updateMapViewWithPlace:self.selectedPlaceMO];
 }
 
 #pragma mark Map
@@ -113,6 +115,8 @@
     NSLog(@"Edited place: %@", editedPlace);
     self.selectedPlaceMO = editedPlace;
     [self updateUIWithData:editedPlace];
+    // rimuovi le annotazioni precedenti
+    [self.mapView removeAnnotations:self.mapView.annotations];
     [self updateMapViewWithPlace:editedPlace];
 }
 

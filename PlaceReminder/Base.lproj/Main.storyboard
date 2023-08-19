@@ -395,12 +395,19 @@
                         <sections>
                             <tableViewSection id="5cq-NH-ELg">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MapTableViewCell" id="rB5-XE-zRI">
-                                        <rect key="frame" x="20" y="18" width="353" height="43.666667938232422"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MapTableViewCell" rowHeight="250" id="rB5-XE-zRI">
+                                        <rect key="frame" x="20" y="18" width="353" height="250"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rB5-XE-zRI" id="DeM-zK-9kr">
-                                            <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="250"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wN3-9s-xOg">
+                                                    <rect key="frame" x="0.0" y="0.0" width="353" height="255"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <standardMapConfiguration key="preferredConfiguration"/>
+                                                </mapView>
+                                            </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -408,7 +415,7 @@
                             <tableViewSection headerTitle="Informations" id="W4F-aj-gwi">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextFieldTableViewCell" id="4ig-Oh-dJe" customClass="TextFieldTableViewCell" customModule="PlaceReminder" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="117.66666793823242" width="353" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="324" width="353" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4ig-Oh-dJe" id="mz2-WI-Ust">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
@@ -416,7 +423,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextFieldTableViewCell" id="s9S-Ee-Gj4" customClass="TextFieldTableViewCell" customModule="PlaceReminder" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="161.33333587646484" width="353" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="367.66666793823242" width="353" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="s9S-Ee-Gj4" id="9Yr-xZ-81J">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
@@ -428,7 +435,7 @@
                             <tableViewSection headerTitle="Reminder" footerTitle="Set a reminder to notify you when you get close to your saved location" id="FgO-L6-qSh">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ReminderCell" id="o5B-f0-ObV">
-                                        <rect key="frame" x="20" y="268.33333587646484" width="353" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="474.66666793823242" width="353" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="o5B-f0-ObV" id="Rim-np-E5S">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
@@ -440,7 +447,7 @@
                             <tableViewSection headerTitle="Notes" id="inz-Hg-6Mg">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextFieldTableViewCell" id="1gZ-sb-HVo">
-                                        <rect key="frame" x="20" y="396.00000381469727" width="353" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="602.33333587646484" width="353" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1gZ-sb-HVo" id="ulJ-CU-mx5">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
@@ -460,6 +467,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="addressTableViewCell" destination="s9S-Ee-Gj4" id="5Kr-9M-tN5"/>
+                        <outlet property="mapView" destination="wN3-9s-xOg" id="zvR-OA-gmR"/>
                         <outlet property="nameTableViewCell" destination="4ig-Oh-dJe" id="Kkr-fG-imP"/>
                         <outlet property="notesTabelViewCell" destination="1gZ-sb-HVo" id="XXd-Mn-Tci"/>
                         <outlet property="reminderTabelViewCell" destination="o5B-f0-ObV" id="UUR-Rh-3iN"/>
@@ -467,7 +475,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wA8-yh-nV5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2604" y="-2"/>
+            <point key="canvasLocation" x="2603.8167938931297" y="-2.1126760563380285"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

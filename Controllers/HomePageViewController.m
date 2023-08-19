@@ -85,7 +85,7 @@
         self.mapView.showsUserLocation = YES;
         
         // Zoom the map to the user's location
-        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(manager.location.coordinate, 1000, 1000);
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(manager.location.coordinate, 500, 500);
         [self.mapView setRegion:region animated:YES];
     
     }

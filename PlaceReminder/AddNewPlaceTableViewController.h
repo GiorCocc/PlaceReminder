@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "PlaceMO+CoreDataProperties.h"
 
@@ -25,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<AddNewPlaceDelegate> delegate;
 @property (nonatomic, strong) PlaceMO *placeToEdit;
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
 
 @end
