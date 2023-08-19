@@ -348,6 +348,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapView" destination="VHX-ki-FAo" id="fUV-7Q-t8f"/>
                         <outlet property="tableView" destination="gZY-co-KyN" id="4uH-Yi-tPw"/>
                         <segue destination="zif-rT-DkN" kind="show" identifier="ShowDetailsSegue" id="fSZ-Db-HVW"/>
                     </connections>
@@ -469,7 +470,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="qhE-0K-a7j"/>
+        <segue reference="fSZ-Db-HVW"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" name="AccentColor"/>
     <resources>

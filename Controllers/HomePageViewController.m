@@ -9,7 +9,6 @@
 //  Cliccando su una cella si apre una nuova schermata che mostra i dettagli del luogo selezionato
 //  I luoghi sono presenti nel database e vanno recuperati da li
 //  In alto a destra è presente un bottone che permette di aggiungere un nuovo luogo e il pulsante per andare a vedere la mappa a tutto schermo
-//  TODO: visualizzazione mappa
 
 #import "HomePageViewController.h"
 #import "CoreDataManager.h"
@@ -23,17 +22,21 @@
 
 
 
-@interface HomePageViewController () <AddNewPlaceDelegate>
+@interface HomePageViewController () <AddNewPlaceDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *places;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) PlaceMO *selectedPlaceMO;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 
 @end
 
 
 
 @implementation HomePageViewController
+
+@synthesize mapView = _mapView;
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -51,11 +54,44 @@
         NSLog(@"Errore nel caricamento dei luoghi: %@", error);
     }
     
+    // Set the map view delegate
+    self.mapView.delegate = self;
+    
+    // Create a location manager and set ourselves as the delegate
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    [self.locationManager requestWhenInUseAuthorization];
+    
+    
+    for (PlaceMO *place in self.places) {
+        MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+        annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+        [self.mapView addAnnotation:annotation];
+    }
+    
+    
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+#pragma mark Location
+
+-(void) locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
+    if (manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse || manager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways) {
+        self.mapView.showsUserLocation = YES;
+        
+        // Zoom the map to the user's location
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(manager.location.coordinate, 1000, 1000);
+        [self.mapView setRegion:region animated:YES];
+    
+    }
+    else {
+        self.mapView.showsUserLocation = NO;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -73,6 +109,18 @@
     
     // Aggiorna la tabella con i dati aggiornati
     [self.tableView reloadData];
+    
+    // Aggiorna la mappa con i dati aggiornati
+    [self updateMapView];
+}
+
+- (void) updateMapView {
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    for (PlaceMO *place in self.places) {
+        MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+        annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+        [self.mapView addAnnotation:annotation];
+    }
 }
 
 - (void)didAddNewPlace: (PlaceMO *) newPlace {
@@ -80,6 +128,12 @@
     NSLog(@"didAddNewPlace chiamato dal delegate");
     [self.places addObject:newPlace];
     [self.tableView reloadData];
+    
+    // Aggiungi anche l'annotation alla mappa
+    MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+    annotation.coordinate = CLLocationCoordinate2DMake(newPlace.latitude, newPlace.longitude);
+    [self.mapView addAnnotation:annotation];
+    
 }
 
 - (void)didEditPlace:(nonnull PlaceMO *)place {}
@@ -90,6 +144,14 @@
     NSLog(@"didRemovePlace chiamato dal delegate");
     [self.places removeObject:place];
     [self.tableView reloadData];
+    
+    // Rimuovo anche l'annotation dalla mappa
+    for (MKPointAnnotation *annotation in self.mapView.annotations) {
+        if (annotation.coordinate.latitude == place.latitude && annotation.coordinate.longitude == place.longitude) {
+            [self.mapView removeAnnotation:annotation];
+        }
+    }
+
 }
 
 - (IBAction)presentAddNewPlaceViewController {
@@ -151,6 +213,12 @@
                 
                 // Elimina la cella dalla tabella con animazione di dissolvenza
                 [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                
+                [self updateMapView];
+            
+                
+                
+            
             }
         }];
         

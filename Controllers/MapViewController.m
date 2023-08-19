@@ -81,6 +81,11 @@
 -(void) locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
     if (manager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse || manager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways) {
         self.mapView.showsUserLocation = YES;
+        
+        // Zoom the map to the user location
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, 500, 500);
+        [self.mapView setRegion:region animated:YES];
+    
     }
     else {
         self.mapView.showsUserLocation = NO;
