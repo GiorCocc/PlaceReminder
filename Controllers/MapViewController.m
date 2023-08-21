@@ -7,6 +7,7 @@
 //  ViewController for the Map View section of the app.
 //  This class is responsible to display the user location and the annotation near him.
 //
+//  FIXME: sistemare la gestione delle annotazioni quando un luogo viene eliminato o modificato
 
 #import "MapViewController.h"
 #import <CoreLocation/CoreLocation.h>
@@ -56,9 +57,11 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager requestWhenInUseAuthorization];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationManager startUpdatingLocation];
+    
     
     // Add annotation to the map
-    // TODO: sostituire con la lista delle annotazioni salvate in locale e salvate in un file json
     for (PlaceMO *place in self.places) {
         // NSLog(@"Place: %@", place.name);
         
@@ -137,6 +140,14 @@
         // Esegui il segue verso la schermata dei dettagli, passando l'oggetto PlaceMO
         [self performSegueWithIdentifier:@"ShowDetailSegue" sender:selectedPlace];
     }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    
+    // Imposta la posizione del centro della mappa sulla posizione dell'utente
+    MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01)); // Puoi regolare il valore di MKCoordinateSpan per il livello di zoom desiderato
+    [self.mapView setRegion:region animated:YES];
 }
 
 

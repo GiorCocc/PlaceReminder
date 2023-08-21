@@ -78,6 +78,8 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager requestWhenInUseAuthorization];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationManager startUpdatingLocation];
     
     
     // Uncomment the following line to preserve selection between presentations.
@@ -101,6 +103,14 @@
     else {
         self.mapView.showsUserLocation = NO;
     }
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    
+    // Imposta la posizione del centro della mappa sulla posizione dell'utente
+    MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01)); // Puoi regolare il valore di MKCoordinateSpan per il livello di zoom desiderato
+    [self.mapView setRegion:region animated:YES];
 }
 
 // preleva lo stato dello switch

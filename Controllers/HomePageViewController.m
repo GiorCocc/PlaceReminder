@@ -19,9 +19,6 @@
 
 
 
-
-
-
 @interface HomePageViewController () <AddNewPlaceDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *places;
@@ -44,6 +41,8 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    [self displayUserLocation];
+    
     // Esegui la query per ottenere i luoghi dal database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
@@ -61,13 +60,32 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager requestWhenInUseAuthorization];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [self.locationManager startUpdatingLocation];
+    
+    
+    
+    
+    CLLocationCoordinate2D placeCoordinate;
+    CLCircularRegion *region;
     
     
     for (PlaceMO *place in self.places) {
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
         [self.mapView addAnnotation:annotation];
+        
+        
+        if (place.remember){
+            placeCoordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+            region = [[CLCircularRegion alloc] initWithCenter:placeCoordinate radius:500 identifier:place.name];
+            [region setNotifyOnEntry:YES];
+            [region setNotifyOnExit:NO];
+        }
     }
+    
+    // geofencing
+    [self.locationManager startMonitoringForRegion:region];
     
     
     
@@ -77,6 +95,14 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
+- (void) displayUserLocation {
+    self.mapView.showsUserLocation = YES;
+    
+    NSLog(@"Latitude: %f\n Longitude: %f", self.mapView.userLocation.coordinate.latitude, self.mapView.userLocation.coordinate.longitude);
+    
+}
+
 
 #pragma mark Location
 
@@ -93,6 +119,15 @@
         self.mapView.showsUserLocation = NO;
     }
 }
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    
+    // Imposta la posizione del centro della mappa sulla posizione dell'utente
+    MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01)); // Puoi regolare il valore di MKCoordinateSpan per il livello di zoom desiderato
+    [self.mapView setRegion:region animated:YES];
+}
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
