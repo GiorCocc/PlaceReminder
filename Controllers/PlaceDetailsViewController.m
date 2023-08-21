@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *notesCell;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (weak, nonatomic) IBOutlet UITableViewCell *distanceCell;
 
 @end
 
@@ -45,6 +46,11 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager requestWhenInUseAuthorization];
+    // user
+    self.mapView.showsUserLocation = YES;
+    
+    
+    
     
     // annotazione sulla mappa
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
@@ -93,6 +99,13 @@
     // zoom sulla posizione dell'annotazione
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 500, 500);
     [self.mapView setRegion:region animated:YES];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    
+    // imposta la scritta sulla cella
+    self.distanceCell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f m", [userLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:self.selectedPlaceMO.latitude longitude:self.selectedPlaceMO.longitude]]];
 }
 
 
@@ -216,6 +229,24 @@
                                                                   timeStyle:NSDateFormatterShortStyle];
             
             cell.detailTextLabel.text = insertTime;
+        } else if (indexPath.row == 3) {
+            // distanza dalla posizione utente
+            CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.mapView.userLocation.coordinate.latitude
+                                                                  longitude:self.mapView.userLocation.coordinate.longitude];
+            CLLocation *placeLocation = [[CLLocation alloc] initWithLatitude:self.selectedPlaceMO.latitude
+                                                                   longitude:self.selectedPlaceMO.longitude];
+            CLLocationDistance distance = [userLocation distanceFromLocation:placeLocation];
+            
+            // stringaformattata per la distanza (metri, km)
+            if (distance > 1000) {
+                distance = distance / 1000;
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f km", distance];
+            } else {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f metri", distance];
+            }
+        
+            
+            
         }
         
         return cell;
@@ -293,7 +324,7 @@
     if (section == 0)       // mappa
         return 1;           // cella con la mappa
     else if (section == 1)  // informazioni
-        return 3;           // nome e indirizzo
+        return 4;           // nome e indirizzo
     else if (section == 2)  // promemoria
         return 1;           // switch promemoria
     else if (section == 3)  // note

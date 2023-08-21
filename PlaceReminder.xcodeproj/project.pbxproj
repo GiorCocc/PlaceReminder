@@ -421,6 +421,7 @@
 				INFOPLIST_FILE = PlaceReminder/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PlaceRemider;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Posizione utente richiesta per la ricezione di notifiche relative alla vicinanza con i tuoi posti preferiti";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -451,6 +452,7 @@
 				INFOPLIST_FILE = PlaceReminder/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PlaceRemider;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Posizione utente richiesta per la ricezione di notifiche relative alla vicinanza con i tuoi posti preferiti";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
