@@ -5,7 +5,6 @@
 //  Created by Giorgio Coccapani on 28/07/23.
 //
 //  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
-//  TODO: quando il reminder cambia stato, abilitare/disabilitare l'ascolto dell'ingresso nella regione geografica
 
 #import "PlaceDetailsViewController.h"
 #import "CoreDataManager.h"
