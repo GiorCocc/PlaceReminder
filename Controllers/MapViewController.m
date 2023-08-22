@@ -7,7 +7,6 @@
 //  ViewController for the Map View section of the app.
 //  This class is responsible to display the user location and the annotation near him.
 //
-//  FIXME: sistemare la gestione delle annotazioni quando un luogo viene eliminato o modificato
 
 #import "MapViewController.h"
 #import <CoreLocation/CoreLocation.h>
@@ -65,6 +64,37 @@
     for (PlaceMO *place in self.places) {
         // NSLog(@"Place: %@", place.name);
         
+        MapAnnotation *annotation = [[MapAnnotation alloc] init];
+        // layout della annotatio
+        
+        annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+        annotation.place = place;
+        annotation.title = place.name;
+        annotation.subtitle = place.address;
+        
+        
+        [self.mapView addAnnotation:annotation];
+    }
+    
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Esegui la query per ottenere i luoghi dal database
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
+    NSError *error = nil;
+    self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    if (error) {
+        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+    }
+    
+    // Aggiorna le annotazioni
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    
+    for (PlaceMO *place in self.places) {
         MapAnnotation *annotation = [[MapAnnotation alloc] init];
         // layout della annotatio
         

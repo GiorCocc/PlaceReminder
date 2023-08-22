@@ -17,6 +17,7 @@
 //      - Immagini (per visualizzare foto relative al posto segnato)
 //  - Note audio (per registrare note audio)
 //  TODO: implementare l'espansione della cella delle note
+//  TODO: creare la regione di geofencing quando viene registrato il posto e ascolta l'ingresso solo quando il promemoria è attivo
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"

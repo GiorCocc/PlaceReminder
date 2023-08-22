@@ -53,26 +53,28 @@
     CLLocationCoordinate2D coordinates;
     
     for (PlaceMO *place in self.places) {
-        if (place.remember) {
             coordinates.latitude = place.latitude;
             coordinates.longitude = place.longitude;
             
             // crea la regione geografica ampia 500 metri
             self.geofenceRegion = [[CLCircularRegion alloc] initWithCenter:coordinates
                                                                     radius:500
-                                                                identifier:@"MyGeofence"];
+                                                                identifier:place.name];
             
             NSLog(@"Regione geografica creata: %@", self.geofenceRegion);
             
             
             // imposta l'ingresso nella regione come trigger
+        if (place.remember){
             self.geofenceRegion.notifyOnEntry = YES;
-            
+                        
             // registra la regione geografica
             [self.locationManager startMonitoringForRegion:self.geofenceRegion];
-        
             
+            NSLog(@"Registro l'ingresso nella regione: %@", self.geofenceRegion);
         }
+            
+        
     }
     
     
@@ -92,7 +94,7 @@
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
     NSLog(@"Entrato nella regione: %@", region);
     
-    if ([region.identifier isEqualToString:@"MyGeofence"]) {
+    if ([region.identifier isEqualToString:region.identifier]) {
         [self scheduleNotificationWithTitle:@"Luogo importante"
                                        body:@"Sei vicino a un luogo importante per te!"];
     }

@@ -5,7 +5,7 @@
 //  Created by Giorgio Coccapani on 28/07/23.
 //
 //  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
-//  TODO: aggiungere la possibilità di impostare un promemoria per il posto
+//  TODO: quando il reminder cambia stato, abilitare/disabilitare l'ascolto dell'ingresso nella regione geografica
 
 #import "PlaceDetailsViewController.h"
 #import "CoreDataManager.h"
@@ -297,6 +297,11 @@
     if (error) {
         NSLog(@"Errore nel salvataggio del contesto: %@", error);
     }
+    
+    if (self.selectedPlaceMO.remember) {
+        
+    }
+    
 }
 
 // rimuove la selezione fissa della cella

@@ -5,7 +5,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Test</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Test</string>
+	<string>Test 1</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
