@@ -11,6 +11,7 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, CLLocationManagerDelegate>
 
+@property (nonatomic, weak) id<CLLocationManagerDelegate> delegate;
 
 @end
 

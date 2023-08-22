@@ -111,6 +111,12 @@
     // Imposta la posizione del centro della mappa sulla posizione dell'utente
     MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01)); // Puoi regolare il valore di MKCoordinateSpan per il livello di zoom desiderato
     [self.mapView setRegion:region animated:YES];
+    
+    // se esiste un posto da modificare, imposta la posizione della mappa
+    if (self.placeToEdit) {
+        [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake(self.placeToEdit.latitude, self.placeToEdit.longitude)];
+    }
+    
 }
 
 // preleva lo stato dello switch

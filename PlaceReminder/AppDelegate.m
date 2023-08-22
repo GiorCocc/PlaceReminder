@@ -6,12 +6,16 @@
 //
 
 #import "AppDelegate.h"
-
+#import "PlaceMO+CoreDataProperties.h"
+#import "CoreDataManager.h"
 
 
 @interface AppDelegate ()
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) CLCircularRegion *geofenceRegion;
+@property (nonatomic, strong) NSArray *places;
+
 
 @end
 
@@ -25,35 +29,95 @@
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    [self.locationManager requestAlwaysAuthorization];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    [self.locationManager startUpdatingLocation];
+    [self.locationManager requestAlwaysAuthorization];
     
-    
-    UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound;
-    [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error) {
-        if (granted) {
-            NSLog(@"Notification authorization granted.");
-        } else {
-            NSLog(@"Notification authorization denied.");
+    // Richiedi l'autorizzazione per le notifiche
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        if (!error && granted) {
+            NSLog(@"User granted notification authorization");
         }
     }];
-
-
+    
+    // Esegui la query per ottenere i luoghi dal database
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
+    NSError *error = nil;
+    self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    if (error) {
+        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+    }
+    
+    CLLocationCoordinate2D coordinates;
+    
+    for (PlaceMO *place in self.places) {
+        if (place.remember) {
+            coordinates.latitude = place.latitude;
+            coordinates.longitude = place.longitude;
+            
+            // crea la regione geografica ampia 500 metri
+            self.geofenceRegion = [[CLCircularRegion alloc] initWithCenter:coordinates
+                                                                    radius:500
+                                                                identifier:@"MyGeofence"];
+            
+            NSLog(@"Regione geografica creata: %@", self.geofenceRegion);
+            
+            
+            // imposta l'ingresso nella regione come trigger
+            self.geofenceRegion.notifyOnEntry = YES;
+            
+            // registra la regione geografica
+            [self.locationManager startMonitoringForRegion:self.geofenceRegion];
+        
+            
+        }
+    }
     
     
+        
     return YES;
 }
 
-- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
-    // Crea e invia una notifica quando l'utente entra nella regione
-    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"Geofencing Notification";
-    content.body = [NSString stringWithFormat:@"You are near %@", region.identifier];
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSString *token = [deviceToken description];
+    token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+    token = [token stringByReplacingOccurrencesOfString:@"<" withString:@""];
+    token = [token stringByReplacingOccurrencesOfString:@">" withString:@""];
     
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"GeofencingNotification" content:content trigger:nil];
-    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
+    NSLog(@"Device Token: %@", token);
 }
+
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    NSLog(@"Entrato nella regione: %@", region);
+    
+    if ([region.identifier isEqualToString:@"MyGeofence"]) {
+        [self scheduleNotificationWithTitle:@"Luogo importante"
+                                       body:@"Sei vicino a un luogo importante per te!"];
+    }
+}
+
+- (void) scheduleNotificationWithTitle: (NSString *) title body:(NSString *) body {
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.title = title;
+    content.body = body;
+    content.sound = UNNotificationSound.defaultSound;
+    
+    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
+    
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"MyNotification" content:content trigger:trigger];
+    
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Error adding notification request: %@", error);
+        } else {
+            NSLog(@"Notification request added successfully");
+        }
+    }];
+}
+
 
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
