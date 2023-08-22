@@ -13,5 +13,7 @@
 
 @property (nonatomic, weak) id<CLLocationManagerDelegate> delegate;
 
+- (void) updateGeofenceSettings;
+
 @end
 

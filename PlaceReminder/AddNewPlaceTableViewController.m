@@ -17,12 +17,12 @@
 //      - Immagini (per visualizzare foto relative al posto segnato)
 //  - Note audio (per registrare note audio)
 //  TODO: implementare l'espansione della cella delle note
-//  TODO: creare la regione di geofencing quando viene registrato il posto e ascolta l'ingresso solo quando il promemoria è attivo
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"
 #import "CoreDataManager.h"
 #import "PlaceMO+CoreDataClass.h"
+#import "AppDelegate.h"
 
 
 
@@ -237,6 +237,16 @@
                             } else {
                                 NSLog(@"Dati salvati con successo!\n");
                                 
+                                // aggiorna il geofence
+                                // [self updateGeofence];
+                                
+                                AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                                [appDelegate updateGeofenceSettings];
+                                
+                                
+                                
+                                
+                                
                                 // Avvisa il delegate dell'aggiunta di un nuovo posto
                                 [self.delegate didEditPlace:self.placeToEdit];
                                 
@@ -283,6 +293,12 @@
                             } else {
                                 NSLog(@"Dati salvati con successo!\n");
                                 
+                                // crea geofence attorno al posto
+                                // [self createGeofenceForPlace:newPlace];
+                                
+                                AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                                [appDelegate updateGeofenceSettings];
+                                
                                 // Avvisa il delegate dell'aggiunta di un nuovo posto
                                 [self.delegate didAddNewPlace:newPlace];
                                 
@@ -308,6 +324,39 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+/*- (void) createGeofenceForPlace: (PlaceMO *) place {
+    CLCircularRegion *geofence = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(place.latitude, place.longitude)
+                                                                   radius:500.0
+                                                               identifier:place.name];
+    if (place.remember) {
+        geofence.notifyOnEntry = YES;
+        [self.locationManager startMonitoringForRegion:geofence];
+    }
+    
+    NSLog(@"Geofence creata: %@", geofence);
+}
+
+- (void) updateGeofence {
+    // rimuovi la vecchia geofence
+    for (CLCircularRegion *geofence in self.locationManager.monitoredRegions) {
+        if ([geofence.identifier isEqualToString:self.placeToEdit.name]) {
+            [self.locationManager stopMonitoringForRegion:geofence];
+            break;
+        }
+    }
+    
+    CLCircularRegion *geofence = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake(self.placeToEdit.latitude, self.placeToEdit.longitude)
+                                                                   radius:500.0
+                                                               identifier:self.placeToEdit.name];
+    if (self.placeToEdit.remember) {
+        geofence.notifyOnEntry = YES;
+        [self.locationManager startMonitoringForRegion:geofence];
+    }
+    
+    NSLog(@"Geofence aggiornata: %@", geofence);
+}*/
+
+
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     
@@ -317,8 +366,6 @@
         self.placeAddress = textField.text;
     else if (textField.tag == 2)            // note
         self.placeNotes = textField.text;
-    
-    NSLog(@"Text field: %@\n", textField.text);
     
     return YES;
 }

@@ -51,6 +51,7 @@
     
     // Set the map view delegate
     self.mapView.delegate = self;
+    self.mapView.showsUserLocation = YES;
     
     // Create a location manager and set ourselves as the delegate
     self.locationManager = [[CLLocationManager alloc] init];

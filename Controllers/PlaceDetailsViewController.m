@@ -10,6 +10,7 @@
 #import "PlaceDetailsViewController.h"
 #import "CoreDataManager.h"
 #import "AddNewPlaceTableViewController.h"
+#import "AppDelegate.h"
 
 @interface PlaceDetailsViewController () <CLLocationManagerDelegate>
 
@@ -35,7 +36,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"Showing selected place details: %@", self.selectedPlaceMO);
+    // NSLog(@"Showing selected place details: %@", self.selectedPlaceMO);
     
     // titolo
     self.title = self.selectedPlaceMO.name;
@@ -124,7 +125,7 @@
 
 - (void) didEditPlace:(PlaceMO *)editedPlace {
     // Aggiorna l'oggetto PlaceMO visualizzato e i dati nella schermata
-    NSLog(@"Edited place: %@", editedPlace);
+    // NSLog(@"Edited place: %@", editedPlace);
     self.selectedPlaceMO = editedPlace;
     [self updateUIWithData:editedPlace];
     // rimuovi le annotazioni precedenti
@@ -136,7 +137,7 @@
 
 
 - (IBAction)removePlaceButtonPressed:(id)sender {
-    NSLog(@"Remove place button pressed");
+    // NSLog(@"Remove place button pressed");
     
     // crea un alert per chiedere conferma
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Remove"
@@ -158,6 +159,13 @@
         
         [self.delegate didRemovePlace:self.selectedPlaceMO];
         
+        // remove geofence
+        // [self removeGeofenceForPlace:self.selectedPlaceMO];
+        
+        AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate updateGeofenceSettings];
+        
+        
         // torna indietro
         [self.navigationController popViewControllerAnimated:YES];
     }];
@@ -178,9 +186,18 @@
     // [self.navigationController popViewControllerAnimated:YES];
 }
 
+/*- (void) removeGeofenceForPlace: (PlaceMO *)place {
+    // rimuovi la geofence
+    for (CLCircularRegion *region in self.locationManager.monitoredRegions) {
+        if ([region.identifier isEqualToString:place.name]) {
+            [self.locationManager stopMonitoringForRegion:region];
+        }
+    }
+}*/
+
 
 - (IBAction)openInMap:(id)sender {
-    NSLog(@"Open in map button pressed");
+    // NSLog(@"Open in map button pressed");
     
     // apri il posto in Apple Maps usando l'indirizzo
     NSString *address = self.selectedPlaceMO.address;
@@ -193,7 +210,7 @@
 }
 
 - (IBAction)sharePlaceInfo:(id)sender {
-    NSLog(@"Share place info button pressed");
+    // NSLog(@"Share place info button pressed");
     
     // open the share menu
     NSString *textToShare = [NSString stringWithFormat:@"Ti condivido volentieri questo posto che ho trovato:\n - Nome: %@\n - Indirizzo: %@",
@@ -285,7 +302,7 @@
 
 // update the place reminder flag when the switch is toggled
 - (IBAction)updatePlaceReminder:(id)sender {
-    NSLog(@"Update place reminder");
+    // NSLog(@"Update place reminder");
     
     // aggiorna il posto con il nuovo valore del reminder
     self.selectedPlaceMO.remember = self.switchReminder.isOn;
@@ -298,11 +315,43 @@
         NSLog(@"Errore nel salvataggio del contesto: %@", error);
     }
     
-    if (self.selectedPlaceMO.remember) {
-        
-    }
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate updateGeofenceSettings];
+    
+    // se il reminder è attivo, registra l'ingresso nella geofence
+    /*if (self.selectedPlaceMO.remember) {
+        [self shouldMonitorRegion:YES];
+    } else {
+        [self shouldMonitorRegion:NO];
+    }*/
+    
     
 }
+
+/*- (void) shouldMonitorRegion:(BOOL) boolean {
+    // recupera la geofence per il posto selezionato
+    for (CLCircularRegion *region in self.locationManager.monitoredRegions) {
+        
+        
+        if ([region.identifier isEqualToString:self.selectedPlaceMO.name]) {
+            NSLog(@"Regioni monitorate: %@", region);
+            // recupera la region
+            if (boolean) {
+                // notify on entering
+                region.notifyOnEntry = YES;
+                
+                NSLog(@"Regione monitorata: %@", region);
+            } else {
+                // smetti di monitorare la regione
+                region.notifyOnEntry = NO;
+                
+                NSLog(@"Regione non monitorata: %@", region);
+            }
+        }
+    }
+    
+    
+}*/
 
 // rimuove la selezione fissa della cella
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -386,7 +435,7 @@
 #pragma mark - Navigation
 
 - (IBAction)editPlace:(id)sender {
-    NSLog(@"Edit place button pressed");
+    // NSLog(@"Edit place button pressed");
     
     PlaceMO *place = self.selectedPlaceMO;
     

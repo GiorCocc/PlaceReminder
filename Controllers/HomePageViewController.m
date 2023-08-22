@@ -15,6 +15,7 @@
 #import "PlaceMO+CoreDataProperties.h"
 #import "AddNewPlaceTableViewController.h"
 #import "PlaceDetailsViewController.h"
+#import "AppDelegate.h"
 
 
 
@@ -40,8 +41,6 @@
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
-    [self displayUserLocation];
     
     // Esegui la query per ottenere i luoghi dal database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
@@ -94,13 +93,6 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void) displayUserLocation {
-    self.mapView.showsUserLocation = YES;
-    
-    NSLog(@"Latitude: %f\n Longitude: %f", self.mapView.userLocation.coordinate.latitude, self.mapView.userLocation.coordinate.longitude);
-    
 }
 
 
@@ -160,7 +152,7 @@
 
 - (void)didAddNewPlace: (PlaceMO *) newPlace {
     // Aggiorna i dati (array places) e ricarica la tabella
-    NSLog(@"didAddNewPlace chiamato dal delegate");
+    // NSLog(@"didAddNewPlace chiamato dal delegate");
     [self.places addObject:newPlace];
     [self.tableView reloadData];
     
@@ -169,6 +161,9 @@
     annotation.coordinate = CLLocationCoordinate2DMake(newPlace.latitude, newPlace.longitude);
     [self.mapView addAnnotation:annotation];
     
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate updateGeofenceSettings];
+    
 }
 
 - (void)didEditPlace:(nonnull PlaceMO *)place {}
@@ -176,7 +171,7 @@
 
 - (void) didRemovePlace: (PlaceMO *) place {
     // Aggiorna i dati (array places) e ricarica la tabella
-    NSLog(@"didRemovePlace chiamato dal delegate");
+    // NSLog(@"didRemovePlace chiamato dal delegate");
     [self.places removeObject:place];
     [self.tableView reloadData];
     
@@ -186,6 +181,9 @@
             [self.mapView removeAnnotation:annotation];
         }
     }
+    
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate updateGeofenceSettings];
 
 }
 
@@ -250,6 +248,9 @@
                 [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
                 
                 [self updateMapView];
+                
+                AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                [appDelegate updateGeofenceSettings];
             
                 
                 

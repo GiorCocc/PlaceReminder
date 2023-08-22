@@ -82,6 +82,43 @@
     return YES;
 }
 
+// Metodo chiamato quando viene effettuato un cambio nelle impostazioni dei geofence nel database
+- (void)updateGeofenceSettings {
+    NSLog(@"Aggiorno le impostazioni dei geofence");
+    
+    // Recupera i dati aggiornati dal database
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
+    NSError *error = nil;
+    self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    
+    if (error) {
+        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+    }
+    
+    
+    
+    // Rimuovi i geofence esistenti
+    [self.locationManager.monitoredRegions enumerateObjectsUsingBlock:^(CLRegion *region, BOOL *stop) {
+        [self.locationManager stopMonitoringForRegion:region];
+    }];
+    
+    // Aggiungi nuovi geofence con le nuove impostazioni
+    for (PlaceMO *place in self.places) {
+        CLLocationCoordinate2D center = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+        CLLocationDistance radius = 500.0; // 500 metri
+        CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:center radius:radius identifier:place.name];
+        
+        if (place.remember){
+            region.notifyOnEntry = YES;
+            region.notifyOnExit = NO;
+            
+            [self.locationManager startMonitoringForRegion:region];
+        }
+    }
+}
+
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString *token = [deviceToken description];
     token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -94,9 +131,17 @@
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
     NSLog(@"Entrato nella regione: %@", region);
     
+    // recupera il nome del luogo
+    NSString *placeName = region.identifier;
+    
+    // inseriscilo nel titlo della notifica
+    NSString *title = [NSString stringWithFormat:@"Sei vicino a %@", placeName];
+    NSString *body = [NSString stringWithFormat:@"%@ è luogo importante per te!", placeName];
+    
+    
     if ([region.identifier isEqualToString:region.identifier]) {
-        [self scheduleNotificationWithTitle:@"Luogo importante"
-                                       body:@"Sei vicino a un luogo importante per te!"];
+        [self scheduleNotificationWithTitle:title
+                                       body:body];
     }
 }
 
