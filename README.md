@@ -33,7 +33,7 @@ PlaceReminder is a simple iOS application written in Objective-C that allows you
 
 In order to install the application on your device, you need a version of iOS 16.4 or higher and a simulator or physical device with this version of iOS installed. You also need to have Xcode 14 or higher installed.
 
-In case you don't have these tools, you can try the application by subscribing to the beta channel on TestFlight.
+<!-- In case you don't have these tools, you can try the application by subscribing to the beta channel on TestFlight. -->
 
 ## Usage
 
