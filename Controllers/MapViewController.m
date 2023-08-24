@@ -6,7 +6,6 @@
 //
 //  ViewController for the Map View section of the app.
 //  This class is responsible to display the user location and the annotation near him.
-//
 
 #import "MapViewController.h"
 #import <CoreLocation/CoreLocation.h>
@@ -15,9 +14,6 @@
 #import "PlaceMO+CoreDataProperties.h"
 #import "PlaceDetailsViewController.h"
 #import "MapAnnotation.h"
-
-
-
 
 
 @interface MapViewController () <CLLocationManagerDelegate>
@@ -38,7 +34,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    // preleva i luoghi dal database
+    // database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
     NSError *error = nil;
@@ -46,7 +42,7 @@
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
-        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+        NSLog(@"Error loading places: %@", error);
     }
     
     // Set the map view delegate
@@ -66,13 +62,10 @@
         // NSLog(@"Place: %@", place.name);
         
         MapAnnotation *annotation = [[MapAnnotation alloc] init];
-        // layout della annotatio
-        
         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
         annotation.place = place;
         annotation.title = place.name;
         annotation.subtitle = place.address;
-        
         
         [self.mapView addAnnotation:annotation];
     }
@@ -82,28 +75,25 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Esegui la query per ottenere i luoghi dal database
+    // get the places from the database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
     NSError *error = nil;
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
-        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+        NSLog(@"Error loading places: %@", error);
     }
     
-    // Aggiorna le annotazioni
+    // update the annotations
     [self.mapView removeAnnotations:self.mapView.annotations];
     
     for (PlaceMO *place in self.places) {
         MapAnnotation *annotation = [[MapAnnotation alloc] init];
-        // layout della annotatio
-        
         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
         annotation.place = place;
         annotation.title = place.name;
         annotation.subtitle = place.address;
-        
         
         [self.mapView addAnnotation:annotation];
     }
@@ -145,10 +135,9 @@
             UIButton *detailButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
             pinView.rightCalloutAccessoryView = detailButton;
             
-            // Creazione di una vista personalizzata per il callout
+            // Custom callout
             UIView *calloutView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 70)];
             calloutView.backgroundColor = [UIColor whiteColor];
-            
             
             pinView.detailCalloutAccessoryView = calloutView;
         } else {
@@ -168,19 +157,18 @@
         MapAnnotation *customAnnotation = (MapAnnotation *)view.annotation;
         PlaceMO *selectedPlace = customAnnotation.place;
         
-        // Esegui il segue verso la schermata dei dettagli, passando l'oggetto PlaceMO
+        // queue to detail view
         [self performSegueWithIdentifier:@"ShowDetailSegue" sender:selectedPlace];
     }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    CLLocation *userLocation = [locations lastObject];
     
-    // Imposta la posizione del centro della mappa sulla posizione dell'utente
-    MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01)); // Puoi regolare il valore di MKCoordinateSpan per il livello di zoom desiderato
+    // Zoom the map to the user location
+    MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01));
     [self.mapView setRegion:region animated:YES];
 }
-
 
 
 #pragma mark - Navigation
@@ -194,7 +182,7 @@
         if ([segue.destinationViewController isKindOfClass:[PlaceDetailsViewController class]]) {
             PlaceDetailsViewController *detailVC = (PlaceDetailsViewController *)segue.destinationViewController;
             
-            // Passa il PlaceMO selezionato alla schermata dei dettagli
+            // send the selected place to the detail view
             detailVC.selectedPlaceMO = sender;
             
         }

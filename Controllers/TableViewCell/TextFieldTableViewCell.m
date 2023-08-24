@@ -32,8 +32,6 @@
     return YES;
 }
 
-// TODO: aggiungere un metodo per permettere al campo di testo di espandersi in altezza
-
 - (void) configureWithTitle:(NSString *)title placeholder:(NSString *)placeholder {
     self.label.text = title;
     self.textField.placeholder = placeholder;

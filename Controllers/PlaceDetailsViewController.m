@@ -4,7 +4,7 @@
 //
 //  Created by Giorgio Coccapani on 28/07/23.
 //
-//  ViewController per la visualizzazione dei dettagli del posto selezionato nella lista della HomePage
+//  ViewController for displaying the details of a place.
 
 #import "PlaceDetailsViewController.h"
 #import "CoreDataManager.h"
@@ -36,40 +36,23 @@
     [super viewDidLoad];
     
     // NSLog(@"Showing selected place details: %@", self.selectedPlaceMO);
-    
-    // titolo
+
     self.title = self.selectedPlaceMO.name;
     
     // map
     self.mapView.delegate = self;
-    // Create a location manager and set ourselves as the delegate
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager requestWhenInUseAuthorization];
-    // user
     self.mapView.showsUserLocation = YES;
     
-    
-    
-    
-    // annotazione sulla mappa
+    // annotations
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
     annotation.coordinate = CLLocationCoordinate2DMake(self.selectedPlaceMO.latitude, self.selectedPlaceMO.longitude);
     [self.mapView addAnnotation:annotation];
-    // centra la mappa sulla posizione dell'annotazione
     [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
-    // zoom sulla posizione dell'annotazione
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 500, 500);
     [self.mapView setRegion:region animated:YES];
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -90,28 +73,22 @@
 #pragma mark Map
 
 - (void) updateMapViewWithPlace:(PlaceMO *)place {
-    // aggiorna la mappa con il posto selezionato
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+    
     annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
     [self.mapView addAnnotation:annotation];
-    // centra la mappa sulla posizione dell'annotazione
     [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
-    // zoom sulla posizione dell'annotazione
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 500, 500);
     [self.mapView setRegion:region animated:YES];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    CLLocation *userLocation = [locations lastObject];
     
-    // imposta la scritta sulla cella
     self.distanceCell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f m", [userLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:self.selectedPlaceMO.latitude longitude:self.selectedPlaceMO.longitude]]];
 }
 
-
-
 - (void)updateUIWithData:(PlaceMO *)place {
-    // aggiorna i dati nella schermata
     self.title = place.name;
     
     self.nameCell.detailTextLabel.text = place.name;
@@ -123,26 +100,27 @@
 }
 
 - (void) didEditPlace:(PlaceMO *)editedPlace {
-    // Aggiorna l'oggetto PlaceMO visualizzato e i dati nella schermata
     // NSLog(@"Edited place: %@", editedPlace);
     self.selectedPlaceMO = editedPlace;
     [self updateUIWithData:editedPlace];
-    // rimuovi le annotazioni precedenti
+    
+    // remove old annotation
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self updateMapViewWithPlace:editedPlace];
 }
 
 - (void) didAddNewPlace:(nonnull PlaceMO *)place {}
 
+# pragma mark AppBar actions
 
 - (IBAction)removePlaceButtonPressed:(id)sender {
     // NSLog(@"Remove place button pressed");
     
-    // crea un alert per chiedere conferma
+    // alert
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Remove"
-                                                                   message:@"Sei sicuro di voler rimuovere questo posto?"
+                                                                   message:@"Are you sure you want to remove this place?"
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Rimuovi"
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Remove"
                                                             style:UIAlertActionStyleDestructive
                                                           handler:^(UIAlertAction *action) {
         // rimuovi il posto dal database
@@ -153,7 +131,7 @@
         [context save:&error];
         
         if (error) {
-            NSLog(@"Errore nel salvataggio del contesto: %@", error);
+            NSLog(@"Error removing place: %@", error);
         }
         
         [self.delegate didRemovePlace:self.selectedPlaceMO];
@@ -164,41 +142,22 @@
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [appDelegate updateGeofenceSettings];
         
-        
-        // torna indietro
         [self.navigationController popViewControllerAnimated:YES];
     }];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Annulla"
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                            style:UIAlertActionStyleCancel handler:nil];
     
     [alert addAction:confirmAction];
     [alert addAction:cancelAction];
     
     [self presentViewController:alert animated:YES completion:nil];
-    
-    
-    // rimuovi il posto dal database
-    // [[CoreDataManager sharedManager] removePlace:self.selectedPlaceMO];
-    
-    // torna indietro
-    // [self.navigationController popViewControllerAnimated:YES];
 }
-
-/*- (void) removeGeofenceForPlace: (PlaceMO *)place {
-    // rimuovi la geofence
-    for (CLCircularRegion *region in self.locationManager.monitoredRegions) {
-        if ([region.identifier isEqualToString:place.name]) {
-            [self.locationManager stopMonitoringForRegion:region];
-        }
-    }
-}*/
-
 
 - (IBAction)openInMap:(id)sender {
     // NSLog(@"Open in map button pressed");
     
-    // apri il posto in Apple Maps usando l'indirizzo
+    // apen the place in Apple Maps
     NSString *address = self.selectedPlaceMO.address;
     address = [address stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     address = [address stringByReplacingOccurrencesOfString:@"," withString:@""];
@@ -209,10 +168,8 @@
 }
 
 - (IBAction)sharePlaceInfo:(id)sender {
-    // NSLog(@"Share place info button pressed");
     
-    // open the share menu
-    NSString *textToShare = [NSString stringWithFormat:@"Ti condivido volentieri questo posto che ho trovato:\n - Nome: %@\n - Indirizzo: %@",
+    NSString *textToShare = [NSString stringWithFormat:@"I want to share with you this place: %@ ~ %@",
                              self.selectedPlaceMO.name, self.selectedPlaceMO.address];
     NSArray *objectsToShare = @[textToShare];
     
@@ -220,17 +177,15 @@
                                                                              applicationActivities:nil];
     
     [self presentViewController:activityVC animated:YES completion:nil];
-    
-    
-    
 }
 
+#pragma mark Table
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
     if (indexPath.section == 0) {
-        // mappa
+        // map
         return cell;
         
     } else if (indexPath.section == 1) {
@@ -246,55 +201,43 @@
             
             cell.detailTextLabel.text = insertTime;
         } else if (indexPath.row == 3) {
-            // distanza dalla posizione utente
+            // distance from user
             CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.mapView.userLocation.coordinate.latitude
                                                                   longitude:self.mapView.userLocation.coordinate.longitude];
             CLLocation *placeLocation = [[CLLocation alloc] initWithLatitude:self.selectedPlaceMO.latitude
                                                                    longitude:self.selectedPlaceMO.longitude];
             CLLocationDistance distance = [userLocation distanceFromLocation:placeLocation];
             
-            // stringaformattata per la distanza (metri, km)
             if (distance > 1000) {
                 distance = distance / 1000;
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f km", distance];
             } else {
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f metri", distance];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f m", distance];
             }
-        
-            
-            
         }
         
         return cell;
     } else if (indexPath.section == 2) {
-        // promemoria
-        // imposta lo switch in base al valore del reminder
+        // reminder
         if (self.selectedPlaceMO.remember) {
             [self.switchReminder setOn:YES];
         } else {
             [self.switchReminder setOn:NO];
         }
         
-        
         return cell;
     } else if (indexPath.section == 3) {
-        // note
+        // notes
         if (self.selectedPlaceMO.notes == nil || [self.selectedPlaceMO.notes isEqualToString:@""]) {
             cell.detailTextLabel.textColor = [UIColor lightGrayColor];
             
-            
-            cell.detailTextLabel.text = @"Nessuna nota";
+            cell.detailTextLabel.text = @"No notes";
         } else {
             cell.detailTextLabel.text = self.selectedPlaceMO.notes;
         }
         
-        
-        
         return cell;
     }
-    
-    
-    
     
     return nil;
 }
@@ -303,65 +246,28 @@
 - (IBAction)updatePlaceReminder:(id)sender {
     // NSLog(@"Update place reminder");
     
-    // aggiorna il posto con il nuovo valore del reminder
     self.selectedPlaceMO.remember = self.switchReminder.isOn;
     
-    // salva il contesto
+    // save the context
     NSError *error = nil;
     [[CoreDataManager sharedManager].managedObjectContext save:&error];
     
     if (error) {
-        NSLog(@"Errore nel salvataggio del contesto: %@", error);
+        NSLog(@"Error saving context: %@", error);
     }
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate updateGeofenceSettings];
-    
-    // se il reminder è attivo, registra l'ingresso nella geofence
-    /*if (self.selectedPlaceMO.remember) {
-        [self shouldMonitorRegion:YES];
-    } else {
-        [self shouldMonitorRegion:NO];
-    }*/
-    
-    
 }
 
-/*- (void) shouldMonitorRegion:(BOOL) boolean {
-    // recupera la geofence per il posto selezionato
-    for (CLCircularRegion *region in self.locationManager.monitoredRegions) {
-        
-        
-        if ([region.identifier isEqualToString:self.selectedPlaceMO.name]) {
-            NSLog(@"Regioni monitorate: %@", region);
-            // recupera la region
-            if (boolean) {
-                // notify on entering
-                region.notifyOnEntry = YES;
-                
-                NSLog(@"Regione monitorata: %@", region);
-            } else {
-                // smetti di monitorare la regione
-                region.notifyOnEntry = NO;
-                
-                NSLog(@"Regione non monitorata: %@", region);
-            }
-        }
-    }
-    
-    
-}*/
 
-// rimuove la selezione fissa della cella
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if (indexPath.section == 1 && indexPath.row == 1){
-        // fai comparire il popup per la copia dell'inidirizzo
+        // copy address to clipboard
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         pasteboard.string = self.selectedPlaceMO.address;
-        
-        
     }
 }
 
@@ -374,62 +280,17 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // return the number of rows
-    if (section == 0)       // mappa
-        return 1;           // cella con la mappa
-    else if (section == 1)  // informazioni
-        return 4;           // nome e indirizzo
-    else if (section == 2)  // promemoria
-        return 1;           // switch promemoria
-    else if (section == 3)  // note
-        return 1;           // text field per le note
+    if (section == 0)       // map
+        return 1;
+    else if (section == 1)  // informations
+        return 4;           // name, address, insert time, distance
+    else if (section == 2)  // remider
+        return 1;
+    else if (section == 3)  // notes
+        return 1;
     
     return 0;
 }
-
-/*
- - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
- UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
- 
- // Configure the cell...
- 
- return cell;
- }
- */
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 
 #pragma mark - Navigation
 
@@ -451,14 +312,12 @@
         if ([segue.destinationViewController isKindOfClass:[AddNewPlaceTableViewController class]]) {
             AddNewPlaceTableViewController *detailVC = (AddNewPlaceTableViewController *)segue.destinationViewController;
             
-            // Passa il PlaceMO selezionato alla schermata dei dettagli
+            // pass the place to edit to the detail view controller
             detailVC.placeToEdit = sender;
             
         }
     }
 }
-
-
 
 
 @end

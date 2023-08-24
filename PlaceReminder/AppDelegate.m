@@ -32,7 +32,7 @@
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager requestAlwaysAuthorization];
     
-    // Richiedi l'autorizzazione per le notifiche
+    // notification authorization
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error) {
         if (!error && granted) {
@@ -40,7 +40,7 @@
         }
     }];
     
-    // Esegui la query per ottenere i luoghi dal database
+    // database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
     NSError *error = nil;
@@ -50,60 +50,53 @@
         NSLog(@"Errore nel caricamento dei luoghi: %@", error);
     }
     
+    // geofence
     CLLocationCoordinate2D coordinates;
     
     for (PlaceMO *place in self.places) {
-            coordinates.latitude = place.latitude;
-            coordinates.longitude = place.longitude;
+        coordinates.latitude = place.latitude;
+        coordinates.longitude = place.longitude;
             
-            // crea la regione geografica ampia 500 metri
-            self.geofenceRegion = [[CLCircularRegion alloc] initWithCenter:coordinates
+        // crea la regione geografica ampia 500 metri
+        self.geofenceRegion = [[CLCircularRegion alloc] initWithCenter:coordinates
                                                                     radius:500
                                                                 identifier:place.name];
             
-            NSLog(@"Regione geografica creata: %@", self.geofenceRegion);
+        NSLog(@"Geofence created: %@", self.geofenceRegion);
             
             
-            // imposta l'ingresso nella regione come trigger
+        // enter trigger (only for place with remember flag set)
         if (place.remember){
             self.geofenceRegion.notifyOnEntry = YES;
-                        
-            // registra la regione geografica
+            
             [self.locationManager startMonitoringForRegion:self.geofenceRegion];
             
-            NSLog(@"Registro l'ingresso nella regione: %@", self.geofenceRegion);
+            NSLog(@"Listening for geofence: %@", self.geofenceRegion);
         }
-            
-        
     }
     
-    
-        
     return YES;
 }
 
-// Metodo chiamato quando viene effettuato un cambio nelle impostazioni dei geofence nel database
 - (void)updateGeofenceSettings {
     NSLog(@"Aggiorno le impostazioni dei geofence");
     
-    // Recupera i dati aggiornati dal database
+    // get updated places from database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
     NSError *error = nil;
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
-        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+        NSLog(@"Errorloading places: %@", error);
     }
     
-    
-    
-    // Rimuovi i geofence esistenti
+    // remove old geofence
     [self.locationManager.monitoredRegions enumerateObjectsUsingBlock:^(CLRegion *region, BOOL *stop) {
         [self.locationManager stopMonitoringForRegion:region];
     }];
     
-    // Aggiungi nuovi geofence con le nuove impostazioni
+    // add new geofence
     for (PlaceMO *place in self.places) {
         CLLocationCoordinate2D center = CLLocationCoordinate2DMake(place.latitude, place.longitude);
         CLLocationDistance radius = 500.0; // 500 metri
@@ -129,12 +122,11 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
-    NSLog(@"Entrato nella regione: %@", region);
-    
-    // recupera il nome del luogo
+    NSLog(@"User entered in region: %@", region);
+
     NSString *placeName = region.identifier;
     
-    // inseriscilo nel titlo della notifica
+    // create notification
     NSString *title = [NSString stringWithFormat:@"Sei vicino a %@", placeName];
     NSString *body = [NSString stringWithFormat:@"%@ è luogo importante per te!", placeName];
     
@@ -168,7 +160,7 @@
 
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
-    // Gestisci la notifica ricevuta
+    
     completionHandler();
 }
 

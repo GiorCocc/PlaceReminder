@@ -4,11 +4,11 @@
 //
 //  Created by Giorgio Coccapani on 17/08/23.
 //
-//  Questo ViewController ha il compito di mostrare una mappa contenente la posizione dell'utente e i luoghi preferiti vicino a lui
-//  Sotto alla mappa è presente una TableView con celle dinamiche che mostrano, in una struttura subtitle, il nome del luogo e il suo indirizzo
-//  Cliccando su una cella si apre una nuova schermata che mostra i dettagli del luogo selezionato
-//  I luoghi sono presenti nel database e vanno recuperati da li
-//  In alto a destra è presente un bottone che permette di aggiungere un nuovo luogo e il pulsante per andare a vedere la mappa a tutto schermo
+// This ViewController is in charge of showing a map containing the user's location and favorite places near him
+// Below the map there is a TableView with dynamic cells showing, in a subtitle structure, the name of the place and its address
+// Clicking on a cell opens a new screen showing the details of the selected place
+// The places are present in the database and must be retrieved from there
+// At the top right there is a button that allows you to add a new place and the button to go and see the map in full screen
 
 #import "HomePageViewController.h"
 #import "CoreDataManager.h"
@@ -16,8 +16,6 @@
 #import "AddNewPlaceTableViewController.h"
 #import "PlaceDetailsViewController.h"
 #import "AppDelegate.h"
-
-
 
 
 @interface HomePageViewController () <AddNewPlaceDelegate, CLLocationManagerDelegate>
@@ -42,38 +40,32 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    // Esegui la query per ottenere i luoghi dal database
+    // database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
     NSError *error = nil;
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
-        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+        NSLog(@"Errorloading places: %@", error);
     }
     
-    // Set the map view delegate
+    // map
     self.mapView.delegate = self;
-    
-    // Create a location manager and set ourselves as the delegate
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager requestWhenInUseAuthorization];
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager startUpdatingLocation];
     
-    
-    
-    
+    // annotations
     CLLocationCoordinate2D placeCoordinate;
     CLCircularRegion *region;
-    
     
     for (PlaceMO *place in self.places) {
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
         [self.mapView addAnnotation:annotation];
-        
         
         if (place.remember){
             placeCoordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
@@ -85,8 +77,6 @@
     
     // geofencing
     [self.locationManager startMonitoringForRegion:region];
-    
-    
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -113,10 +103,10 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    CLLocation *userLocation = [locations lastObject];
     
-    // Imposta la posizione del centro della mappa sulla posizione dell'utente
-    MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01)); // Puoi regolare il valore di MKCoordinateSpan per il livello di zoom desiderato
+    // Zoom the map to the user's location
+    MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01));
     [self.mapView setRegion:region animated:YES];
 }
 
@@ -124,25 +114,23 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Esegui la query per ottenere i luoghi dal database
+    // get data from database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
     NSError *error = nil;
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
-        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+        NSLog(@"Errorloading places: %@", error);
     }
     
-    // Aggiorna la tabella con i dati aggiornati
     [self.tableView reloadData];
-    
-    // Aggiorna la mappa con i dati aggiornati
     [self updateMapView];
 }
 
 - (void) updateMapView {
     [self.mapView removeAnnotations:self.mapView.annotations];
+    
     for (PlaceMO *place in self.places) {
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
@@ -151,31 +139,29 @@
 }
 
 - (void)didAddNewPlace: (PlaceMO *) newPlace {
-    // Aggiorna i dati (array places) e ricarica la tabella
+    
     // NSLog(@"didAddNewPlace chiamato dal delegate");
     [self.places addObject:newPlace];
     [self.tableView reloadData];
     
-    // Aggiungi anche l'annotation alla mappa
+    // annotations
     MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
     annotation.coordinate = CLLocationCoordinate2DMake(newPlace.latitude, newPlace.longitude);
     [self.mapView addAnnotation:annotation];
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate updateGeofenceSettings];
-    
 }
 
 - (void)didEditPlace:(nonnull PlaceMO *)place {}
 
 
 - (void) didRemovePlace: (PlaceMO *) place {
-    // Aggiorna i dati (array places) e ricarica la tabella
     // NSLog(@"didRemovePlace chiamato dal delegate");
     [self.places removeObject:place];
     [self.tableView reloadData];
     
-    // Rimuovo anche l'annotation dalla mappa
+    // remove annotation
     for (MKPointAnnotation *annotation in self.mapView.annotations) {
         if (annotation.coordinate.latitude == place.latitude && annotation.coordinate.longitude == place.longitude) {
             [self.mapView removeAnnotation:annotation];
@@ -184,17 +170,14 @@
     
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate updateGeofenceSettings];
-
 }
 
 - (IBAction)presentAddNewPlaceViewController {
     AddNewPlaceTableViewController *addNewPlaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AddNewPlaceViewController"];
     addNewPlaceVC.delegate = self;
-    // presenta il view controller come push
-    [self.navigationController pushViewController:addNewPlaceVC animated:YES];
     
+    [self.navigationController pushViewController:addNewPlaceVC animated:YES];
 }
-
 
 
 #pragma mark - Table view data source
@@ -217,20 +200,22 @@
     cell.textLabel.text = place.name;
     cell.detailTextLabel.text = place.address;
     
-    // Configure the cell...
-    
     return cell;
 }
 
-// Override to support editing the table view.
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Crea un alert per chiedere conferma della cancellazione
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Cancellazione luogo" message:@"Sei sicuro di voler cancellare questo luogo?" preferredStyle:UIAlertControllerStyleAlert];
+        // alert
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Remove"
+                                                                                 message:@"Are you sure you want to remove this place?"
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
         
         // Aggiungi l'azione per la cancellazione
-        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Cancella" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-            // Cancellare il luogo dal database
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Confirm"
+                                                               style:UIAlertActionStyleDestructive
+                                                             handler:^(UIAlertAction * _Nonnull action) {
+            // remove from database
             PlaceMO *place = self.places[indexPath.row];
             NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
             [context deleteObject:place];
@@ -239,33 +224,31 @@
             [context save:&error];
             
             if (error) {
-                NSLog(@"Errore nel salvataggio del contesto: %@", error);
+                NSLog(@"Errorsaving context: %@", error);
             } else {
-                // Rimuovi il luogo dall'array dei dati
+                // remove from array
                 [self.places removeObjectAtIndex:indexPath.row];
                 
-                // Elimina la cella dalla tabella con animazione di dissolvenza
+                // remove from table
                 [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
                 
                 [self updateMapView];
                 
+                // remove geofence
                 AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 [appDelegate updateGeofenceSettings];
-            
-                
-                
-            
             }
         }];
         
-        // Aggiungi l'azione per annullare la cancellazione
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Annulla" style:UIAlertActionStyleCancel handler:nil];
         
-        // Aggiungi le azioni all'alert
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+        
+        
         [alertController addAction:deleteAction];
         [alertController addAction:cancelAction];
         
-        // Mostra l'alert
         [self presentViewController:alertController animated:YES completion:nil];
     }
 }
@@ -274,14 +257,11 @@
 #pragma mark - Navigation
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES]; // Deseleziona la cella
-    
-    // Ottieni il PlaceMO corrispondente all'indice selezionato
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
     PlaceMO *selectedPlace = self.places[indexPath.row];
     self.selectedPlaceMO = selectedPlace;
-    
-    
-    // Passa l'oggetto PlaceMO a prepareForSegue
+
     [self performSegueWithIdentifier:@"ShowDetailsSegue" sender:selectedPlace];
 }
 
@@ -291,7 +271,7 @@
         if ([segue.destinationViewController isKindOfClass:[PlaceDetailsViewController class]]) {
             PlaceDetailsViewController *detailVC = (PlaceDetailsViewController *)segue.destinationViewController;
             
-            // Passa il PlaceMO selezionato alla schermata dei dettagli
+            // pass the selected place to the detail view controller
             detailVC.selectedPlaceMO = sender;
             
         }
