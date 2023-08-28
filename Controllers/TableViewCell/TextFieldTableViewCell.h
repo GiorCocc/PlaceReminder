@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 
 - (void) configureWithTitle:(NSString *)title placeholder:(NSString *)placeholder;
+- (void) fillTextFieldWithText:(NSString *)text;
 
  
 

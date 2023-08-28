@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Test</string>
+	<string>User location required for registering proximity notifications to saved places</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Test 1</string>
+	<string>User location required for registering proximity notifications to saved places</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -195,12 +195,6 @@
             cell.detailTextLabel.text = self.selectedPlaceMO.address;
             
         } else if (indexPath.row == 2) {
-            NSString *insertTime = [NSDateFormatter localizedStringFromDate:self.selectedPlaceMO.insert_time
-                                                                  dateStyle:NSDateFormatterMediumStyle
-                                                                  timeStyle:NSDateFormatterShortStyle];
-            
-            cell.detailTextLabel.text = insertTime;
-        } else if (indexPath.row == 3) {
             // distance from user
             CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.mapView.userLocation.coordinate.latitude
                                                                   longitude:self.mapView.userLocation.coordinate.longitude];
@@ -260,6 +254,34 @@
     [appDelegate updateGeofenceSettings];
 }
 
+- (UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if (section == 0) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        
+        NSString *insertTime = [NSDateFormatter localizedStringFromDate:self.selectedPlaceMO.insert_time
+                                                              dateStyle:NSDateFormatterMediumStyle
+                                                              timeStyle:NSDateFormatterShortStyle];
+        
+        NSString *lastUpdateAt = [NSString stringWithFormat:@"Last update at: %@", insertTime];
+        
+        label.text = lastUpdateAt;
+        
+        label.textAlignment = NSTextAlignmentRight;
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor grayColor];
+        label.numberOfLines = 0;
+        label.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 15);
+        
+        
+        
+    
+        
+        return label;
+    }
+    
+    return nil;
+}
+
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -283,7 +305,7 @@
     if (section == 0)       // map
         return 1;
     else if (section == 1)  // informations
-        return 4;           // name, address, insert time, distance
+        return 3;           // name, address, insert time, distance
     else if (section == 2)  // remider
         return 1;
     else if (section == 3)  // notes

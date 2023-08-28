@@ -65,7 +65,6 @@
         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
         annotation.place = place;
         annotation.title = place.name;
-        annotation.subtitle = place.address;
         
         [self.mapView addAnnotation:annotation];
     }

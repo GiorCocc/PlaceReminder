@@ -12,11 +12,6 @@
 //      - Place address (text field)
 //      - Reminder (switch)
 //      - Notes (text field)
-//
-//  TODO: other information and sections to insert:
-//      - Images (to display photos related to the marked place)
-//      - Audio Notes (for recording audio notes)
-//  TODO: implement note cell expansion
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"
@@ -33,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet TextFieldTableViewCell *addressTableViewCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *reminderTabelViewCell;
 @property (weak, nonatomic) IBOutlet TextFieldTableViewCell *notesTabelViewCell;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *userLocationButton;
 @property (nonatomic, strong) NSString *placeName;
 @property (nonatomic, strong) NSString *placeAddress;
 @property (nonatomic, strong) NSString *placeNotes;
@@ -178,6 +174,20 @@
                      completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
             if (error) {
                 NSLog(@"Geocode error: %@", error.localizedDescription);
+                
+                // alert
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                               message:@"Coordinates not found for the specified address"
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                        style:UIAlertActionStyleDefault
+                                                                      handler:nil];
+                
+                [alert addAction:confirmAction];
+                [self presentViewController:alert animated:YES completion:nil];
+                
+                
                 return;
             }
             
@@ -194,6 +204,20 @@
                                completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
                     if (error) {
                         NSLog(@"Geocode error: %@", error.localizedDescription);
+                        
+                        // alert
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                       message:@"Address not found for the specified coordinates"
+                                                                                preferredStyle:UIAlertControllerStyleAlert];
+                        
+                        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                                style:UIAlertActionStyleDefault
+                                                                              handler:nil];
+                        
+                        [alert addAction:confirmAction];
+                        [self presentViewController:alert animated:YES completion:nil];
+                        
+                        
                         return;
                     }
                     
@@ -325,6 +349,52 @@
     
     return YES;
 }
+- (IBAction)fillAddressTextFieldWithUserPosition:(id)sender {
+    // get the user coordinates
+    CLLocation *userLocation = self.mapView.userLocation.location;
+    
+    // geocode the user location
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    [geocoder reverseGeocodeLocation:userLocation
+                   completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+                       
+                       if (error) {
+                           NSLog(@"Geocode error: %@", error.localizedDescription);
+                           
+                           // alert
+                           UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                          message:@"Address not found for the specified coordinates"
+                                                                                   preferredStyle:UIAlertControllerStyleAlert];
+                           
+                           UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
+                                                                                   style:UIAlertActionStyleDefault
+                                                                                 handler:nil];
+                           
+                           [alert addAction:confirmAction];
+                           [self presentViewController:alert animated:YES completion:nil];
+                           
+                           
+                           return;
+                       }
+                       
+                       if (placemarks && placemarks.count > 0) {
+                           CLPlacemark *placemark = placemarks.firstObject;
+                           NSString *address = [NSString stringWithFormat:@"%@ %@, %@, %@, %@, %@",
+                                                placemark.thoroughfare,
+                                                placemark.subThoroughfare ? placemark.subThoroughfare : @"",
+                                                placemark.postalCode,
+                                                placemark.locality,
+                                                placemark.administrativeArea,
+                                                placemark.country];
+                           
+                           // fill the address text field
+                           TextFieldTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+                            cell.textField.text = address;
+                            
+                       }
+                       
+                   }];
+}
 
 # pragma mark Table
 
@@ -366,6 +436,7 @@
                 cell.textField.text = self.placeToEdit.name;
             }
             
+            
             cell.textField.tag = 0;
            
             return cell;
@@ -389,6 +460,7 @@
             
             cell.textField.tag = 1;
             cell.textField.textContentType = UITextContentTypeAddressCityAndState;
+            
             
             return cell;
         }
@@ -437,7 +509,7 @@
             cell.textField.text = self.placeToEdit.notes;
         }
         
-        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         cell.textField.tag = 2;
         
         return cell;

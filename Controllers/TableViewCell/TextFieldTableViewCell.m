@@ -38,5 +38,9 @@
     self.textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 }
 
+- (void) fillTextFieldWithText:(NSString *)text {
+    self.textField.text = text;
+}
+
 
 @end
