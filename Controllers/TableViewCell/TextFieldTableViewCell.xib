@@ -27,7 +27,7 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="224" id="6rb-28-VCT"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="words" enablesReturnKeyAutomatically="YES"/>
                     </textField>
                 </subviews>

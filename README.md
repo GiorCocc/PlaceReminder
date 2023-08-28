@@ -33,6 +33,8 @@ PlaceReminder is a simple iOS application written in Objective-C that allows you
 
 Upcoming features to be implemented:
 
+- [x] Ability to fill the address field only partially
+- [x] Ability to fill the address field with the current location
 - [ ] Addition of categories for places (e.g. work, home, school, etc.)
 - [ ] Adding photos for saved places
 - [ ] Ability to record a voice note for each saved place

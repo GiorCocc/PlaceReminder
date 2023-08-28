@@ -20,8 +20,6 @@
 #import "AppDelegate.h"
 
 
-
-
 @interface AddNewPlaceTableViewController ()
 
 @property (weak, nonatomic) IBOutlet TextFieldTableViewCell *nameTableViewCell;
@@ -272,8 +270,9 @@
                                 // notify the delegate that the place has been edited
                                 [self.delegate didEditPlace:self.placeToEdit];
                                 
-                                // pop the view controller
-                                [self.navigationController popViewControllerAnimated:YES];
+                                // go to the home page
+                                [self.navigationController popToRootViewControllerAnimated:YES];
+                            
                             }
                             
                             return;
