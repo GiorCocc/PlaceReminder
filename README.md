@@ -7,13 +7,13 @@ PlaceReminder is a simple iOS application written in Objective-C that allows you
 - [PlaceReminder](#placereminder)
   - [Index](#index)
   - [Functionality](#functionality)
+    - [Future developments and improvements](#future-developments-and-improvements)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Project structure](#project-structure)
     - [Databases](#databases)
     - [MapKit](#mapkit)
       - [Geofencing](#geofencing)
-  - [Future developments and improvements](#future-developments-and-improvements)
 
 ## Functionality
 
@@ -28,6 +28,15 @@ PlaceReminder is a simple iOS application written in Objective-C that allows you
 - Placeholders can be deleted by the user and modified at will
 - More information can be read from Apple Maps
 - When the user enters the region of a reminder, he is notified with a message that he has entered the region
+
+### Future developments and improvements
+
+Upcoming features to be implemented:
+
+- [ ] Addition of categories for places (e.g. work, home, school, etc.)
+- [ ] Adding photos for saved places
+- [ ] Ability to record a voice note for each saved place
+- [ ] Ability to change the geographic region radius for each saved place
 
 ## Installation
 
@@ -239,12 +248,3 @@ When the user enters the region, a notification appears alerting them that they 
     }];
 }
 ```
-
-## Future developments and improvements
-
-Upcoming features to be implemented:
-
-- [ ] Addition of categories for places (e.g. work, home, school, etc.)
-- [ ] Adding photos for saved places
-- [ ] Ability to record a voice note for each saved place
-- [ ] Ability to change the geographic region radius for each saved place
