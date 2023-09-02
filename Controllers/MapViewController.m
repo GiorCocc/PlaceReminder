@@ -95,9 +95,8 @@
         MapAnnotation *annotation = [[MapAnnotation alloc] init];
         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
         annotation.place = place;
-        annotation.title = place.name;
-        annotation.subtitle = place.address;
-        
+		annotation.title = place.name;
+		
         [self.mapView addAnnotation:annotation];
     }
 }
@@ -162,18 +161,28 @@
         MKMarkerAnnotationView *pinView = (MKMarkerAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
         
         if (!pinView) {
-            pinView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation
-                                                         reuseIdentifier:annotationIdentifier];
+            pinView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
             pinView.canShowCallout = YES;
-            
-            UIButton *detailButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-            pinView.rightCalloutAccessoryView = detailButton;
-            
-            // Custom callout
-            UIView *calloutView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 70)];
-            calloutView.backgroundColor = [UIColor whiteColor];
-            
-            pinView.detailCalloutAccessoryView = calloutView;
+			
+			UIView *calloutView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+			pinView.detailCalloutAccessoryView = calloutView;
+			
+			CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
+			CLLocation *pinLocation = [[CLLocation alloc] initWithLatitude:annotation.coordinate.latitude longitude:annotation.coordinate.longitude];
+			CLLocationDistance distance = [userLocation distanceFromLocation:pinLocation];
+			
+			UILabel *distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];
+			
+			if (distance < 1000)
+				distanceLabel.text = [NSString stringWithFormat:@"%.0f m", distance];
+			else
+				distanceLabel.text = [NSString stringWithFormat:@"%.2f km", distance];
+			
+			distanceLabel.textAlignment = NSTextAlignmentCenter;
+			distanceLabel.font = [UIFont systemFontOfSize:12];
+			pinView.detailCalloutAccessoryView = distanceLabel;
+			
+			pinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         } else {
             pinView.annotation = annotation;
         }
