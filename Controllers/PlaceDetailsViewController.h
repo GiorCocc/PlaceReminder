@@ -16,15 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void) didRemovePlace: (PlaceMO *) place;
 
-
 @end
+
 
 @interface PlaceDetailsViewController : UITableViewController <AddNewPlaceDelegate>
 
 @property (nonatomic, strong) PlaceMO *selectedPlaceMO;
 @property (nonatomic, weak) id<PlaceDetailsDelegate> delegate;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-
 
 - (void) updateUIWithData: (PlaceMO *) place;
 

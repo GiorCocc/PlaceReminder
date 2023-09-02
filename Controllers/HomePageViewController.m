@@ -4,11 +4,12 @@
 //
 //  Created by Giorgio Coccapani on 17/08/23.
 //
-// This ViewController is in charge of showing a map containing the user's location and favorite places near him
-// Below the map there is a TableView with dynamic cells showing, in a subtitle structure, the name of the place and its address
-// Clicking on a cell opens a new screen showing the details of the selected place
-// The places are present in the database and must be retrieved from there
-// At the top right there is a button that allows you to add a new place and the button to go and see the map in full screen
+//  This ViewController is in charge of showing a map containing the user's location and favorite places near him
+//  Below the map there is a TableView with dynamic cells showing, in a subtitle structure, the name of the place and its address
+//  Clicking on a cell opens a new screen showing the details of the selected place
+//  The places are present in the database and must be retrieved from there
+//  At the top right there is a button that allows you to add a new place and the button to go and see the map in full screen
+//
 
 #import "HomePageViewController.h"
 #import "CoreDataManager.h"

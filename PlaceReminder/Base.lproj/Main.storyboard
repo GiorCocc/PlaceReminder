@@ -234,7 +234,7 @@
                                 </barButtonItems>
                             </barButtonItemGroup>
                         </centerItemGroups>
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="6LM-If-39Z">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="6LM-If-39Z">
                             <connections>
                                 <action selector="editPlace:" destination="zif-rT-DkN" id="dkR-Zc-s1t"/>
                             </connections>
@@ -272,7 +272,7 @@
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="gZY-co-KyN">
-                                <rect key="frame" x="16" y="456" width="361" height="706"/>
+                                <rect key="frame" x="16" y="457.66666666666674" width="361" height="706"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="706" id="4pX-dB-emW"/>
                                 </constraints>
@@ -311,9 +311,9 @@
                                     <outlet property="delegate" destination="UqE-6A-1q2" id="rqc-uh-9k1"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Places" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gN-SQ-D5T">
-                                <rect key="frame" x="16" y="416" width="361" height="32"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="26"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Places" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gN-SQ-D5T">
+                                <rect key="frame" x="16" y="416" width="361" height="33.666666666666686"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -335,7 +335,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="PlaceReminder" largeTitleDisplayMode="always" id="NI2-my-dkx">
                         <rightBarButtonItems>
-                            <barButtonItem image="plus" catalog="system" id="JQ6-wX-36t">
+                            <barButtonItem systemItem="add" id="JQ6-wX-36t">
                                 <connections>
                                     <action selector="presentAddNewPlaceViewController" destination="4KF-2l-02u" id="P15-T2-egN"/>
                                 </connections>
@@ -550,7 +550,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="fSZ-Db-HVW"/>
+        <segue reference="qhE-0K-a7j"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" name="AccentColor"/>
     <resources>

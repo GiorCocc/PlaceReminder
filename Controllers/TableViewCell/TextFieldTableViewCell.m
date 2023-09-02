@@ -4,6 +4,9 @@
 //
 //  Created by Giorgio Coccapani on 16/08/23.
 //
+//  ViewController for the cell in the AddNewPlace page. This cell contains a UITextField and a UILabel.
+//  The UITextField is used to insert the name of the place, the UILabel is used to show the title of the cell.
+//
 
 #import "TextFieldTableViewCell.h"
 
@@ -29,6 +32,7 @@
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
+    
     return YES;
 }
 

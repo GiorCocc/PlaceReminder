@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) configureWithTitle:(NSString *)title placeholder:(NSString *)placeholder;
 - (void) fillTextFieldWithText:(NSString *)text;
 
- 
-
 @end
 
 NS_ASSUME_NONNULL_END

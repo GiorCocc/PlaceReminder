@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		442F5B172A6ED4870089E298 /* Poi.m in Sources */ = {isa = PBXBuildFile; fileRef = 442F5B162A6ED4870089E298 /* Poi.m */; };
 		4453F44C2A6D26150066FAEA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453F44B2A6D26150066FAEA /* AppDelegate.m */; };
 		4453F44F2A6D26150066FAEA /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453F44E2A6D26150066FAEA /* SceneDelegate.m */; };
 		4453F4522A6D26150066FAEA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4453F4512A6D26150066FAEA /* ViewController.m */; };
@@ -31,8 +30,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		442F5B162A6ED4870089E298 /* Poi.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Poi.m; sourceTree = "<group>"; };
-		442F5B182A6ED4980089E298 /* Poi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Poi.h; sourceTree = "<group>"; };
 		442F5B1C2A6EDD170089E298 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4453F4472A6D26150066FAEA /* PlaceReminder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlaceReminder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4453F44A2A6D26150066FAEA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -157,8 +154,6 @@
 				445547342A8FF632001BCCC8 /* PlaceMO+CoreDataClass.h */,
 				445547352A8FF632001BCCC8 /* PlaceMO+CoreDataClass.m */,
 				445547362A8FF632001BCCC8 /* PlaceMO+CoreDataProperties.m */,
-				442F5B162A6ED4870089E298 /* Poi.m */,
-				442F5B182A6ED4980089E298 /* Poi.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -265,7 +260,6 @@
 				445547382A8FF632001BCCC8 /* PlaceMO+CoreDataProperties.m in Sources */,
 				445547232A8E996C001BCCC8 /* HomePageViewController.m in Sources */,
 				4453F44C2A6D26150066FAEA /* AppDelegate.m in Sources */,
-				442F5B172A6ED4870089E298 /* Poi.m in Sources */,
 				4453F45D2A6D26170066FAEA /* main.m in Sources */,
 				445547372A8FF632001BCCC8 /* PlaceMO+CoreDataClass.m in Sources */,
 				4455471B2A8D5677001BCCC8 /* CoreDataManager.m in Sources */,
@@ -421,7 +415,7 @@
 				INFOPLIST_FILE = PlaceReminder/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PlaceRemider;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Posizione utente richiesta per la ricezione di notifiche relative alla vicinanza con i tuoi posti preferiti";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "User location required to receive notifications about proximity to your favorite places";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -452,7 +446,7 @@
 				INFOPLIST_FILE = PlaceReminder/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PlaceRemider;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Posizione utente richiesta per la ricezione di notifiche relative alla vicinanza con i tuoi posti preferiti";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "User location required to receive notifications about proximity to your favorite places";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

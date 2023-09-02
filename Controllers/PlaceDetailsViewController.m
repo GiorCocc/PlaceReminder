@@ -5,6 +5,7 @@
 //  Created by Giorgio Coccapani on 28/07/23.
 //
 //  ViewController for displaying the details of a place.
+//
 
 #import "PlaceDetailsViewController.h"
 #import "CoreDataManager.h"
@@ -16,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *mapCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *nameCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *addressCell;
-@property (weak, nonatomic) IBOutlet UITableViewCell *insertTimeCell;
 @property (weak, nonatomic) IBOutlet UISwitch *switchReminder;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editBarButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *removeBarButton;
@@ -64,7 +64,7 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // aggiorna i dati nella schermata
+    // update UI
     [self updateUIWithData:self.selectedPlaceMO];
     [self.mapView removeAnnotations:self.mapView.annotations];
     [self updateMapViewWithPlace:self.selectedPlaceMO];
@@ -83,9 +83,17 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    self.distanceCell.detailTextLabel.text = @"Calculating...";
+    
     CLLocation *userLocation = [locations lastObject];
     
-    self.distanceCell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f m", [userLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:self.selectedPlaceMO.latitude longitude:self.selectedPlaceMO.longitude]]];
+    float distance = [userLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:self.selectedPlaceMO.latitude longitude:self.selectedPlaceMO.longitude]];
+    
+    if (distance > 1000) {
+        self.distanceCell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f km", distance / 1000];
+    } else {
+        self.distanceCell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f m", distance];
+    }
 }
 
 - (void)updateUIWithData:(PlaceMO *)place {
@@ -93,9 +101,9 @@
     
     self.nameCell.detailTextLabel.text = place.name;
     self.addressCell.detailTextLabel.text = place.address;
-    self.insertTimeCell.detailTextLabel.text = [place.insert_time description];
     self.switchReminder.on = place.remember;
     self.notesCell.detailTextLabel.text = place.notes;
+    
     [self updateMapViewWithPlace:place];
 }
 
@@ -109,7 +117,7 @@
     [self updateMapViewWithPlace:editedPlace];
 }
 
-- (void) didAddNewPlace:(nonnull PlaceMO *)place {}
+- (void) didAddNewPlace:(nonnull PlaceMO *)place { }
 
 # pragma mark AppBar actions
 
@@ -137,8 +145,6 @@
         [self.delegate didRemovePlace:self.selectedPlaceMO];
         
         // remove geofence
-        // [self removeGeofenceForPlace:self.selectedPlaceMO];
-        
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [appDelegate updateGeofenceSettings];
         
@@ -154,29 +160,36 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (IBAction)openInMap:(id)sender {
-    // NSLog(@"Open in map button pressed");
-    
-    // apen the place in Apple Maps
+- (NSString *) mapURLForPlace:(PlaceMO *)place {
     NSString *address = self.selectedPlaceMO.address;
     address = [address stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     address = [address stringByReplacingOccurrencesOfString:@"," withString:@""];
     NSString *urlString = [NSString stringWithFormat:@"http://maps.apple.com/?q=%@", address];
+    
+    return urlString;
+}
+
+- (IBAction)openInMap:(id)sender {
+    // NSLog(@"Open in map button pressed");
+    
+    // apen the place in Apple Maps
+    NSString *urlString = [self mapURLForPlace:self.selectedPlaceMO];
     NSURL *url = [NSURL URLWithString:urlString];
     [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
     
 }
 
 - (IBAction)sharePlaceInfo:(id)sender {
-    
-    NSString *textToShare = [NSString stringWithFormat:@"I want to share with you this place: %@ ~ %@",
-                             self.selectedPlaceMO.name, self.selectedPlaceMO.address];
+    NSString *textToShare = [NSString stringWithFormat:@"I want to share with you this place: %@ ~ %@\n\n Open directly in map:\n%@",
+                             self.selectedPlaceMO.name,
+                             self.selectedPlaceMO.address,
+                             [self mapURLForPlace:self.selectedPlaceMO]];
     NSArray *objectsToShare = @[textToShare];
     
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare
+    UIActivityViewController *activity = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare
                                                                              applicationActivities:nil];
     
-    [self presentViewController:activityVC animated:YES completion:nil];
+    [self presentViewController:activity animated:YES completion:nil];
 }
 
 #pragma mark Table
@@ -184,18 +197,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
-    if (indexPath.section == 0) {
-        // map
+    if (indexPath.section == 0) {   // map
         return cell;
-        
     } else if (indexPath.section == 1) {
         if (indexPath.row == 0) {
             cell.detailTextLabel.text = self.selectedPlaceMO.name;
         } else if (indexPath.row == 1) {
             cell.detailTextLabel.text = self.selectedPlaceMO.address;
             
-        } else if (indexPath.row == 2) {
-            // distance from user
+        } else if (indexPath.row == 2) { // distance from user
             CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.mapView.userLocation.coordinate.latitude
                                                                   longitude:self.mapView.userLocation.coordinate.longitude];
             CLLocation *placeLocation = [[CLLocation alloc] initWithLatitude:self.selectedPlaceMO.latitude
@@ -203,16 +213,14 @@
             CLLocationDistance distance = [userLocation distanceFromLocation:placeLocation];
             
             if (distance > 1000) {
-                distance = distance / 1000;
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f km", distance];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f km", distance / 1000];
             } else {
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f m", distance];
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f m", distance];
             }
         }
         
         return cell;
-    } else if (indexPath.section == 2) {
-        // reminder
+    } else if (indexPath.section == 2) {    // reminder
         if (self.selectedPlaceMO.remember) {
             [self.switchReminder setOn:YES];
         } else {
@@ -220,8 +228,7 @@
         }
         
         return cell;
-    } else if (indexPath.section == 3) {
-        // notes
+    } else if (indexPath.section == 3) {    // notes
         if (self.selectedPlaceMO.notes == nil || [self.selectedPlaceMO.notes isEqualToString:@""]) {
             cell.detailTextLabel.textColor = [UIColor lightGrayColor];
             
@@ -236,7 +243,6 @@
     return nil;
 }
 
-// update the place reminder flag when the switch is toggled
 - (IBAction)updatePlaceReminder:(id)sender {
     // NSLog(@"Update place reminder");
     
@@ -322,7 +328,6 @@
     PlaceMO *place = self.selectedPlaceMO;
     
     [self performSegueWithIdentifier:@"EditSelectedPlaceSegue" sender:place];
-    
 }
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -336,7 +341,6 @@
             
             // pass the place to edit to the detail view controller
             detailVC.placeToEdit = sender;
-            
         }
     }
 }

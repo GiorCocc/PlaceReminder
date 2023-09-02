@@ -5,13 +5,15 @@
 //  Created by Giorgio Coccapani on 15/08/23.
 //
 //  In this screen, a new item is added to the list of favorite places.
-//  The screen consists of a TableView that includes 1 sections and each cell is a static element
+//  The screen consists of a TableView that includes 4 sections and each cell is a static element
 //  The sections and the information they contain are:
-//      - About the place:
-//      - Place name (text field)
-//      - Place address (text field)
+//      - Map (map)
+//      - Informations:
+//          - Place name (text field)
+//          - Place address (text field)
 //      - Reminder (switch)
 //      - Notes (text field)
+//
 
 #import "AddNewPlaceTableViewController.h"
 #import "TextFieldTableViewCell.h"
@@ -92,7 +94,6 @@
         // Zoom the map to the user's location
         MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(manager.location.coordinate, 500, 500);
         [self.mapView setRegion:region animated:YES];
-    
     }
     else {
         self.mapView.showsUserLocation = NO;
@@ -100,7 +101,7 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
-    CLLocation *userLocation = [locations lastObject]; // Prendi l'ultima posizione disponibile
+    CLLocation *userLocation = [locations lastObject];
     
     // place the center of the map on the user's location
     MKCoordinateRegion region = MKCoordinateRegionMake(userLocation.coordinate, MKCoordinateSpanMake(0.01, 0.01));
@@ -110,15 +111,28 @@
     if (self.placeToEdit) {
         [self.mapView setCenterCoordinate:CLLocationCoordinate2DMake(self.placeToEdit.latitude, self.placeToEdit.longitude)];
     }
-    
 }
 
+#pragma mark Buttons
+
 - (void)switchChanged:(UISwitch *)sender {
-    NSLog(@"Switch changed %d", sender.isOn);
+    // NSLog(@"Switch changed %d", sender.isOn);
     
     self.placeRemember = sender.isOn;
 }
 
+- (void) errorAlertWithMessage:(NSString *) message {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:nil];
+    
+    [alert addAction:confirmAction];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 - (void)doneButtonTapped {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Confirm"
@@ -128,29 +142,18 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Ok"
                                                             style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * _Nonnull action) {
-        // preleva i dati dai text field
-        TextFieldTableViewCell *nameCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0
-                                                                                                    inSection:1]];
-        TextFieldTableViewCell *addressCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1
-                                                                                                       inSection:1]];
-        TextFieldTableViewCell *notesCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0
-                                                                                                     inSection:3]];
+        // get the data from the text fields
+        TextFieldTableViewCell *nameCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        TextFieldTableViewCell *addressCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+        TextFieldTableViewCell *notesCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:3]];
         NSString *placeName = nameCell.textField.text;
         NSString *placeAddress = addressCell.textField.text;
         NSString *notes = notesCell.textField.text;
         
-        // controlla che i campi di nome e indirizzo non siano vuoti
+        // database validation: check if the name and address fields are empty
         if ([placeName isEqualToString:@""] || [placeAddress isEqualToString:@""]) {
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
-                                                                           message:@"Name and address fields cannot be empty"
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            [self errorAlertWithMessage:@"Name and address fields cannot be empty"];
             
-            UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                    style:UIAlertActionStyleDefault
-                                                                  handler:nil];
-            
-            [alert addAction:confirmAction];
-            [self presentViewController:alert animated:YES completion:nil];
             return;
         }
         
@@ -158,7 +161,7 @@
         self.placeAddress = placeAddress;
         self.placeNotes = notes;
         
-        // insert data into the database
+        // insert tday date into the database
         NSDate *currentDate = [NSDate date];
         NSTimeZone *timeZone = [NSTimeZone localTimeZone];
         NSInteger timeZoneOffset = [timeZone secondsFromGMTForDate:currentDate];
@@ -166,25 +169,14 @@
         NSDate *localDate = [currentDate dateByAddingTimeInterval:timeZoneOffset];
         self.placeInsertTime = localDate;
         
-        // location
+        // location: get the coordinates from the address
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
         [geocoder geocodeAddressString:placeAddress
                      completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
             if (error) {
                 NSLog(@"Geocode error: %@", error.localizedDescription);
                 
-                // alert
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
-                                                                               message:@"Coordinates not found for the specified address"
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                        style:UIAlertActionStyleDefault
-                                                                      handler:nil];
-                
-                [alert addAction:confirmAction];
-                [self presentViewController:alert animated:YES completion:nil];
-                
+                [self errorAlertWithMessage:@"Coordinates not found for the specified address. Check if the address is correct and try again."];
                 
                 return;
             }
@@ -196,25 +188,14 @@
                 self.placeLatitude = location.coordinate.latitude;
                 self.placeLongitude = location.coordinate.longitude;
                 
-                // from the coordinates, get the full address
+                // location: reverse geocode the coordinates to get the full address
                 location = [[CLLocation alloc] initWithLatitude:self.placeLatitude longitude:self.placeLongitude];
                 [geocoder reverseGeocodeLocation:location
                                completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
                     if (error) {
                         NSLog(@"Geocode error: %@", error.localizedDescription);
                         
-                        // alert
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
-                                                                                       message:@"Address not found for the specified coordinates"
-                                                                                preferredStyle:UIAlertControllerStyleAlert];
-                        
-                        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                                style:UIAlertActionStyleDefault
-                                                                              handler:nil];
-                        
-                        [alert addAction:confirmAction];
-                        [self presentViewController:alert animated:YES completion:nil];
-                        
+                        [self errorAlertWithMessage:@"Address not found for the specified coordinates"];
                         
                         return;
                     }
@@ -248,7 +229,7 @@
                             self.placeToEdit.longitude = self.placeLongitude;
                             
                             
-                            NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
+                            NSLog(@"Place updated: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
                                   self.placeToEdit.name,
                                   self.placeToEdit.address,
                                   self.placeToEdit.notes,
@@ -272,7 +253,6 @@
                                 
                                 // go to the home page
                                 [self.navigationController popToRootViewControllerAnimated:YES];
-                            
                             }
                             
                             return;
@@ -289,7 +269,7 @@
                             newPlace.latitude = self.placeLatitude;
                             newPlace.longitude = self.placeLongitude;
                             
-                            NSLog(@"Place: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
+                            NSLog(@"Place added: name: %@, address: %@, notes: %@, remember: %d, insert_time: %@, latitude: %f, longitude: %f",
                                   newPlace.name,
                                   newPlace.address,
                                   newPlace.notes,
@@ -301,8 +281,7 @@
                             // database save
                             NSError *error = nil;
                             if (![context save:&error]) {
-                                NSLog(@"Error saving context: %@\n%@",
-                                      [error localizedDescription], [error userInfo]);
+                                NSLog(@"Error saving context: %@\n%@", [error localizedDescription], [error userInfo]);
                             
                             } else {
                                 NSLog(@"Data saved");
@@ -348,82 +327,70 @@
     
     return YES;
 }
+
 - (IBAction)fillAddressTextFieldWithUserPosition:(id)sender {
     // get the user coordinates
     CLLocation *userLocation = self.mapView.userLocation.location;
     
-    // geocode the user location
+    // reverse geocode the user location
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     [geocoder reverseGeocodeLocation:userLocation
                    completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        
+        if (error) {
+            NSLog(@"Geocode error: %@", error.localizedDescription);
+            
+            [self errorAlertWithMessage:@"Address not found for the specified coordinates"];
+                           
+            return;
+        }
                        
-                       if (error) {
-                           NSLog(@"Geocode error: %@", error.localizedDescription);
+        if (placemarks && placemarks.count > 0) {
+            CLPlacemark *placemark = placemarks.firstObject;
+            NSString *address = [NSString stringWithFormat:@"%@ %@, %@, %@, %@, %@",
+                                 placemark.thoroughfare,
+                                 placemark.subThoroughfare ? placemark.subThoroughfare : @"",
+                                 placemark.postalCode,
+                                 placemark.locality,
+                                 placemark.administrativeArea,
+                                 placemark.country];
                            
-                           // alert
-                           UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error"
-                                                                                          message:@"Address not found for the specified coordinates"
-                                                                                   preferredStyle:UIAlertControllerStyleAlert];
-                           
-                           UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"OK"
-                                                                                   style:UIAlertActionStyleDefault
-                                                                                 handler:nil];
-                           
-                           [alert addAction:confirmAction];
-                           [self presentViewController:alert animated:YES completion:nil];
-                           
-                           
-                           return;
-                       }
+            // fill the address text field
+            TextFieldTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
+            cell.textField.text = address;
+        }
                        
-                       if (placemarks && placemarks.count > 0) {
-                           CLPlacemark *placemark = placemarks.firstObject;
-                           NSString *address = [NSString stringWithFormat:@"%@ %@, %@, %@, %@, %@",
-                                                placemark.thoroughfare,
-                                                placemark.subThoroughfare ? placemark.subThoroughfare : @"",
-                                                placemark.postalCode,
-                                                placemark.locality,
-                                                placemark.administrativeArea,
-                                                placemark.country];
-                           
-                           // fill the address text field
-                           TextFieldTableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]];
-                            cell.textField.text = address;
-                            
-                       }
-                       
-                   }];
+    }];
 }
 
 # pragma mark Table
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (indexPath.section == 0) {
-        // map
+    if (indexPath.section == 0) {   // map
         UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
         
+        // if the user need to edit a place, display the place annotation on the map
         if (self.placeToEdit) {
             MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
             annotation.coordinate = CLLocationCoordinate2DMake(self.placeToEdit.latitude, self.placeToEdit.longitude);
             [self.mapView addAnnotation:annotation];
             
             // center the map on the annotation
-            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 500, 500);
+            MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 100, 100);
             [self.mapView setRegion:region animated:YES];
         }
         
         return cell;
-    }
-
-    else if (indexPath.section == 1) {
-        if (indexPath.row == 0) {
-            // place name
+        
+    } else if (indexPath.section == 1) {  // informations
+        if (indexPath.row == 0) {       // place name
+            
             static NSString *NameCellIdentifier = @"TextFieldTableViewCell";
             TextFieldTableViewCell *cell = (TextFieldTableViewCell *)[tableView dequeueReusableCellWithIdentifier:NameCellIdentifier
                                                                                                      forIndexPath:indexPath];
             if (cell == nil) {
-                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TextFieldTableViewCell"
+                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:NameCellIdentifier
                                                              owner:self
                                                            options:nil];
                 cell = [nib objectAtIndex:0];
@@ -431,41 +398,42 @@
             
             [cell configureWithTitle:@"Name" placeholder:@"Place name"];
             
+            // fill the text field with the place name if the user is editing a place
             if (self.placeToEdit) {
                 cell.textField.text = self.placeToEdit.name;
             }
             
-            
             cell.textField.tag = 0;
            
             return cell;
-        } else if (indexPath.row == 1) {
-            // place address
-            static NSString *NameCellIdentifier = @"TextFieldTableViewCell";
-            TextFieldTableViewCell *cell = (TextFieldTableViewCell *)[tableView dequeueReusableCellWithIdentifier:NameCellIdentifier
+            
+        } else if (indexPath.row == 1) {    // place address
+            
+            static NSString *AddressCellIdentifier = @"TextFieldTableViewCell";
+            TextFieldTableViewCell *cell = (TextFieldTableViewCell *)[tableView dequeueReusableCellWithIdentifier:AddressCellIdentifier
                                                                                                      forIndexPath:indexPath];
             if (cell == nil) {
-                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TextFieldTableViewCell"
+                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:AddressCellIdentifier
                                                              owner:self
                                                            options:nil];
                 cell = [nib objectAtIndex:0];
             }
             
             [cell configureWithTitle:@"Address" placeholder:@"Place address"];
+            cell.textField.textContentType = UITextContentTypeAddressCityAndState;
             
+            // fill the text field with the place address if the user is editing a place
             if (self.placeToEdit) {
                 cell.textField.text = self.placeToEdit.address;
             }
             
             cell.textField.tag = 1;
-            cell.textField.textContentType = UITextContentTypeAddressCityAndState;
-            
             
             return cell;
         }
         
-    } else if (indexPath.section == 2) {
-        // reminder
+    } else if (indexPath.section == 2) {    // reminder
+        
         static NSString *ReminderCellIdentifier = @"ReminderCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReminderCellIdentifier forIndexPath:indexPath];
         
@@ -480,6 +448,7 @@
         UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
         cell.accessoryView = switchView;
         
+        // if the user is editing a place, set the switch to the place remember value
         if (self.placeToEdit) {
             self.placeRemember = self.placeToEdit.remember;
         }
@@ -489,26 +458,26 @@
 
         return cell;
         
-    } else if (indexPath.section == 3) {
-        // notes
-        static NSString *NotesCellIdentifier = @"TextFieldTableViewCell";
+    } else if (indexPath.section == 3) {    // notes
         
+        static NSString *NotesCellIdentifier = @"TextFieldTableViewCell";
         TextFieldTableViewCell *cell = (TextFieldTableViewCell *)[tableView dequeueReusableCellWithIdentifier:NotesCellIdentifier
                                                                                              forIndexPath:indexPath];
         if (cell == nil) {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TextFieldTableViewCell"
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:NotesCellIdentifier
                                                          owner:self
                                                        options:nil];
             cell = [nib objectAtIndex:0];
         }
         
         [cell configureWithTitle:@"Notes" placeholder:@"Place notes"];
+        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         
-        if (self.placeToEdit) {
+        // fill the text field with the place notes if the user is editing a place and the place has notes
+        if (self.placeToEdit && self.placeToEdit.notes) {
             cell.textField.text = self.placeToEdit.notes;
         }
         
-        cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         cell.textField.tag = 2;
         
         return cell;
@@ -518,28 +487,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    if (indexPath.section == 0) {
+    if (indexPath.section == 0) {   // map
         return 250;
     }
     
     return 44;
-}
-
-- (UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == 2) {
-        // reminder footer
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        
-        label.text = @"Set a reminder to notify you when you get close to your saved location";
-        label.textAlignment = NSTextAlignmentLeft;
-        label.font = [UIFont systemFontOfSize:12];
-        label.textColor = [UIColor grayColor];
-        label.numberOfLines = 0;
-        
-        return label;
-    }
-    
-    return nil;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -554,7 +506,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // return the number of rows
+    // return the number of rows in each section
     if (section == 0)       // map
         return 1;
     else if (section == 1)  // informations
@@ -563,8 +515,7 @@
         return 1;
     else if (section == 3)  // notes
         return 1;
-    
-    return 0;
+    else return 0;          // error
 }
 
 
