@@ -376,24 +376,27 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="78Y-K3-q7e">
-                                <rect key="frame" x="330" y="722" width="47" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="minus" catalog="system">
-                                    <color key="baseBackgroundColor" systemColor="opaqueSeparatorColor"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="zoomOut:" destination="pmm-M2-iOk" eventType="touchUpInside" id="nBV-jg-GC5"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UIq-zX-ZX1">
-                                <rect key="frame" x="330" y="679" width="47" height="35"/>
+                                <rect key="frame" x="337" y="668" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="slU-Xa-9HA"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="plus" catalog="system">
+                                <buttonConfiguration key="configuration" style="filled" image="plus" catalog="system" buttonSize="large">
                                     <color key="baseBackgroundColor" systemColor="opaqueSeparatorColor"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="zoomIn:" destination="pmm-M2-iOk" eventType="touchUpInside" id="n6q-dG-J9b"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ETc-EF-ggO">
+                                <rect key="frame" x="337" y="103" width="40" height="40"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" image="location" catalog="system" buttonSize="large">
+                                    <color key="baseBackgroundColor" systemColor="opaqueSeparatorColor"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="centerToUserLocationButton:" destination="pmm-M2-iOk" eventType="touchUpInside" id="yz6-wW-f7E"/>
                                 </connections>
                             </button>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z5b-mp-Yu9">
@@ -410,32 +413,36 @@
                                 </items>
                                 <toolbarAppearance key="standardAppearance"/>
                             </toolbar>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ETc-EF-ggO">
-                                <rect key="frame" x="330" y="103" width="47" height="35"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="78Y-K3-q7e">
+                                <rect key="frame" x="337" y="716" width="40" height="40"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" image="location" catalog="system">
+                                <buttonConfiguration key="configuration" style="filled" image="minus" catalog="system" buttonSize="large">
                                     <color key="baseBackgroundColor" systemColor="opaqueSeparatorColor"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <action selector="centerToUserLocationButton:" destination="pmm-M2-iOk" eventType="touchUpInside" id="yz6-wW-f7E"/>
+                                    <action selector="zoomOut:" destination="pmm-M2-iOk" eventType="touchUpInside" id="nBV-jg-GC5"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="a3M-nq-zO7"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Z5b-mp-Yu9" firstAttribute="top" secondItem="78Y-K3-q7e" secondAttribute="bottom" constant="17" id="2N7-kM-1fq"/>
-                            <constraint firstItem="78Y-K3-q7e" firstAttribute="top" secondItem="UIq-zX-ZX1" secondAttribute="bottom" constant="8" id="Hh6-a8-3yV"/>
+                            <constraint firstItem="78Y-K3-q7e" firstAttribute="height" secondItem="ETc-EF-ggO" secondAttribute="height" id="2eq-b0-84c"/>
+                            <constraint firstItem="UIq-zX-ZX1" firstAttribute="leading" secondItem="a3M-nq-zO7" secondAttribute="leading" constant="337" id="B0f-r4-4VH"/>
+                            <constraint firstItem="UIq-zX-ZX1" firstAttribute="trailing" secondItem="yfq-Uv-zd3" secondAttribute="trailingMargin" id="CqI-kO-yar"/>
                             <constraint firstItem="Z5b-mp-Yu9" firstAttribute="leading" secondItem="3Q6-YQ-KmB" secondAttribute="leading" id="KFI-ga-WkP"/>
-                            <constraint firstItem="ETc-EF-ggO" firstAttribute="trailing" secondItem="yfq-Uv-zd3" secondAttribute="trailingMargin" id="VN7-aW-4ax"/>
-                            <constraint firstItem="ETc-EF-ggO" firstAttribute="top" secondItem="a3M-nq-zO7" secondAttribute="top" id="XnM-q4-e3C"/>
-                            <constraint firstItem="ETc-EF-ggO" firstAttribute="leading" secondItem="a3M-nq-zO7" secondAttribute="leading" constant="330" id="d47-O0-Lzp"/>
-                            <constraint firstItem="a3M-nq-zO7" firstAttribute="trailing" secondItem="UIq-zX-ZX1" secondAttribute="trailing" constant="16" id="eew-TG-7YG"/>
-                            <constraint firstItem="ETc-EF-ggO" firstAttribute="leading" secondItem="UIq-zX-ZX1" secondAttribute="leading" id="iN5-Ua-4MK"/>
+                            <constraint firstItem="UIq-zX-ZX1" firstAttribute="height" secondItem="ETc-EF-ggO" secondAttribute="height" id="TBL-2Z-gOq"/>
+                            <constraint firstItem="UIq-zX-ZX1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="78Y-K3-q7e" secondAttribute="leading" id="Tdz-Vk-6BL"/>
+                            <constraint firstItem="ETc-EF-ggO" firstAttribute="top" secondItem="a3M-nq-zO7" secondAttribute="top" id="Ygs-qc-KZT"/>
+                            <constraint firstItem="a3M-nq-zO7" firstAttribute="trailing" secondItem="78Y-K3-q7e" secondAttribute="trailing" constant="16" id="aLZ-sf-BOR"/>
+                            <constraint firstAttribute="bottom" secondItem="UIq-zX-ZX1" secondAttribute="bottom" constant="144" id="dRc-wy-WTW"/>
+                            <constraint firstItem="78Y-K3-q7e" firstAttribute="top" secondItem="UIq-zX-ZX1" secondAttribute="bottom" constant="8" symbolic="YES" id="e1Y-LP-RoX"/>
                             <constraint firstItem="Z5b-mp-Yu9" firstAttribute="trailing" secondItem="3Q6-YQ-KmB" secondAttribute="trailing" id="jD8-u1-i3h"/>
+                            <constraint firstItem="UIq-zX-ZX1" firstAttribute="width" secondItem="ETc-EF-ggO" secondAttribute="width" id="k7E-J0-vMA"/>
+                            <constraint firstItem="UIq-zX-ZX1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ETc-EF-ggO" secondAttribute="leading" id="kRh-rN-3vi"/>
+                            <constraint firstItem="78Y-K3-q7e" firstAttribute="width" secondItem="ETc-EF-ggO" secondAttribute="width" id="mP0-oI-VJ9"/>
                             <constraint firstItem="Z5b-mp-Yu9" firstAttribute="bottom" secondItem="a3M-nq-zO7" secondAttribute="bottom" id="nQQ-4j-rqc"/>
-                            <constraint firstItem="a3M-nq-zO7" firstAttribute="trailing" secondItem="78Y-K3-q7e" secondAttribute="trailing" constant="16" id="pRg-6P-SWL"/>
-                            <constraint firstItem="UIq-zX-ZX1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="78Y-K3-q7e" secondAttribute="leading" id="w0l-CW-fJz"/>
+                            <constraint firstItem="a3M-nq-zO7" firstAttribute="trailing" secondItem="ETc-EF-ggO" secondAttribute="trailing" constant="16" id="qZ8-8l-J1J"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Map" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="opH-uy-VXt"/>
