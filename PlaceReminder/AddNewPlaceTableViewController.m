@@ -361,6 +361,10 @@
         }
                        
     }];
+	
+	// center the map on the user location
+	MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 100, 100);
+	[self.mapView setRegion:region animated:YES];
 }
 
 # pragma mark Table

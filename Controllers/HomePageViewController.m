@@ -35,7 +35,7 @@
 @synthesize mapView = _mapView;
 
 
-- (void)viewDidLoad {
+- (void) viewDidLoad {
     [super viewDidLoad];
     
     self.tableView.delegate = self;
@@ -86,6 +86,69 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
+	// get data from database
+	NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+	NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
+	NSError *error = nil;
+	self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+	
+	if (error) {
+		NSLog(@"Errorloading places: %@", error);
+	}
+	
+	[self.tableView reloadData];
+	[self updateMapView];
+}
+
+- (void) updateMapView {
+	[self.mapView removeAnnotations:self.mapView.annotations];
+	
+	for (PlaceMO *place in self.places) {
+		MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+		annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+		[self.mapView addAnnotation:annotation];
+	}
+}
+
+- (void) didAddNewPlace: (PlaceMO *) newPlace {
+	
+	// NSLog(@"didAddNewPlace chiamato dal delegate");
+	[self.places addObject:newPlace];
+	[self.tableView reloadData];
+	
+	// annotations
+	MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
+	annotation.coordinate = CLLocationCoordinate2DMake(newPlace.latitude, newPlace.longitude);
+	[self.mapView addAnnotation:annotation];
+	
+	// update geofence settings
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[appDelegate updateGeofenceSettings];
+}
+
+- (void) didEditPlace:(nonnull PlaceMO *)place {}
+
+
+- (void) didRemovePlace: (PlaceMO *) place {
+	// NSLog(@"didRemovePlace chiamato dal delegate");
+	[self.places removeObject:place];
+	[self.tableView reloadData];
+	
+	// remove annotation
+	for (MKPointAnnotation *annotation in self.mapView.annotations) {
+		if (annotation.coordinate.latitude == place.latitude && annotation.coordinate.longitude == place.longitude) {
+			[self.mapView removeAnnotation:annotation];
+		}
+	}
+	
+	// update geofence settings
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[appDelegate updateGeofenceSettings];
+}
+
 
 #pragma mark Location
 
@@ -96,14 +159,13 @@
         // Zoom the map to the user's location
         MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(manager.location.coordinate, 500, 500);
         [self.mapView setRegion:region animated:YES];
-    
     }
     else {
         self.mapView.showsUserLocation = NO;
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+- (void) locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
     CLLocation *userLocation = [locations lastObject];
     
     // Zoom the map to the user's location
@@ -112,88 +174,19 @@
 }
 
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    // get data from database
-    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
-    NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
-    NSError *error = nil;
-    self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
-    
-    if (error) {
-        NSLog(@"Errorloading places: %@", error);
-    }
-    
-    [self.tableView reloadData];
-    [self updateMapView];
-}
-
-- (void) updateMapView {
-    [self.mapView removeAnnotations:self.mapView.annotations];
-    
-    for (PlaceMO *place in self.places) {
-        MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-        annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
-        [self.mapView addAnnotation:annotation];
-    }
-}
-
-- (void)didAddNewPlace: (PlaceMO *) newPlace {
-    
-    // NSLog(@"didAddNewPlace chiamato dal delegate");
-    [self.places addObject:newPlace];
-    [self.tableView reloadData];
-    
-    // annotations
-    MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-    annotation.coordinate = CLLocationCoordinate2DMake(newPlace.latitude, newPlace.longitude);
-    [self.mapView addAnnotation:annotation];
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate updateGeofenceSettings];
-}
-
-- (void)didEditPlace:(nonnull PlaceMO *)place {}
-
-
-- (void) didRemovePlace: (PlaceMO *) place {
-    // NSLog(@"didRemovePlace chiamato dal delegate");
-    [self.places removeObject:place];
-    [self.tableView reloadData];
-    
-    // remove annotation
-    for (MKPointAnnotation *annotation in self.mapView.annotations) {
-        if (annotation.coordinate.latitude == place.latitude && annotation.coordinate.longitude == place.longitude) {
-            [self.mapView removeAnnotation:annotation];
-        }
-    }
-    
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [appDelegate updateGeofenceSettings];
-}
-
-- (IBAction)presentAddNewPlaceViewController {
-    AddNewPlaceTableViewController *addNewPlaceVC = [self.storyboard instantiateViewControllerWithIdentifier:@"AddNewPlaceViewController"];
-    addNewPlaceVC.delegate = self;
-    
-    [self.navigationController pushViewController:addNewPlaceVC animated:YES];
-}
-
-
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // return the number of rows
     return self.places.count;
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
     PlaceMO *place = self.places[indexPath.row];
@@ -205,7 +198,7 @@
 }
 
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // alert
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Remove"
@@ -241,7 +234,6 @@
             }
         }];
         
-        
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                                style:UIAlertActionStyleCancel
                                                              handler:nil];
@@ -267,7 +259,7 @@
 }
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"ShowDetailsSegue"]) {
         if ([segue.destinationViewController isKindOfClass:[PlaceDetailsViewController class]]) {
             PlaceDetailsViewController *detailVC = (PlaceDetailsViewController *)segue.destinationViewController;

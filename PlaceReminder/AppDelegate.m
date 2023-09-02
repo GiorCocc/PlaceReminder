@@ -4,6 +4,7 @@
 //
 //  Created by Giorgio Coccapani on 23/07/23.
 //
+//	Geofence implementation with notification managment when user enter in a region
 
 #import "AppDelegate.h"
 #import "PlaceMO+CoreDataProperties.h"
@@ -24,9 +25,10 @@
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL) application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+	// location authorization
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -47,7 +49,7 @@
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
-        NSLog(@"Errore nel caricamento dei luoghi: %@", error);
+        NSLog(@"Error loading places: %@", error);
     }
     
     // geofence
@@ -78,8 +80,8 @@
     return YES;
 }
 
-- (void)updateGeofenceSettings {
-    NSLog(@"Aggiorno le impostazioni dei geofence");
+- (void) updateGeofenceSettings {
+    NSLog(@"Update geofence settings");
     
     // get updated places from database
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
@@ -88,7 +90,7 @@
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
-        NSLog(@"Errorloading places: %@", error);
+        NSLog(@"Error loading places: %@", error);
     }
     
     // remove old geofence
@@ -99,10 +101,11 @@
     // add new geofence
     for (PlaceMO *place in self.places) {
         CLLocationCoordinate2D center = CLLocationCoordinate2DMake(place.latitude, place.longitude);
-        CLLocationDistance radius = 500.0; // 500 metri
+        CLLocationDistance radius = 500.0;
         CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:center radius:radius identifier:place.name];
         
-        if (place.remember){
+		// if the remider flag is set, listen for enter event and start monitoring
+        if (place.remember) {
             region.notifyOnEntry = YES;
             region.notifyOnExit = NO;
             
@@ -111,8 +114,7 @@
     }
 }
 
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+- (void) application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString *token = [deviceToken description];
     token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
     token = [token stringByReplacingOccurrencesOfString:@"<" withString:@""];
@@ -127,13 +129,12 @@
     NSString *placeName = region.identifier;
     
     // create notification
-    NSString *title = [NSString stringWithFormat:@"Sei vicino a %@", placeName];
-    NSString *body = [NSString stringWithFormat:@"%@ è luogo importante per te!", placeName];
+    NSString *title = [NSString stringWithFormat:@"You are near %@", placeName];
+    NSString *body = [NSString stringWithFormat:@"%@ is an important place for you!", placeName];
     
     
     if ([region.identifier isEqualToString:region.identifier]) {
-        [self scheduleNotificationWithTitle:title
-                                       body:body];
+        [self scheduleNotificationWithTitle:title body:body];
     }
 }
 
@@ -157,27 +158,23 @@
     }];
 }
 
-
-
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+- (void) userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
     
     completionHandler();
 }
 
 
-
-
 #pragma mark - UISceneSession lifecycle
 
 
-- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
+- (UISceneConfiguration *) application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
     // Called when a new scene session is being created.
     // Use this method to select a configuration to create the new scene with.
     return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
 }
 
 
-- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
+- (void) application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
     // Called when the user discards a scene session.
     // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
     // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
