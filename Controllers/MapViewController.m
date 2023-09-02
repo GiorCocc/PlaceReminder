@@ -6,6 +6,7 @@
 //
 //  ViewController for the Map View section of the app.
 //  This class is responsible to display the user location and the annotation near him.
+//
 
 #import "MapViewController.h"
 #import <CoreLocation/CoreLocation.h>
@@ -20,6 +21,10 @@
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) NSMutableArray *places;
+@property (weak, nonatomic) IBOutlet UIButton *userLocationCenterButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *nearestPinButton;
+@property (weak, nonatomic) IBOutlet UIButton *zoomInButton;
+@property (weak, nonatomic) IBOutlet UIButton *zoomOutButton;
 
 @end
 
@@ -56,7 +61,6 @@
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     [self.locationManager startUpdatingLocation];
     
-    
     // Add annotation to the map
     for (PlaceMO *place in self.places) {
         // NSLog(@"Place: %@", place.name);
@@ -68,7 +72,6 @@
         
         [self.mapView addAnnotation:annotation];
     }
-    
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -78,6 +81,7 @@
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
     NSError *error = nil;
+    
     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
     
     if (error) {
@@ -96,8 +100,37 @@
         
         [self.mapView addAnnotation:annotation];
     }
-    
 }
+
+#pragma mark Buttons
+
+- (IBAction)centerToUserLocationButton:(id)sender {
+    // Zoom the map to the user location
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, 500, 500);
+    [self.mapView setRegion:region animated:YES];
+}
+
+- (IBAction)centerToNearestPin:(id)sender {
+    // Get the nearest pin
+    CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
+    CLLocation *nearestPin = nil;
+    CLLocationDistance nearestDistance = DBL_MAX;
+    
+    for (PlaceMO *place in self.places) {
+        CLLocation *pinLocation = [[CLLocation alloc] initWithLatitude:place.latitude longitude:place.longitude];
+        CLLocationDistance distance = [userLocation distanceFromLocation:pinLocation];
+        
+        if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearestPin = pinLocation;
+        }
+    }
+    
+    // Zoom the map to the nearest pin
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(nearestPin.coordinate, 500, 500);
+    [self.mapView setRegion:region animated:YES];
+}
+
 
 #pragma mark Location
 
@@ -108,7 +141,6 @@
         // Zoom the map to the user location
         MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(self.locationManager.location.coordinate, 500, 500);
         [self.mapView setRegion:region animated:YES];
-    
     }
     else {
         self.mapView.showsUserLocation = NO;
@@ -118,17 +150,20 @@
 #pragma mark Map
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    // If the annotation is the user location, do nothing
     if ([annotation isKindOfClass:[MKUserLocation class]]) {
         return nil;
     }
     
+    // If the annotation is a place, create a pin and a custom callout
     if ([annotation isKindOfClass:[MapAnnotation class]]) {
         static NSString *annotationIdentifier = @"annotationIdentifier";
         
         MKMarkerAnnotationView *pinView = (MKMarkerAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
         
         if (!pinView) {
-            pinView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
+            pinView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation
+                                                         reuseIdentifier:annotationIdentifier];
             pinView.canShowCallout = YES;
             
             UIButton *detailButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
@@ -149,8 +184,6 @@
     return nil;
 }
 
-
-
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     if ([view.annotation isKindOfClass:[MapAnnotation class]]) {
         MapAnnotation *customAnnotation = (MapAnnotation *)view.annotation;
@@ -169,6 +202,16 @@
     [self.mapView setRegion:region animated:YES];
 }
 
+- (IBAction)zoomIn:(id)sender {
+    MKCoordinateRegion region = MKCoordinateRegionMake(self.mapView.region.center, MKCoordinateSpanMake(self.mapView.region.span.latitudeDelta / 2, self.mapView.region.span.longitudeDelta / 2));
+    [self.mapView setRegion:region animated:YES];
+}
+
+- (IBAction)zoomOut:(id)sender {
+    MKCoordinateRegion region = MKCoordinateRegionMake(self.mapView.region.center, MKCoordinateSpanMake(self.mapView.region.span.latitudeDelta * 2, self.mapView.region.span.longitudeDelta * 2));
+    [self.mapView setRegion:region animated:YES];
+
+}
 
 #pragma mark - Navigation
 
