@@ -445,12 +445,6 @@
         cell.textLabel.text = @"Reminder";
 		cell.textLabel.textAlignment = NSTextAlignmentNatural;
 		
-		
-		
-		
-		
-		
-        
         // switch
         UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
         cell.accessoryView = switchView;
