@@ -163,11 +163,7 @@
         
         // insert tday date into the database
         NSDate *currentDate = [NSDate date];
-        NSTimeZone *timeZone = [NSTimeZone localTimeZone];
-        NSInteger timeZoneOffset = [timeZone secondsFromGMTForDate:currentDate];
-
-        NSDate *localDate = [currentDate dateByAddingTimeInterval:timeZoneOffset];
-        self.placeInsertTime = localDate;
+        self.placeInsertTime = currentDate;
         
         // location: get the coordinates from the address
         CLGeocoder *geocoder = [[CLGeocoder alloc] init];
@@ -447,6 +443,13 @@
         }
         
         cell.textLabel.text = @"Reminder";
+		cell.textLabel.textAlignment = NSTextAlignmentNatural;
+		
+		
+		
+		
+		
+		
         
         // switch
         UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
