@@ -19,7 +19,7 @@
 #import "AppDelegate.h"
 
 
-@interface HomePageViewController () <AddNewPlaceDelegate, CLLocationManagerDelegate>
+@interface HomePageViewController () <AddNewPlaceDelegate, CLLocationManagerDelegate, UITableViewDataSource, MKMapViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *places;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -33,7 +33,6 @@
 @implementation HomePageViewController
 
 @synthesize mapView = _mapView;
-
 
 - (void) viewDidLoad {
     [super viewDidLoad];
@@ -96,7 +95,7 @@
 	self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
 	
 	if (error) {
-		NSLog(@"Errorloading places: %@", error);
+		NSLog(@"Error loading places: %@", error);
 	}
 	
 	[self.tableView reloadData];
@@ -129,7 +128,7 @@
 	[appDelegate updateGeofenceSettings];
 }
 
-- (void) didEditPlace:(nonnull PlaceMO *)place {}
+- (void) didEditPlace:(nonnull PlaceMO *)place { }
 
 
 - (void) didRemovePlace: (PlaceMO *) place {
@@ -205,7 +204,7 @@
                                                                                  message:@"Are you sure you want to remove this place?"
                                                                           preferredStyle:UIAlertControllerStyleAlert];
         
-        // Aggiungi l'azione per la cancellazione
+        // remove place
         UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"Confirm"
                                                                style:UIAlertActionStyleDestructive
                                                              handler:^(UIAlertAction * _Nonnull action) {
@@ -266,7 +265,6 @@
             
             // pass the selected place to the detail view controller
             detailVC.selectedPlaceMO = sender;
-            
         }
     }
 }

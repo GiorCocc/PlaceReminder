@@ -5,6 +5,8 @@
 //  Created by Giorgio Coccapani on 23/07/23.
 //
 //	Geofence implementation with notification managment when user enter in a region
+//  and update of the geofence settings when the user add or remove a place.
+//
 
 #import "AppDelegate.h"
 #import "PlaceMO+CoreDataProperties.h"
@@ -59,7 +61,7 @@
         coordinates.latitude = place.latitude;
         coordinates.longitude = place.longitude;
             
-        // crea la regione geografica ampia 500 metri
+        // geofence region (500m radius)
         self.geofenceRegion = [[CLCircularRegion alloc] initWithCenter:coordinates
                                                                     radius:500
                                                                 identifier:place.name];

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Up2-IK-8Lz">
-    <device id="retina6_12" orientation="portrait" appearance="dark"/>
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
@@ -167,15 +167,17 @@
                                                         <action selector="updatePlaceReminder:" destination="zif-rT-DkN" eventType="valueChanged" id="Nhe-lU-TcF"/>
                                                     </connections>
                                                 </switch>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLQ-ZS-iEE">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kLQ-ZS-iEE">
                                                     <rect key="frame" x="20" y="11.333333333333336" width="73" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="kLQ-ZS-iEE" firstAttribute="centerY" secondItem="lc9-dH-sxn" secondAttribute="centerY" id="L6P-15-nyk"/>
+                                                <constraint firstItem="kLQ-ZS-iEE" firstAttribute="leading" secondItem="BXz-z5-HbU" secondAttribute="leadingMargin" id="LG1-jR-Cnx"/>
+                                                <constraint firstItem="lc9-dH-sxn" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="kLQ-ZS-iEE" secondAttribute="trailing" constant="8" symbolic="YES" id="ZuD-K3-iwg"/>
                                                 <constraint firstItem="lc9-dH-sxn" firstAttribute="trailing" secondItem="BXz-z5-HbU" secondAttribute="trailingMargin" id="fp8-lu-hdZ"/>
                                                 <constraint firstItem="lc9-dH-sxn" firstAttribute="centerY" secondItem="BXz-z5-HbU" secondAttribute="centerY" id="xdX-li-OEh"/>
                                             </constraints>
@@ -297,7 +299,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hoC-SE-4w9">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hoC-SE-4w9">
                                                     <rect key="frame" x="59" y="29.333333333333332" width="46.666666666666664" height="15.666666666666666"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="13"/>
@@ -566,8 +568,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="LEZ-ew-xMK"/>
-        <segue reference="qhE-0K-a7j"/>
+        <segue reference="W2O-Pc-WfV"/>
+        <segue reference="fSZ-Db-HVW"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" name="AccentColor"/>
     <resources>

@@ -164,9 +164,11 @@
             pinView = [[MKMarkerAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
             pinView.canShowCallout = YES;
 			
+			// callout view with name and distance from user
 			UIView *calloutView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 			pinView.detailCalloutAccessoryView = calloutView;
 			
+			// - distance label
 			CLLocation *userLocation = [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude];
 			CLLocation *pinLocation = [[CLLocation alloc] initWithLatitude:annotation.coordinate.latitude longitude:annotation.coordinate.longitude];
 			CLLocationDistance distance = [userLocation distanceFromLocation:pinLocation];
@@ -182,6 +184,7 @@
 			distanceLabel.font = [UIFont systemFontOfSize:12];
 			pinView.detailCalloutAccessoryView = distanceLabel;
 			
+			// - info button
 			pinView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         } else {
             pinView.annotation = annotation;
@@ -198,7 +201,7 @@
         MapAnnotation *customAnnotation = (MapAnnotation *)view.annotation;
         PlaceMO *selectedPlace = customAnnotation.place;
         
-        // queue to detail view
+        // segue to detail view
         [self performSegueWithIdentifier:@"ShowDetailSegue" sender:selectedPlace];
     }
 }
@@ -235,7 +238,6 @@
             
             // send the selected place to the detail view
             detailVC.selectedPlaceMO = sender;
-            
         }
     }
 }

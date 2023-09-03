@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) PlaceMO *selectedPlaceMO;
 @property (nonatomic, weak) id<PlaceDetailsDelegate> delegate;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 
 - (void) updateUIWithData: (PlaceMO *) place;
 

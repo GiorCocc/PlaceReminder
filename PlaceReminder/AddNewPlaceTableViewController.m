@@ -22,7 +22,7 @@
 #import "AppDelegate.h"
 
 
-@interface AddNewPlaceTableViewController ()
+@interface AddNewPlaceTableViewController () <MKMapViewDelegate>
 
 @property (weak, nonatomic) IBOutlet TextFieldTableViewCell *nameTableViewCell;
 @property (weak, nonatomic) IBOutlet TextFieldTableViewCell *addressTableViewCell;
@@ -161,7 +161,7 @@
         self.placeAddress = placeAddress;
         self.placeNotes = notes;
         
-        // insert tday date into the database
+        // insert today date into the database
         NSDate *currentDate = [NSDate date];
         self.placeInsertTime = currentDate;
         

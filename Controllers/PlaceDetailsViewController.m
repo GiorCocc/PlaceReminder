@@ -12,7 +12,7 @@
 #import "AddNewPlaceTableViewController.h"
 #import "AppDelegate.h"
 
-@interface PlaceDetailsViewController () <CLLocationManagerDelegate>
+@interface PlaceDetailsViewController () <CLLocationManagerDelegate, MKMapViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *mapCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *nameCell;
@@ -23,7 +23,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *openInMapBarButton;
 @property (weak, nonatomic) IBOutlet UITableViewCell *notesCell;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
-@property (nonatomic, strong) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UITableViewCell *distanceCell;
 
 @end
@@ -131,7 +130,7 @@
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"Remove"
                                                             style:UIAlertActionStyleDestructive
                                                           handler:^(UIAlertAction *action) {
-        // rimuovi il posto dal database
+        // remove place from database
         NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
         [context deleteObject:self.selectedPlaceMO];
         
@@ -148,6 +147,7 @@
         AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         [appDelegate updateGeofenceSettings];
         
+		// go back to previous view (home screen)
         [self.navigationController popViewControllerAnimated:YES];
     }];
     
@@ -172,15 +172,15 @@
 - (IBAction)openInMap:(id)sender {
     // NSLog(@"Open in map button pressed");
     
-    // apen the place in Apple Maps
+    // open the place in Apple Maps
     NSString *urlString = [self mapURLForPlace:self.selectedPlaceMO];
     NSURL *url = [NSURL URLWithString:urlString];
+	
     [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
-    
 }
 
 - (IBAction)sharePlaceInfo:(id)sender {
-    NSString *textToShare = [NSString stringWithFormat:@"I want to share with you this place: %@ ~ %@\n\n Open directly in map:\n%@",
+    NSString *textToShare = [NSString stringWithFormat:@"I want to share with you this place: %@ ~ %@\n\nOpen directly in map:\n%@",
                              self.selectedPlaceMO.name,
                              self.selectedPlaceMO.address,
                              [self mapURLForPlace:self.selectedPlaceMO]];
@@ -221,17 +221,12 @@
         
         return cell;
     } else if (indexPath.section == 2) {    // reminder
-        if (self.selectedPlaceMO.remember) {
-            [self.switchReminder setOn:YES];
-        } else {
-            [self.switchReminder setOn:NO];
-        }
+		self.selectedPlaceMO.remember ? [self.switchReminder setOn:YES] : [self.switchReminder setOn:NO];
         
         return cell;
     } else if (indexPath.section == 3) {    // notes
         if (self.selectedPlaceMO.notes == nil || [self.selectedPlaceMO.notes isEqualToString:@""]) {
             cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-            
             cell.detailTextLabel.text = @"No notes";
         } else {
             cell.detailTextLabel.text = self.selectedPlaceMO.notes;
@@ -256,6 +251,7 @@
         NSLog(@"Error saving context: %@", error);
     }
     
+	// update geofence settings
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate updateGeofenceSettings];
 }
@@ -278,10 +274,6 @@
         label.numberOfLines = 0;
         label.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 15);
         
-        
-        
-    
-        
         return label;
     }
     
@@ -292,7 +284,7 @@
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (indexPath.section == 1 && indexPath.row == 1){
+    if (indexPath.section == 1 && indexPath.row == 1){	// address row
         // copy address to clipboard
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         pasteboard.string = self.selectedPlaceMO.address;
