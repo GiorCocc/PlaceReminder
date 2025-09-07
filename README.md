@@ -657,7 +657,6 @@ This project uses the following Apple frameworks and services:
 ### 👨‍💻 Project Maintainer
 
 **Giorgio Coccapani**
-- **📧 Email**: [giorgio.coccapani@email.com](mailto:giorgio.coccapani@email.com)
 - **🐙 GitHub**: [@GiorCocc](https://github.com/GiorCocc)
 - **🎓 University**: University of Parma - Mobile Development Course
 - **📍 Location**: Parma, Italy
@@ -685,7 +684,7 @@ This project was developed as part of the **Mobile Development** course at the *
 Special thanks to:
 
 - **🏫 University of Parma** - For providing excellent mobile development education
-- **👩‍🏫 Course Instructors** - For guidance and project requirements
+- **👩‍🏫 Course Instructors [Simone Cirani](https://github.com/simonecirani)** - For guidance and project requirements
 - **🍎 Apple Developer Documentation** - For comprehensive iOS development resources
 - **🌟 Open Source Community** - For inspiration and best practices
 
