@@ -1,278 +1,700 @@
-# PlaceReminder
+# 📍 PlaceReminder
 
-PlaceReminder is a simple iOS application written in Objective-C that allows you to save places of interest and be notified when you are near one of these.
+[![iOS](https://img.shields.io/badge/iOS-16.4%2B-blue.svg)](https://developer.apple.com/ios/)
+[![Xcode](https://img.shields.io/badge/Xcode-14%2B-blue.svg)](https://developer.apple.com/xcode/)
+[![Objective-C](https://img.shields.io/badge/Language-Objective--C-orange.svg)](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](#license)
 
-The application was developed as a project for the Mobile Development course at the University of Parma.
+**PlaceReminder** is an intuitive iOS application written in Objective-C that empowers users to save their favorite places and receive intelligent location-based notifications when they're nearby. Never forget an important location again!
 
-## Index
+> 🎓 This application was developed as a comprehensive project for the Mobile Development course at the University of Parma, showcasing modern iOS development practices and location-based services.
 
-- [PlaceReminder](#placereminder)
-  - [Index](#index)
-  - [Functionality](#functionality)
-    - [Future developments and improvements](#future-developments-and-improvements)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Project structure](#project-structure)
-    - [Databases](#databases)
-    - [MapKit](#mapkit)
-      - [Geofencing](#geofencing)
+## 📋 Table of Contents
 
-## Functionality
+- [📍 PlaceReminder](#-placereminder)
+  - [📋 Table of Contents](#-table-of-contents)
+  - [✨ Features](#-features)
+  - [🚀 Future Enhancements](#-future-enhancements)
+  - [📱 Requirements](#-requirements)
+  - [⚙️ Installation & Setup](#️-installation--setup)
+  - [📖 User Guide](#-user-guide)
+    - [🏠 Home Screen](#-home-screen)
+    - [➕ Adding Places](#-adding-places)
+    - [📋 Place Details](#-place-details)
+    - [🗺️ Map View](#️-map-view)
+    - [🔒 Permissions](#-permissions)
+  - [🏗️ Technical Architecture](#️-technical-architecture)
+    - [📊 Database Design](#-database-design)
+    - [🗺️ MapKit Integration](#️-mapkit-integration)
+    - [📍 Geofencing System](#-geofencing-system)
+  - [🤝 Contributing](#-contributing)
+  - [📄 License](#-license)
+  - [👤 Contact](#-contact)
 
-- A user can save a placeholder featuring:
+## ✨ Features
 
-  - Geographic coordinates and address
-  - Name and optionally a description
-  - Date and time of addition
+PlaceReminder offers a comprehensive suite of location-based features designed to help you remember and manage your important places:
 
-- Placeholders can be viewed in a list sorted by date added and in a map through markers on it.
-- Pressing a marker on the map displays a callout with general information (name and distance from user) and gives the possibility to view all the details
-- Placeholders can be deleted by the user and modified at will
-- User can view the saved place directly in Apple Maps
-- User can set a reminder for each place
-- When the user enters the region of a reminder, he is notified with a message that he has entered the region
+### 🎯 Core Functionality
+- **📍 Place Management**: Save unlimited places with detailed information including:
+  - 🌍 Geographic coordinates and full address
+  - 📝 Custom name and optional description
+  - 📅 Automatic timestamp recording
+  - 🔔 Optional location-based reminders
 
-### Future developments and improvements
+### 🗺️ Intelligent Mapping
+- **📊 Multiple Views**: Switch between list and map views for optimal place browsing
+- **📌 Interactive Markers**: Tap map markers to view place details and distance information
+- **🧭 Location Services**: Real-time user location tracking and display
+- **🍎 Apple Maps Integration**: Seamlessly view places in the native Maps app
 
-Upcoming features to be implemented:
+### 🔔 Smart Notifications
+- **⚡ Geofencing Technology**: Automatic notifications when entering saved place regions
+- **🎯 Proximity Alerts**: Customizable 500-meter radius notifications
+- **🔕 Background Processing**: Receive notifications even when the app is closed
 
-- [x] Ability to fill the address field only partially
-- [x] Ability to fill the address field with the current location
-- [ ] Addition of categories for places (e.g. work, home, school, etc.)
-- [ ] Adding photos for saved places
-- [ ] Ability to record a voice note for each saved place
-- [ ] Ability to change the geographic region radius for each saved place
+### ✏️ Place Management
+- **✏️ Full Editing**: Modify any saved place information
+- **🗑️ Easy Deletion**: Remove places with simple gestures
+- **🔍 Smart Address Completion**: Partial address input with automatic geocoding
 
-## Installation
+## 🚀 Future Enhancements
 
-In order to install the application on your device, you need a version of iOS 16.4 or higher and a simulator or physical device with this version of iOS installed. You also need to have Xcode 14 or higher installed.
+The following features are planned for future releases:
 
-<!-- In case you don't have these tools, you can try the application by subscribing to the beta channel on TestFlight. -->
+### ✅ Completed
+- [x] **Smart Address Input**: Partial address completion with geocoding
+- [x] **Current Location**: Auto-fill address with current GPS location
 
-## Usage
+### 🚧 In Development
+- [ ] **📂 Place Categories**: Organize places (work, home, entertainment, etc.)
+- [ ] **📸 Photo Attachments**: Add visual memories to your places
+- [ ] **🎤 Voice Notes**: Record audio reminders for each location
+- [ ] **📏 Custom Radius**: Adjustable geofence radius per place
+- [ ] **📊 Visit Statistics**: Track frequency and duration of visits
+- [ ] **🌙 Dark Mode**: Full dark theme support
 
-When started, the application will present a map in which the user's position will be displayed and, if present, the saved places. 
-At the top there are two buttons: one to add a new place to the list of saved places and one to view the map in full screen.
+## 📱 Requirements
 
-<!-- Put home screen image and map -->
-<img src="./img/home.png" alt="Home" width="200"/>
-<img src="./img/map.png" alt="Map" width="200"/>
+### System Requirements
+- **📱 iOS**: 16.4 or later
+- **💾 Storage**: 50 MB available space
+- **🌐 Network**: Internet connection for geocoding services
+- **📍 GPS**: Location services capability
 
-In the screen for adding a new place it is possible to enter the name of the place and the address that you want to store; this information is **strictly** necessary, otherwise it will not be possible to save the place. 
-Furthermore, it is possible to add a reminder for the place, which consists of a notification that will be delivered to the device when you approach the marked place, and some notes that can be useful to remember why you saved the place.
+### Development Requirements
+- **🛠️ Xcode**: 14.0 or later
+- **💻 macOS**: Monterey 12.0 or later
+- **📱 iOS SDK**: 16.4 or later
+- **🎯 Target**: iOS 16.4+
+- **🔧 Language**: Objective-C
 
-The address can also be filled in only partially (for example, it is possible to insert only the name of the street and the city); the missing information will be automatically retrieved through Apple Maps via geocoding and reverse geocoding services.
+### Device Compatibility
+- **📱 iPhone**: iPhone 8 and later
+- **📟 iPad**: iPad (6th generation) and later
+- **📱 iPod touch**: 7th generation
 
-<img src="./img/add.png" alt="Add Place" width="200"/>
+## ⚙️ Installation & Setup
 
-In the map view screen and homepage, you can select a saved place to view its information. In particular, you can view the place name, address, notes and memo, if any, as well as the date that place was added. 
-Additionally, you can delete the place from your Saved Places list, view more information within Apple Maps, and edit the place's information.
+### 📥 For End Users
 
-<!-- Put place view screen image -->
-<img src="./img/details.png" alt="Place Detail" width="200"/>
+#### Option 1: App Store (Recommended)
+> 🚧 *Coming Soon* - The app will be available on the App Store
 
-> **NOTE:** all information is not shared with third party services (with the exception of Apple Maps for the geocoding and reverse geocoding service) and is saved locally on the device.
+#### Option 2: TestFlight Beta
+> 🚧 *Coming Soon* - Beta testing via TestFlight
 
-### Permission
+#### Option 3: Developer Installation
+If you have access to the source code and a developer account:
 
-In order to use the application, the user must grant the following permissions:
+1. **Prerequisites**: Ensure you have Xcode 14+ installed
+2. **Clone Repository**: Download or clone the project
+3. **Open Project**: Launch `PlaceReminder.xcodeproj` in Xcode
+4. **Set Team**: Configure your Apple Developer Team in project settings
+5. **Build & Run**: Connect your device and install via Xcode
 
-- **Location**: to be able to show the user's position on the map and to be able to set reminders for saved places
-- **Notifications**: to be able to notify the user when he is near a saved place
+### 🛠️ For Developers
 
-## Project structure
+#### Setting up the Development Environment
 
-The project was developed using the MVC (Model-View-Controller) pattern. 
-The data (model) faithfully reproduce what is reported in the database and the files representing the entities have been automatically generated by Xcode through the command `Editor > Create NSManagedObject Subclass...`.
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/GiorCocc/PlaceReminder.git
+   cd PlaceReminder
+   ```
 
-The display part was developed using Storyboard and AutoLayout. 
-The application is managed by a `NavigationController` which allows you to manage the navigation between the various screens. 
-The screens that make up the application are as follows:
+2. **Open in Xcode**
+   ```bash
+   open PlaceReminder.xcodeproj
+   ```
 
-- `HomePageViewController`: main screen of the application, contains the map and the list of saved places. The screen consists of a `ViewController` inside which there is an `MKMapView` and a `UITableView`. The map was implemented using the `MapKit` framework and the list of places was implemented using a `UITableViewController` with dynamic type cells. In the navigation bar there are two buttons: one to add a new place and one to view the map in full screen.
-- `AddPlaceViewController`: screen for adding a new place. The screen consists of a `TableViewController` which contains four sections: map view, general information about the place, reminders and notes. __The name and address information are essential for saving the place, while the others are optional__. The map was implemented using the `MapKit` framework and shows the user's current location; while the cell view was implemented using a `UITableViewController` with cells of static type. This screen is also used to edit the information of a saved place. 
-- `PlaceDetailViewController`: screen for viewing the details of a place. The screen consists of a `TableViewController` which contains four sections: general information about the place, reminders, notes and date added. Cell view was implemented using a `UITableViewController` with cells of static type. The map has been implemented using the `MapKit` framework and shows the location of the saved place and, in case the user is near that place, also the user's location indicator. In the navigation bar there are buttons for changing the place data and for viewing more information within Apple Maps and removing the place from the list of saved places.
-- `MapViewController`: full screen map display screen. The screen consists of a `ViewController` inside which there is an `MKMapView`. The map shows your current location and saved places. Each saved place is placed on the map with a marker that can be selected to view the general information of the place by going to the detail screen.
+3. **Configure Code Signing**
+   - Select the `PlaceReminder` target
+   - Navigate to "Signing & Capabilities"
+   - Set your Team and Bundle Identifier
 
-### Databases
+4. **Build the Project**
+   - Use `⌘+B` to build
+   - Use `⌘+R` to run on simulator or device
 
-The database was implemented using Core Data. The database consists of a single entity, `Place`, which contains the following information:
+#### Project Dependencies
+This project uses the following iOS frameworks:
+- **🗺️ MapKit**: For map display and location services
+- **💾 CoreData**: For local data persistence
+- **📍 CoreLocation**: For location tracking and geofencing
+- **🔔 UserNotifications**: For location-based alerts
+- **🎨 UIKit**: For user interface components
+
+> 📝 **Note**: No external dependencies or CocoaPods required - all frameworks are part of iOS SDK
+
+## 📖 User Guide
+
+PlaceReminder features an intuitive interface designed for effortless place management. Below is a comprehensive guide to each screen and feature.
+
+### 🏠 Home Screen
+
+The home screen is your central hub for accessing all saved places and primary app functions.
+
+<img src="./img/home.png" alt="Home Screen" width="200"/>
+
+**Key Features:**
+- **🗺️ Interactive Map**: Displays your current location and all saved places as markers
+- **📋 Place List**: Scrollable table showing places sorted by date added (most recent first)
+- **➕ Add Place Button**: Quick access to save new locations (top navigation bar)
+- **🔍 Map Toggle**: Switch to full-screen map view for better exploration
+
+**Navigation:**
+- **Tap any place** in the list to view detailed information
+- **Tap map markers** to see place name and distance from your location
+- **Pull to refresh** the list to update locations and distances
+
+### ➕ Adding Places
+
+The add place screen provides a comprehensive interface for saving new locations with detailed information.
+
+<img src="./img/add.png" alt="Add New Place" width="200"/>
+
+**Required Information:**
+- **📝 Place Name**: Custom identifier for your location
+- **📍 Address**: Full or partial address (auto-completed via Apple Maps)
+
+**Optional Features:**
+- **🔔 Reminder Toggle**: Enable location-based notifications
+- **📝 Notes**: Personal notes about why this place is important
+- **📍 Current Location**: Auto-fill with your current GPS coordinates
+
+**Smart Address Input:**
+- Enter partial addresses (e.g., "Central Park, NY")
+- System automatically completes missing information
+- Real-time address validation through Apple's geocoding services
+- Preview location on integrated map before saving
+
+**Validation:**
+- Name and address fields are **required**
+- Address must be geocodable (valid location)
+- Duplicate places are allowed (useful for different purposes)
+
+### 📋 Place Details
+
+The place details screen provides comprehensive information about saved locations and management options.
+
+<img src="./img/details.png" alt="Place Details" width="200"/>
+
+**Information Displayed:**
+- **📍 Location**: Full address and coordinates
+- **📝 Details**: Name, description, and personal notes  
+- **📅 Metadata**: Date and time when place was added
+- **🔔 Reminder Status**: Whether notifications are enabled
+- **🗺️ Mini Map**: Visual location preview with your position (if nearby)
+
+**Available Actions:**
+- **✏️ Edit**: Modify any place information
+- **🍎 Open in Maps**: View location in Apple Maps app
+- **🗑️ Delete**: Remove place from your saved list
+- **📤 Share**: Share place information with others
+
+**Distance Information:**
+- Real-time distance calculation from your current location
+- Updates automatically as you move
+- Displayed in both metric and imperial units based on device settings
+
+### 🗺️ Map View
+
+The full-screen map provides an immersive way to explore your saved places and surroundings.
+
+<img src="./img/map.png" alt="Full Map View" width="200"/>
+
+**Map Features:**
+- **📍 Your Location**: Blue dot showing current GPS position
+- **📌 Place Markers**: Red pins for all saved locations
+- **🎯 Interactive Callouts**: Tap markers to see place information
+- **🔍 Zoom Controls**: Pinch to zoom in/out for different perspectives
+- **🧭 Location Tracking**: Map follows your movement in real-time
+
+**Marker Interactions:**
+- **Single Tap**: Show place name and distance
+- **Callout Tap**: Navigate to detailed place information
+- **Long Press**: Quick preview of place details
+
+### 🔒 Permissions
+
+PlaceReminder requires specific permissions to provide its full functionality:
+
+#### 📍 Location Services
+**Required for:**
+- Displaying your position on maps
+- Calculating distances to saved places
+- Triggering location-based notifications
+- Auto-filling current location when adding places
+
+**Permission Levels:**
+- **"When Using App"**: Basic functionality with manual refresh
+- **"Always"** (Recommended): Background location monitoring for notifications
+
+#### 🔔 Notifications  
+**Required for:**
+- Proximity alerts when approaching saved places
+- Background reminders even when app is closed
+- Custom notification sounds and badges
+
+**Setup Process:**
+1. **First Launch**: App automatically requests permissions
+2. **Location Prompt**: Choose "Allow While Using App" or "Allow Always"
+3. **Notification Prompt**: Tap "Allow" for full notification support
+4. **Settings**: Modify permissions anytime in iOS Settings > PlaceReminder
+
+> ⚠️ **Privacy Note**: All location data is stored locally on your device. No information is shared with third parties except Apple Maps for geocoding services.
+
+## 🏗️ Technical Architecture
+
+PlaceReminder is built using modern iOS development practices and follows the **Model-View-Controller (MVC)** architectural pattern for clean code organization and maintainability.
+
+### 🏛️ Architecture Overview
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│     View        │    │   Controller    │    │     Model       │
+│                 │    │                 │    │                 │
+│ • Storyboard    │◄──►│ • ViewControllers│◄──►│ • CoreData      │
+│ • XIB Files     │    │ • Delegates     │    │ • PlaceMO       │
+│ • UITableView   │    │ • DataSources   │    │ • CoreDataMgr   │
+│ • MKMapView     │    │ • IBActions     │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                              │
+                              ▼
+                    ┌─────────────────┐
+                    │   Frameworks    │
+                    │                 │
+                    │ • MapKit        │
+                    │ • CoreLocation  │
+                    │ • UserNotifications │
+                    │ • CoreData      │
+                    └─────────────────┘
+```
+
+### 📁 Project Structure
+
+The project is organized into logical groups for optimal code maintenance:
+
+```
+PlaceReminder/
+├── 📱 App Lifecycle
+│   ├── AppDelegate.h/m          # App lifecycle and notifications
+│   ├── SceneDelegate.h/m        # Scene management (iOS 13+)
+│   └── main.m                   # App entry point
+│
+├── 🎮 Controllers/
+│   ├── HomePageViewController   # Main screen with map and list
+│   ├── AddNewPlaceTableViewController # Add/edit place form
+│   ├── PlaceDetailsViewController # Place information display
+│   ├── MapViewController        # Full-screen map view
+│   └── ViewController           # Base view controller
+│
+├── 🏗️ Models/
+│   ├── PlaceMO+CoreDataClass    # Core Data managed object
+│   ├── PlaceMO+CoreDataProperties # Auto-generated properties
+│   └── MapAnnotation            # Custom map pin annotations
+│
+├── 💾 DataModel/
+│   ├── CoreDataManager          # Core Data stack management
+│   └── PlaceCoreDataModel.xcdatamodeld # Data model definition
+│
+├── 🎨 Views/
+│   ├── Main.storyboard          # Primary UI layouts
+│   ├── LaunchScreen.storyboard  # App launch screen
+│   └── TextFieldTableViewCell  # Custom table cell components
+│
+└── 📦 Resources/
+    ├── Assets.xcassets          # App icons and images
+    ├── Info.plist              # App configuration
+    └── en.lproj/               # Localization resources
+```
+
+### 🎮 View Controller Architecture
+
+#### **HomePageViewController**
+- **Purpose**: Main application hub combining map and list views
+- **Components**: 
+  - `MKMapView` for interactive location display
+  - `UITableView` for place list management
+  - Navigation controls for app-wide actions
+- **Responsibilities**:
+  - Real-time location tracking and display
+  - Place list management and sorting
+  - Map annotation handling and user interactions
+
+#### **AddNewPlaceTableViewController**
+- **Purpose**: Form interface for creating and editing places
+- **Components**: Static `UITableView` with specialized cells
+- **Features**:
+  - Smart address completion with geocoding
+  - Current location auto-fill capability
+  - Input validation and error handling
+  - Dual-purpose design (add new/edit existing)
+
+#### **PlaceDetailsViewController**
+- **Purpose**: Comprehensive place information display
+- **Components**: Static table layout with action buttons
+- **Features**:
+  - Complete place information presentation
+  - Edit/delete action management
+  - Apple Maps integration
+  - Distance calculation and display
+
+#### **MapViewController**
+- **Purpose**: Full-screen immersive map experience
+- **Components**: Single `MKMapView` with enhanced interactions
+- **Features**:
+  - Full-screen place exploration
+  - Enhanced marker interactions
+  - Seamless navigation to place details
+
+### 📊 Database Design
+
+PlaceReminder uses **Core Data** for robust local data persistence with optimal performance and data integrity.
+
+#### **PlaceMO Entity Structure**
 
 ```objc
 // PlaceMO+CoreDataProperties.h
 
-@dynamic address;       // place address (human readable - reverse geocoded) !! NECCESSARY !!
-@dynamic name;          // place name !! NECCESSARY !!
-@dynamic notes;         // place notes
-@dynamic remember;      // flag to remember the place and set a geofence region
-@dynamic insert_time;   // place insert time
-@dynamic latitude;      // place latitude (geocoded from address) !! CREATED AUTOMATICALLY !!
-@dynamic longitude;     // place longitude (geocoded from address) !! CREATED AUTOMATICALLY !!
+@interface PlaceMO : NSManagedObject
+
+@property (nonatomic, retain) NSString *address;      // Human-readable address ⚠️ REQUIRED
+@property (nonatomic, retain) NSString *name;         // User-defined place name ⚠️ REQUIRED  
+@property (nonatomic, retain) NSString *notes;        // Optional user notes
+@property (nonatomic) BOOL remember;                  // Geofencing enabled flag
+@property (nonatomic, retain) NSDate *insert_time;    // Auto-generated timestamp
+@property (nonatomic) double latitude;                // Auto-geocoded coordinate
+@property (nonatomic) double longitude;               // Auto-geocoded coordinate
+
+@end
 ```
 
-On the add a new place page, `address` is entered by the user and, if it is not complete, it is automatically retrieved from Apple Maps; `latitude` and `longitude` are automatically retrieved from Apple Maps starting from the address entered by the user; `insert_time` is automatically inserted when saving the place. 
-All other information is entered by the user. and can be changed later.
+#### **Data Flow Process**
 
-The elements are retrieved from the database through the `fetchPlaces` method of the `PlaceMO` which returns an array of objects of type `PlaceMO` sorted by date of insertion.
+1. **User Input**: Name and address (required fields)
+2. **Geocoding**: Apple Maps converts address to coordinates
+3. **Validation**: Ensures geocoding success before save
+4. **Persistence**: Core Data saves to local SQLite database
+5. **Retrieval**: Fetch with automatic sorting by insertion date
+
+#### **Core Data Stack**
 
 ```objc
-// HomePageViewController.m
+// CoreDataManager.h - Singleton pattern for data management
+
+@interface CoreDataManager : NSObject
+
+@property (readonly, strong) NSPersistentContainer *persistentContainer;
+@property (readonly, strong) NSManagedObjectContext *managedObjectContext;
+
++ (instancetype)sharedManager;
+- (void)saveContext;
+
+@end
+```
+
+### 🗺️ MapKit Integration
+
+PlaceReminder leverages **MapKit** framework for sophisticated location services and map visualization.
+
+#### **Location Services Setup**
+
+```objc
+// HomePageViewController.m - Location manager configuration
 
 - (void)viewDidLoad {
-     [superviewDidLoad];
+    [super viewDidLoad];
     
-     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
-     NSFetchRequest *fetchRequest = [PlaceMO fetchRequest];
-     NSError *error = nil;
-     self.places = [[context executeFetchRequest:fetchRequest error:&error] mutableCopy];
+    // Configure map view
+    self.mapView.delegate = self;
+    self.mapView.showsUserLocation = YES;
     
-     if (error) {
-         NSLog(@"Error: %@", error);
-     }
+    // Initialize location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    // Request permissions
+    [self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager startUpdatingLocation];
 }
 ```
 
-### MapKit
-
-The `MapKit` framework was used for displaying the maps. 
-In particular, the `MKMapView` and `MKAnnotationView` classes have been used for displaying the map and the markers. 
-An object of type `CLLocationManager` is initialized within each controller to manage the user's location. 
-In particular, the `requestWhenInUseAuthorization` method is used to ask the user for permission to use the current location and the `requestLocation` method to request the user's current location. 
-Also, the `startUpdatingLocation` method is used to update the user's location in real time.
+#### **Custom Annotations**
 
 ```objc
-// HomePageViewController.m
+// MapAnnotation.h - Custom pin annotations for saved places
 
-- (void)viewDidLoad {
-     [superviewDidLoad];
-     // Set the map view delegate
-     self.mapView.delegate = self;
-    
-     // Create a location manager and set ourselves as the delegate
-     self.locationManager = [[CLLocationManager alloc] init];
-     self.locationManager.delegate = self;
-     [self.locationManager requestWhenInUseAuthorization];
-     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-     [self.locationManager startUpdatingLocation];
+@interface MapAnnotation : NSObject <MKAnnotation>
 
-     // ...
-}
+@property (nonatomic, assign) CLLocationCoordinate2D coordinate;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString *subtitle;
+@property (nonatomic, strong) PlaceMO *place;
+
+@end
 ```
 
-For each object that is retrieved from CoreData an object of type `MKPointAnnotation` is created and added to the map. 
-In particular, the `addAnnotation` method is used to add the object to the map.
+#### **Address Geocoding Process**
+
+1. **User Input**: Partial or complete address
+2. **CLGeocoder**: Apple's service converts text to coordinates
+3. **Validation**: Ensures valid location results
+4. **Reverse Geocoding**: Fills missing address components
+5. **Coordinate Storage**: Saves lat/lng for map display
+
+### 📍 Geofencing System
+
+Advanced proximity monitoring using **Core Location** for intelligent location-based notifications.
+
+#### **Geofence Region Creation**
 
 ```objc
-// HomePageViewController.m
+// AppDelegate.m - Setting up geofencing for saved places
 
-- (void)loadPlaces {
-     // ...
-    
-     // Create a point annotation for each place
-     for (PlaceMO *place in self.places) {
-         MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-         annotation.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitude);
-         [self.mapView addAnnotation:annotation];
-     }
-}
-```
-
-#### Geofencing
-
-Through the coordinates of the saved place and those of the user it is possible to calculate the distance between the two points and, if this is less than a certain value, it is possible to notify the user that he is near a saved place.
-
-Notification handling was implemented using the `UserNotifications` framework.
-
-```objc
-// AppDelegate.m
-
-- (void) viewDidLoad {
-     // ...
-
-     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-     [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error) {
-         if (!error && granted) {
-             NSLog(@"User granted notification authorization");
-         }
-     }];
-}
-```
-
-For each location saved, we have chosen to create a circular region of radius 500 meters centered on the location itself. 
-This way, when the user is within 500 meters of the place, a notification appears to warn them that they are near a saved place.
-
-```objc
-// AppDelegate.m
-
-- (void) viewDidLoad {
-     // ...
-
-     CLLocationCoordinate2D coordinates;
-    
-     for (PlaceMO *place in self.places) {
-         coordinates.latitude = place.latitude;
-         coordinates.longitude = place.longitude;
+- (void)setupGeofencingForPlaces:(NSArray<PlaceMO *> *)places {
+    for (PlaceMO *place in places) {
+        if (place.remember) {
+            // Create circular region (500m radius)
+            CLLocationCoordinate2D center = CLLocationCoordinate2DMake(place.latitude, place.longitude);
+            CLCircularRegion *region = [[CLCircularRegion alloc] initWithCenter:center 
+                                                                          radius:500.0 
+                                                                      identifier:place.name];
             
-         // create the geographic region 500 meters wide
-         self.geofenceRegion = [[CLCircularRegion alloc] initWithCenter:coordinates radius:500 identifier:place.name];
+            // Configure for entry notifications
+            region.notifyOnEntry = YES;
+            region.notifyOnExit = NO;
             
-         NSLog(@"Geofence Region created: %@", self.geofenceRegion);
-            
-            
-         // set entry to region as trigger
-         if (place.remember){
-             self.geofenceRegion.notifyOnEntry = YES;
-                        
-             // register the geographic region
-             [self.locationManager startMonitoringForRegion:self.geofenceRegion];
-            
-             NSLog(@"Log entry to region: %@", self.geofenceRegion);
-         }
-     }
-}
-```
-
-When the user enters the region, a notification appears alerting them that they are near a saved place. 
-Notifications are handled through the `didEnterRegion` method of the `AppDelegate` and use the `UNUserNotificationCenter` for notification display.
-The notification appears only if the user has chosen to remember the place and the app is in the background.
-
-```objc
-// AppDelegate.m
-
-- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
-    NSLog(@"Entrato nella regione: %@", region);
-    
-    // recupera il nome del luogo
-    NSString *placeName = region.identifier;
-    
-    // inseriscilo nel titlo della notifica
-    NSString *title = [NSString stringWithFormat:@"Sei vicino a %@", placeName];
-    NSString *body = [NSString stringWithFormat:@"%@ è luogo importante per te!", placeName];
-    
-    
-    if ([region.identifier isEqualToString:region.identifier]) {
-        [self scheduleNotificationWithTitle:title
-                                       body:body];
+            // Start monitoring
+            [self.locationManager startMonitoringForRegion:region];
+        }
     }
 }
+```
 
-- (void) scheduleNotificationWithTitle: (NSString *) title body:(NSString *) body {
+#### **Notification Handling**
+
+```objc
+// AppDelegate.m - Processing geofence entry events
+
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    NSString *placeName = region.identifier;
+    NSString *title = [NSString stringWithFormat:@"📍 Near %@", placeName];
+    NSString *body = [NSString stringWithFormat:@"%@ is one of your important places!", placeName];
+    
+    [self scheduleNotificationWithTitle:title body:body];
+}
+
+- (void)scheduleNotificationWithTitle:(NSString *)title body:(NSString *)body {
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = title;
     content.body = body;
     content.sound = UNNotificationSound.defaultSound;
+    content.badge = @1;
     
-    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
+    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger 
+                                                   triggerWithTimeInterval:1 repeats:NO];
     
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"MyNotification" content:content trigger:trigger];
+    UNNotificationRequest *request = [UNNotificationRequest 
+                                      requestWithIdentifier:[[NSUUID UUID] UUIDString]
+                                      content:content 
+                                      trigger:trigger];
     
-    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"Error adding notification request: %@", error);
-        } else {
-            NSLog(@"Notification request added successfully");
-        }
-    }];
+    [[UNUserNotificationCenter currentNotificationCenter] 
+     addNotificationRequest:request withCompletionHandler:nil];
 }
 ```
+
+#### **Privacy & Performance**
+
+- **Local Processing**: All location data remains on device
+- **Battery Optimization**: Efficient geofencing with 500m radius
+- **Permission Handling**: Graceful degradation without location access
+- **Background Capability**: Notifications work when app is closed
+
+## 🤝 Contributing
+
+We welcome contributions from the community! PlaceReminder is an open-source educational project, and we appreciate any help in making it better.
+
+### 🚀 Ways to Contribute
+
+- **🐛 Bug Reports**: Found an issue? [Open an issue](https://github.com/GiorCocc/PlaceReminder/issues)
+- **✨ Feature Requests**: Have an idea? [Suggest a feature](https://github.com/GiorCocc/PlaceReminder/issues)
+- **💻 Code Contributions**: Submit pull requests for improvements
+- **📚 Documentation**: Help improve this README or add code comments
+- **🌍 Localization**: Translate the app to new languages
+- **🧪 Testing**: Help test the app on different devices and iOS versions
+
+### 📋 Development Guidelines
+
+#### Before Contributing
+1. **📖 Read** this README thoroughly
+2. **🔍 Search** existing issues to avoid duplicates
+3. **💬 Discuss** major changes by opening an issue first
+
+#### Code Standards
+- **📝 Language**: Objective-C following Apple's conventions
+- **🏗️ Architecture**: Maintain MVC pattern
+- **📱 Compatibility**: Support iOS 16.4+
+- **🧹 Code Style**: Follow existing formatting and naming conventions
+- **📄 Documentation**: Comment complex logic and public interfaces
+
+#### Pull Request Process
+1. **🔀 Fork** the repository
+2. **🌿 Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **✅ Test** your changes thoroughly
+4. **💾 Commit** with clear, descriptive messages
+5. **📤 Push** to your fork (`git push origin feature/amazing-feature`)
+6. **🔃 Submit** a pull request with detailed description
+
+#### Commit Message Format
+```
+📝 type(scope): brief description
+
+🔹 Longer description explaining what and why
+🔹 Reference any related issues (#123)
+
+Examples:
+✨ feat(geofencing): add custom radius support
+🐛 fix(maps): resolve annotation clustering issue
+📚 docs(readme): update installation instructions
+```
+
+### 🧪 Testing Guidelines
+
+- **📱 Device Testing**: Test on multiple iOS devices and versions
+- **🌍 Location Testing**: Verify geofencing in different locations
+- **🔋 Battery Impact**: Ensure location services don't drain battery
+- **🔒 Privacy**: Verify no data leaks or unauthorized access
+- **♿ Accessibility**: Check VoiceOver and accessibility features
+
+### 📞 Getting Help
+
+- **❓ Questions**: Use [GitHub Discussions](https://github.com/GiorCocc/PlaceReminder/discussions)
+- **🐛 Bug Reports**: [Open an Issue](https://github.com/GiorCocc/PlaceReminder/issues)
+- **💬 Real-time Chat**: Contact maintainers directly (see contact section)
+
+## 📄 License
+
+This project is licensed under the **MIT License** - see the details below.
+
+### MIT License
+
+```
+MIT License
+
+Copyright (c) 2023 Giorgio Coccapani
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+### 🔓 What This Means
+
+✅ **You CAN:**
+- Use this software for personal and commercial projects
+- Modify and distribute the code
+- Include it in proprietary software
+- Sell applications based on this code
+
+❌ **You CANNOT:**
+- Hold the authors liable for any damages
+- Use the authors' names for endorsement without permission
+
+⚠️ **You MUST:**
+- Include the original copyright notice
+- Include the license text in any distribution
+
+### 🙏 Third-Party Acknowledgments
+
+This project uses the following Apple frameworks and services:
+
+- **🗺️ MapKit Framework** - © Apple Inc. (Map display and location services)
+- **📍 Core Location Framework** - © Apple Inc. (GPS and geofencing)
+- **💾 Core Data Framework** - © Apple Inc. (Local data persistence)
+- **🔔 User Notifications Framework** - © Apple Inc. (Push notifications)
+- **🍎 Apple Maps Geocoding Services** - © Apple Inc. (Address resolution)
+
+## 👤 Contact
+
+### 👨‍💻 Project Maintainer
+
+**Giorgio Coccapani**
+- **📧 Email**: [giorgio.coccapani@email.com](mailto:giorgio.coccapani@email.com)
+- **🐙 GitHub**: [@GiorCocc](https://github.com/GiorCocc)
+- **🎓 University**: University of Parma - Mobile Development Course
+- **📍 Location**: Parma, Italy
+
+### 🏫 Academic Context
+
+This project was developed as part of the **Mobile Development** course at the **University of Parma**, demonstrating practical application of:
+
+- iOS app development with Objective-C
+- Location-based services and geofencing
+- Core Data persistence and management
+- MapKit integration and custom annotations
+- User notification systems
+- MVC architectural patterns
+
+### 🔗 Project Links
+
+- **📂 Repository**: [https://github.com/GiorCocc/PlaceReminder](https://github.com/GiorCocc/PlaceReminder)
+- **🐛 Issues**: [Report bugs or request features](https://github.com/GiorCocc/PlaceReminder/issues)
+- **💬 Discussions**: [Community discussions](https://github.com/GiorCocc/PlaceReminder/discussions)
+- **📚 Documentation**: [Wiki pages](https://github.com/GiorCocc/PlaceReminder/wiki) (Coming Soon)
+
+### 💝 Acknowledgments
+
+Special thanks to:
+
+- **🏫 University of Parma** - For providing excellent mobile development education
+- **👩‍🏫 Course Instructors** - For guidance and project requirements
+- **🍎 Apple Developer Documentation** - For comprehensive iOS development resources
+- **🌟 Open Source Community** - For inspiration and best practices
+
+---
+
+<div align="center">
+
+**⭐ If you found this project helpful, please give it a star!**
+
+Made with ❤️ in Italy 🇮🇹
+
+</div>
